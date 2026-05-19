@@ -1,0 +1,160 @@
+{%- doc -%}
+  Intended for use in a block similar to the button block.
+
+  @param {string} link - link to render
+  @param {object} [block] - The block
+
+  @example
+  {% render 'button', link: '/collections/all' %}
+{%- enddoc -%}
+
+{% assign block_settings = block.settings %}
+{% assign link_text_decoration = 'none' %}
+{% if block_settings.link_underlined %}
+  {% assign link_text_decoration = 'underline' %}
+{% endif %}
+
+{% if block_settings.enable_buy_now and block_settings.variant_id != blank %}
+  <button
+    type="button"
+    class="
+      size-style
+      {{ block_settings.style_class }}
+      {{ block_settings.style_class }}--{{ block.id }}
+      hero-buy-now-button
+    "
+    style="{% render 'size-style', settings: block_settings %}"
+    data-hero-buy-now
+    data-action="{{ block_settings.buy_now_action | default: 'checkout' }}"
+    data-variant-id="{{ block_settings.variant_id }}"
+    {{ block.shopify_attributes }}
+  >
+    {{ block_settings.label }}
+  </button>
+{% else %}
+  <a
+    {% if link == blank %}
+      role="link"
+      aria-disabled="true"
+    {% else %}
+      href="{{ link }}"
+    {% endif %}
+    class="
+      size-style
+      {{ block_settings.style_class }}
+      {{ block_settings.style_class }}--{{ block.id }}
+    "
+    style="{% render 'size-style', settings: block_settings %}"
+    {%- if block_settings.open_in_new_tab -%}
+      target="_blank"
+      rel="noopener noreferrer"
+    {%- endif -%}
+    {{ block.shopify_attributes }}
+  >
+    {{ block_settings.label }}
+  </a>
+{% endif %}
+
+
+{% stylesheet %}
+  .link {
+    text-decoration: var(--button-link-text-decoration, none);
+    text-decoration-color: currentcolor;
+    font-style: var(--button-link-font-style, normal);
+    font-weight: var(--button-link-font-weight, inherit);
+    letter-spacing: var(--button-link-letter-spacing, normal);
+    font-size: var(--button-link-font-size, inherit);
+
+    &:hover {
+      color: var(--color-primary-hover);
+      text-decoration-color: transparent;
+    }
+  }
+  
+  .hero-buy-now-button {
+    cursor: pointer;
+    border: none;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('click', async function(event) {
+    const button = event.target.closest('[data-hero-buy-now]');
+    if (!button) return;
+
+    event.preventDefault();
+    button.disabled = true;
+
+    const variantId = button.dataset.variantId;
+    const action = button.dataset.action || 'checkout';
+
+    if (!variantId) {
+      console.error('Buy Now button: No variant ID provided');
+      button.disabled = false;
+      return;
+    }
+
+    const rootPath = window.Shopify?.routes?.root || '/';
+
+    try {
+      // Gather cart-items section IDs so Shopify returns updated HTML
+      const cartItemsComponents = document.querySelectorAll('cart-items-component');
+      const sectionIds = [];
+      cartItemsComponents.forEach(function(item) {
+        if (item.dataset && item.dataset.sectionId) {
+          sectionIds.push(item.dataset.sectionId);
+        }
+      });
+
+      const payload = {
+        items: [{ id: parseInt(variantId, 10), quantity: 1 }]
+      };
+
+      // Include sections so Shopify returns rendered section HTML
+      if (sectionIds.length > 0) {
+        payload.sections = sectionIds.join(',');
+        payload.sections_url = window.location.pathname;
+      }
+
+      const response = await fetch(rootPath + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (result.status) {
+        console.error('Buy Now error:', result.description);
+        button.disabled = false;
+        return;
+      }
+
+      if (action === 'checkout') {
+        window.location.href = '/checkout';
+      } else {
+        // Dispatch 'cart:update' event (same event the theme uses) with sections data
+        // so cart-drawer, cart-icon, and cart-items all update properly
+        const cartUpdateEvent = new CustomEvent('cart:update', {
+          bubbles: true,
+          detail: {
+            resource: result,
+            sourceId: 'hero-buy-now',
+            data: {
+              source: 'hero-buy-now',
+              itemCount: 1,
+              variantId: variantId,
+              sections: result.sections || {}
+            }
+          }
+        });
+        button.dispatchEvent(cartUpdateEvent);
+
+        button.disabled = false;
+      }
+    } catch (error) {
+      console.error('Buy Now fetch error:', error);
+      button.disabled = false;
+    }
+  });
+{% endjavascript %}

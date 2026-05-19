@@ -1,0 +1,188 @@
+{%- doc -%}
+  Renders a variant as a standalone product card in collection grids.
+
+  @param {object} product - Parent product
+  @param {object} variant - Variant displayed as its own card
+  @param {object} section - Collection section
+{%- enddoc -%}
+
+{% liquid
+  assign block_settings = block.settings
+  assign variant_url = product.url | append: '?variant=' | append: variant.id
+
+  assign title_source = block_settings.title_source | default: 'variant'
+  if title_source == 'product'
+    assign card_title = product.title
+  else
+    if variant.title == 'Default Title'
+      assign card_title = product.title
+    else
+      assign card_title = product.title | append: ' - ' | append: variant.title
+    endif
+  endif
+
+  assign image_source = block_settings.image_source | default: 'variant'
+  if image_source == 'product'
+    assign card_image = product.featured_image
+    if card_image == blank
+      assign card_image = variant.featured_image
+    endif
+  else
+    assign card_image = variant.featured_image
+    if card_image == blank
+      assign card_image = product.featured_image
+    endif
+  endif
+
+  assign image_ratio = block_settings.image_ratio | default: 'adapt'
+  assign ratio_css = 'auto'
+  case image_ratio
+    when 'portrait'
+      assign ratio_css = '4 / 5'
+    when 'square'
+      assign ratio_css = '1 / 1'
+    when 'landscape'
+      assign ratio_css = '16 / 9'
+  endcase
+
+  assign title_type_preset = block_settings.title_type_preset | default: 'rte'
+  assign price_type_preset = block_settings.price_type_preset | default: 'h6'
+  assign show_vendor = block_settings.show_vendor | default: false
+  assign show_price = block_settings.show_price | default: true
+
+  assign has_quick_add = false
+  if settings.quick_add and variant.available
+    assign has_quick_add = true
+  endif
+
+  assign has_mobile_quick_add = false
+  if has_quick_add and settings.mobile_quick_add
+    assign has_mobile_quick_add = true
+  endif
+
+  assign featured_media_url = blank
+  if settings.transition_to_main_product and card_image != blank
+    assign featured_media_url = card_image | image_url: width: 500
+  endif
+%}
+
+{%- if settings.transition_to_main_product -%}
+  <product-card-link
+    data-product-id="{{ product.id }}"
+    data-featured-media-url="{{ featured_media_url }}"
+    data-product-transition="{{ settings.transition_to_main_product }}"
+  >
+{%- endif -%}
+<product-card
+  class="product-card product-card--variant"
+  data-product-id="{{ product.id }}"
+  data-variant-id="{{ variant.id }}"
+  data-product-transition="{{ settings.transition_to_main_product }}"
+  {{ block.shopify_attributes }}
+>
+  <a
+    id="{{ section.id }}-{{ product.id }}-{{ variant.id | append: '-link' | md5 }}"
+    href="{{ variant_url }}"
+    class="product-card__link"
+    ref="productCardLink"
+  >
+    <span class="visually-hidden">{{ card_title }}</span>
+  </a>
+  <div
+    class="product-card__content layout-panel-flex layout-panel-flex--column product-grid__card spacing-style border-style gap-style"
+    style="
+      --quick-add-display: {% if has_quick_add %}flex{% else %}none{% endif %};
+      --quick-add-mobile-display: {% if has_mobile_quick_add %}flex{% else %}none{% endif %};
+      --quick-add-mobile-opacity: {% if has_mobile_quick_add %}1{% else %}0{% endif %};
+      --product-card-gap: var(--padding-sm);
+    "
+  >
+    <div
+      ref="cardGallery"
+      class="card-gallery variant-card-gallery"
+      style="
+        --gallery-aspect-ratio: {{ ratio_css }};
+        --padding-block-start: 0px;
+        --padding-inline-start: 0px;
+        --border-radius: 0px;
+      "
+      data-product-id="{{ product.id }}"
+      data-image-ratio="{{ image_ratio }}"
+    >
+      <a class="contents" ref="cardGalleryLink" href="{{ variant_url }}" aria-label="{{ card_title }}">
+        <div class="product-media-container media-fit product-media-container--image">
+          {% if card_image != blank %}
+            {{
+              card_image
+              | image_url: width: 1200
+              | image_tag:
+                loading: 'lazy',
+                class: 'product-media',
+                widths: '360, 535, 750, 940, 1100, 1200',
+                sizes: '(min-width: 750px) 50vw, 100vw',
+                alt: card_title
+            }}
+          {% else %}
+            {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-image product-media' }}
+          {% endif %}
+        </div>
+      </a>
+      {% render 'product-card-badges', product: product, variant: variant, settings: settings %}
+      {%- if settings.quick_add or settings.mobile_quick_add -%}
+        {% render 'quick-add', product: product, section_id: section.id %}
+      {%- endif -%}
+    </div>
+
+    <div class="variant-card__info">
+      {% if show_vendor %}
+        <div class="variant-card__vendor">{{ product.vendor }}</div>
+      {% endif %}
+
+      <a href="{{ variant_url }}" class="variant-card__title {{ title_type_preset }}">{{ card_title }}</a>
+
+      {% if show_price %}
+        <div class="variant-card__price {{ price_type_preset }}">
+          {% if variant.compare_at_price > variant.price %}
+            <s>{{ variant.compare_at_price | money }}</s>
+          {% endif %}
+          <span>{{ variant.price | money }}</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</product-card>
+{%- if settings.transition_to_main_product -%}
+  </product-card-link>
+{%- endif -%}
+
+{% stylesheet %}
+  .variant-card-gallery .product-badges {
+    z-index: var(--layer-raised);
+  }
+
+  .variant-card-gallery[data-image-ratio='adapt'] .product-media-container,
+  .variant-card-gallery[data-image-ratio='adapt'] .product-media {
+    aspect-ratio: auto;
+  }
+
+  .variant-card-gallery[data-image-ratio='adapt'] .product-media {
+    height: auto;
+    object-fit: contain;
+  }
+
+  .variant-card__info {
+    display: grid;
+    gap: var(--padding-2xs);
+  }
+
+  .variant-card__title {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .variant-card__price {
+    display: inline-flex;
+    gap: var(--padding-2xs);
+    align-items: center;
+  }
+{% endstylesheet %}

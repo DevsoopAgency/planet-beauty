@@ -1,0 +1,106 @@
+{%- doc -%}
+  Renders product badges for the product card.
+
+  @param {object} product - The product object.
+  @param {object} [variant] - Optional variant object for variant-card badge logic.
+  @param {object} settings - The theme settings object.
+
+  @example
+  {% render 'product-card-badges', product: product, settings: settings %}
+{%- enddoc -%}
+
+{% liquid
+  assign is_sold_out = false
+  assign is_on_sale = false
+
+  if variant != blank
+    if variant.available == false
+      assign is_sold_out = true
+    endif
+
+    if variant.compare_at_price != blank and variant.compare_at_price > variant.price
+      assign is_on_sale = true
+    elsif product.compare_at_price > product.price
+      assign is_on_sale = true
+    elsif product.compare_at_price_max > product.price_max
+      assign is_on_sale = true
+    endif
+  else
+    if product.available == false
+      assign is_sold_out = true
+    endif
+    if product.compare_at_price > product.price
+      assign is_on_sale = true
+    elsif product.compare_at_price_max > product.price_max
+      assign is_on_sale = true
+    endif
+  endif
+%}
+
+<div
+  class="product-badges product-badges--{{ settings.badge_position }}"
+  style="
+    --badge-border-radius: {{ settings.badge_corner_radius }}px;
+    --badge-font-family: var(--font-{{ settings.badge_font_family }}--family); --badge-font-weight: var(--font-{{ settings.badge_font_family }}--weight); --badge-text-transform: {{ settings.badge_text_transform }};
+  "
+>
+  {%- if is_sold_out or is_on_sale -%}
+    <div
+      class="
+        product-badges__badge product-badges__badge--rectangle
+        {% if is_sold_out %} color-{{ settings.badge_sold_out_color_scheme }}{% elsif is_on_sale %} color-{{ settings.badge_sale_color_scheme }}{% endif %}
+      "
+    >
+      {%- if is_sold_out -%}
+        {{ 'content.product_badge_sold_out' | t }}
+      {%- elsif is_on_sale -%}
+        {{ 'content.product_badge_sale' | t }}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .product-badges {
+    --badge-inset: max(var(--padding-xs), calc((var(--border-radius) + var(--padding-xs)) * (1 - cos(45deg))));
+
+    position: absolute;
+    z-index: var(--layer-flat);
+  }
+
+  .product-badges--bottom-left {
+    bottom: calc(var(--badge-inset) + var(--padding-block-start));
+    left: calc(var(--badge-inset) + var(--padding-inline-start));
+  }
+
+  .product-badges--top-left {
+    top: calc(var(--badge-inset) + var(--padding-block-start));
+    left: calc(var(--badge-inset) + var(--padding-inline-start));
+  }
+
+  .product-badges--top-right {
+    top: calc(var(--badge-inset) + var(--padding-block-start));
+    right: calc(var(--badge-inset) + var(--padding-inline-start));
+  }
+
+  .product-badges__badge {
+    --badge-font-size: var(--font-size--xs);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--color-foreground);
+    background: var(--color-background);
+    font-size: var(--badge-font-size);
+    font-family: var(--badge-font-family);
+    font-weight: var(--badge-font-weight);
+    text-transform: var(--badge-text-transform);
+    border-radius: var(--badge-border-radius);
+  }
+
+  .product-badges__badge--rectangle {
+    padding-block: var(--badge-rectangle-padding-block);
+    padding-inline: var(--badge-rectangle-padding-inline);
+  }
+{% endstylesheet %}

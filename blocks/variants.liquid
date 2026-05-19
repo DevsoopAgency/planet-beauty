@@ -1,0 +1,164 @@
+{% liquid
+  assign product_resource = closest.product
+  if request.visual_preview_mode and product_resource == blank
+    assign product_resource = collections.all.products.first
+  endif
+-%}
+
+{% unless product_resource == blank %}
+  {% liquid
+    assign block_settings = block.settings
+    assign strikethrough_color_mix = '#fff'
+    if section.settings.color_scheme and section.settings.color_scheme.settings.foreground
+      assign button_background_brightness = section.settings.color_scheme.settings.foreground | color_brightness
+      if button_background_brightness < 105
+        assign strikethrough_color_mix = '#000'
+      endif
+    endif
+
+    # Find color option name (if swatches are used)
+    assign color_option_name = null
+    for product_option in product_resource.options_with_values
+      assign swatch_count = product_option.values | map: 'swatch' | compact | size
+      if swatch_count > 0
+        assign color_option_name = product_option.name
+        break
+      endif
+    endfor
+  %}
+
+  {% unless product_resource.has_only_default_variant %}
+    <product-card-variant-picker
+      class="variant-picker variant-picker--compact spacing-style variant-picker--{{ block_settings.alignment }}"
+      style="--color-strikethrough-mix: {{ strikethrough_color_mix }}; {% render 'spacing-style', settings: block_settings %}"
+      data-section-id="{{ section.id }}"
+      data-product-id="{{ product_resource.id }}"
+      data-product-url="{{ product_resource.url }}"
+      {% if block_settings.hide_color %}data-hide-color="true"{% endif %}
+      {{ block.shopify_attributes }}
+    >
+      <form class="variant-picker__form">
+        {%- for product_option in product_resource.options_with_values -%}
+          {% unless block_settings.hide_color and product_option.name == color_option_name %}
+            {%- liquid
+              assign fieldset_index = forloop.index0
+              assign longest_value = 0
+            -%}
+
+            <fieldset class="variant-option variant-option--buttons variant-option--compact" data-fieldset-index="{{ fieldset_index }}">
+              <legend>{{ product_option.name | escape }}</legend>
+              {%- for product_option_value in product_option.values -%}
+                {% if product_option_value.size > longest_value %}
+                  {% assign longest_value = product_option_value.size %}
+                {% endif %}
+                <label class="variant-option__button-label variant-option__button-label--compact">
+                  <input
+                    type="radio"
+                    name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                    value="{{ product_option_value | escape }}"
+                    data-option-value-id="{{ product_option_value.id }}"
+                    data-variant-id="{{ product_option_value.variant.id }}"
+                    {% if product_option_value.selected %}checked{% endif %}
+                  >
+                  {% if product_option_value.available == true %}
+                    <span class="variant-option__button-label__pill"></span>
+                  {% endif %}
+                  <span class="variant-option__button-label__text">{{ product_option_value | escape }}</span>
+                </label>
+              {%- endfor -%}
+            </fieldset>
+          {% endunless %}
+        {%- endfor -%}
+        <script type="application/json">
+          {{ product_resource.selected_or_first_available_variant | json }}
+        </script>
+      </form>
+    </product-card-variant-picker>
+  {% endunless %}
+{% endunless %}
+
+{% # theme-check-disable %}
+{% stylesheet %}
+  .variant-picker--compact .variant-option--compact {
+    gap: var(--gap-xs);
+  }
+  .variant-picker--compact .variant-option__button-label--compact {
+    padding-block: var(--padding-xs);
+    padding-inline: var(--padding-sm);
+    min-height: 2em;
+    font-size: 0.875rem;
+  }
+{% endstylesheet %}
+{% # theme-check-enable %}
+
+{% schema %}
+{
+  "name": "t:names.variants",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "hide_color",
+      "label": "Hide color option",
+      "info": "Hide color buttons when using swatches",
+      "default": false
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.variants",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}
+

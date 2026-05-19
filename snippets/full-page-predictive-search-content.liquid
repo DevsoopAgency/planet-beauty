@@ -1,0 +1,83 @@
+{%- liquid
+  assign manual_keywords = settings.search_keywords | split: ','
+  assign has_query = false
+  if predictive_search.performed and predictive_search.terms != blank
+    assign has_query = true
+  endif
+  assign empty_collection = settings.empty_state_collection | default: collections.all
+-%}
+
+<div class="full-page-search-hub__results" data-full-page-search-results>
+  <div class="full-page-search-hub__grid">
+  <div class="full-page-search-hub__panel full-page-search-hub__panel--keywords" data-full-page-search-keywords>
+    {% if has_query and predictive_search.resources.queries.size > 0 %}
+      <div class="predictive-search-keywords">
+        <h2 class="predictive-search-keywords__title">Popular Keywords</h2>
+      </div>
+      <ul class="full-page-search-hub__query-list predictive-search-keywords__list list-unstyled">
+        {% for resource in predictive_search.resources.queries %}
+          <li>
+            <button
+              type="button"
+              class="predictive-search-keyword full-page-search-hub__query-button"
+              data-keyword="{{ resource.text | escape }}"
+            >
+              {{ resource.styled_text }}
+            </button>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      {% render 'predictive-search-keywords', keywords: manual_keywords %}
+    {% endif %}
+  </div>
+
+  <div class="full-page-search-hub__panel full-page-search-hub__panel--products" data-full-page-search-products>
+    {% if has_query %}
+      {% if predictive_search.resources.products.size > 0 %}
+        {% render 'predictive-search-products-list',
+          title: 'Popular Products',
+          products: predictive_search.resources.products,
+          limit: 8
+        %}
+      {% else %}
+        <h4 class="predictive-search-results__title">Popular Products</h4>
+        <p class="full-page-search-hub__empty">No products found.</p>
+      {% endif %}
+    {% else %}
+      {% render 'predictive-search-products-list',
+        title:  'Popular Products',
+        products: empty_collection.products,
+        limit: 8
+      %}
+    {% endif %}
+  </div>
+
+  <div class="full-page-search-hub__panel full-page-search-hub__panel--articles" data-full-page-search-articles>
+    {% if has_query %}
+      {% if predictive_search.resources.articles.size > 0 %}
+        {% render 'predictive-search-resource-carousel',
+          title: 'Popular Articles',
+          resource_type: 'article',
+          resources: predictive_search.resources.articles
+        %}
+      {% else %}
+        <h4 class="predictive-search-results__title">Popular Articles</h4>
+        <p class="full-page-search-hub__empty">No articles found.</p>
+      {% endif %}
+    {% else %}
+      {% assign featured_blog = settings.search_featured_blog %}
+      {% if featured_blog != blank and featured_blog.articles_count > 0 %}
+        {% render 'predictive-search-resource-carousel',
+          title: 'Popular Articles',
+          resource_type: 'article',
+          resources: featured_blog.articles
+        %}
+      {% else %}
+        <h4 class="predictive-search-results__title">Popular Articles</h4>
+        <p class="full-page-search-hub__empty">{{ 'content.search_results_no_results' | t: terms: '' }}</p>
+      {% endif %}
+    {% endif %}
+  </div>
+  </div>
+</div>
