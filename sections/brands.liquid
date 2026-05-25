@@ -1,0 +1,79 @@
+<div class="section-brands">
+
+  <div class="heading__wrapper">
+      <h2 class="heading h1 highlight-internal">{{section.settings.title}}</h2>
+  </div>
+
+    <div class="carousel carousel__mobile-half carousel__tablet-3 carousel__desktop-5" data-flickity-init='{ "groupCells": "true", "cellAlign": "left", "imagesLoaded": "true", "percentPosition": "false", "adaptiveHeight": "true", "groupCells": "100%", "lazyLoad": "true", "accessibility": "false" }'>
+      {% for block in section.blocks %}
+        {% if block.settings.image != blank %}
+          <div class="carousel__item"><a {% if block.settings.link != blank %} href="{{block.settings.link}}" {% endif %}>
+            <div class="carousel__item-container">
+              {%- assign image_url = block.settings.image | img_url: '500x300' -%}
+              {% render 'image', src: image_url, aspect_ratio: block.settings.image.aspect_ratio, alt: block.settings.image.alt %}
+            </div>
+          </a></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brands",
+  "settings": [
+    {
+        "type": "text",
+        "id": "title",
+        "default": "Featured Brands",
+        "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+        "type": "logo_image",
+        "name": {
+        "en": "Brand Logo"
+        },
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": {
+                "en": "Image"
+                }
+            },
+            {
+              "id": "link",
+              "type": "url",
+              "label": "Link"
+            }
+        ]
+    }
+  ],
+  "presets": [
+    {
+      "name": {
+        "en": "Brands"
+      },
+      "category": {
+        "en": "Image"
+      },
+      "blocks": [
+        {
+          "type": "logo_image"
+        },
+        {
+          "type": "logo_image"
+        },
+        {
+            "type": "logo_image"
+        },
+        {
+          "type": "logo_image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
