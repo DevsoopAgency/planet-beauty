@@ -1,0 +1,85 @@
+/*
+    Brands Component
+*/
+.brands-grid {
+    
+}
+
+.brands-grid__letter-title {
+    width: 100%;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 11.5px;
+    font-size: 28px;
+    color: var(--color-primary);
+    transition: 250ms;
+}
+
+.brands-grid__brand-items {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding-top: 9.5px;
+    padding-bottom: 30px;
+}
+
+.brands-grid__brand-item {
+    width: 100%;
+}
+
+.brands-grid__brand-item-link,
+.brands-grid__letter-link {
+    text-decoration: none;
+}
+
+.brands-grid__brand-item-link:hover,
+.brands-grid__brand-item-linkc,
+.brands-grid__letter-link:hover,
+.brands-grid__letter-link:focus {
+    color: var(--color-primary);
+}
+
+.brands-grid__brands-alphabet {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.brands-grid__letter-link {
+    font-size: 20px;
+    line-height: 25px;
+    padding-right: 2.5px;
+    padding-left: 2.5px;
+}
+
+.brands-grid__letter-link-wrapper {
+    padding-right: 7px;
+    padding-left: 7px;
+    padding-bottom: 7px;
+}
+
+/* @include desktop */
+@media (min-width: 900px) { 
+    .brands-grid__brand-items {
+        flex-direction: row;
+        padding-bottom: 50px;
+    }
+
+    .brands-grid__brands-alphabet {
+        display: flex;
+        padding-top: 30px;
+        padding-bottom: 40px;
+        margin-bottom: 0;
+        overflow: auto;
+    }
+
+    .brands-grid__brand-item {
+        flex: 0 0 20%;
+    }
+
+    .brands-grid__letter-link-wrapper {
+        padding-bottom: 0;
+    }
+}
