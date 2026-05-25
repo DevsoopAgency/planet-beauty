@@ -57,11 +57,11 @@
         "padding-block-end": 80
       }
     },
-    "custom_liquid_diyarD": {
+    "custom_liquid_YCNJe8": {
       "type": "custom-liquid",
       "name": "t:names.custom_liquid",
       "settings": {
-        "custom_liquid": "<div class=\"page-container static-page\" data-static-page >\n\n  <div class=\"container\">\n\n    <!-- <div class=\"static-page__heading\">\n      <h1 class=\"highlight\">{{ page.title }}</h1>\n    </div> -->\n\n    <div style=\"margin-top:50px;\">\n      <div id=\"dml_fmc_wrapper\">\n<script>window.fmc_hasBanner=false;</script>\n<script>const fmcEmbedUrl =\n\"https://facemapping.me/fmcembed.js?\"+(new Date()).getTime();\nconst fmcScript = document.createElement(\"script\");\nfmcScript.src = fmcEmbedUrl;\ndocument.getElementById(\"dml_fmc_wrapper\").appendChild(fmcScript)\n</script>\n</div>\n\n    </div>\n\n  </div>\n\n</div>",
+        "custom_liquid": "<div class=\"yotpo-widget-instance\" data-yotpo-instance-id=\"206071\"></div>",
         "color_scheme": "",
         "section_width": "page-width",
         "padding-block-start": 0,
@@ -71,6 +71,6 @@
   },
   "order": [
     "main",
-    "custom_liquid_diyarD"
+    "custom_liquid_YCNJe8"
   ]
 }
