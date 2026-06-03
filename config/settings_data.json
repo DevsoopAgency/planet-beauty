@@ -99,6 +99,11 @@
         "type": "shopify://apps/boost-ai-search-filter/blocks/boost-sd/7fc998ae-a150-4367-bab8-505d8a4503f7",
         "disabled": false,
         "settings": {}
+      },
+      "10641372206048101839": {
+        "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-global-embed/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
