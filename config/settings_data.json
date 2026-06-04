@@ -62,6 +62,7 @@
     "pills_border_radius": 40,
     "cart_type": "drawer",
     "cart_price_font": "secondary",
+    "auto_open_cart_drawer": true,
     "show_cart_note": false,
     "show_add_discount_code": true,
     "drawer_drop_shadow": true,
