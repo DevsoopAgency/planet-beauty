@@ -18,7 +18,6 @@
           "type": "_announcement",
           "settings": {
             "text": "<strong>FREE SHIPPING</strong>  ON ORDERS OVER $59*",
-            "icon": "shopify://shop_images/DarkOilCnd6oz.jpg",
             "text_2": "",
             "link": "",
             "font": "var(--font-body--family)",
