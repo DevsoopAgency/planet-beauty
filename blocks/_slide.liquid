@@ -4,14 +4,16 @@
 {%- assign block_index = section.blocks | find_index: 'id', block.id -%}
 {%- assign section_index = section.index -%}
 
+{% liquid
+  assign preview_image = block_settings.image_1
+  assign mobile_image = block_settings.mobile_image_1
+  if block_settings.media_type_1 == 'video'
+    assign preview_image = block_settings.video_1.preview_image
+  endif
+%}
+
 {% capture children %}
   {% liquid
-    assign preview_image = block_settings.image_1
-    assign mobile_image = block_settings.mobile_image_1
-    if block_settings.media_type_1 == 'video'
-      assign preview_image = block_settings.video_1.preview_image
-    endif
-
     assign rounded_image_corners = false
     if block_settings.inherit_color_scheme == true or block_settings.inherit_color_scheme == false and section.settings.color_scheme.settings.background.rgb == block_settings.color_scheme.settings.background.rgb
       assign rounded_image_corners = true
@@ -46,7 +48,13 @@
       -%}
 
       {%- if block_settings.media_type_1 == 'image' -%}
-        {%- if mobile_image != blank -%}
+        {%- liquid
+          assign use_separate_mobile_image = false
+          if mobile_image != blank and mobile_image != block_settings.image_1
+            assign use_separate_mobile_image = true
+          endif
+        -%}
+        {%- if use_separate_mobile_image -%}
           {%- liquid
             assign mobile_height = mobile_image.width | divided_by: mobile_image.aspect_ratio | round
             assign mobile_widths = '375, 550, 750, 1100'
@@ -57,12 +65,18 @@
             | image_url: width: 1200
             | image_tag: height: mobile_height, sizes: mobile_sizes, widths: mobile_widths, loading: loading, fetchpriority: fetchpriority, class: 'slide__image slide__image--mobile'
           }}
+          {{
+            block_settings.image_1
+            | image_url: width: 3840
+            | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image slide__image--desktop', loading: loading, fetchpriority: fetchpriority
+          }}
+        {%- else -%}
+          {{
+            block_settings.image_1
+            | image_url: width: 3840
+            | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image', loading: loading, fetchpriority: fetchpriority
+          }}
         {%- endif -%}
-        {{
-          block_settings.image_1
-          | image_url: width: 3840
-          | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image slide__image--desktop', loading: loading, fetchpriority: fetchpriority
-        }}
       {%- else -%}
         {%- liquid
           assign video_aspect_ratio = block_settings.video_aspect_ratio | default: 'auto'
@@ -157,6 +171,13 @@
   endif
 -%}
 
+{%- liquid
+  assign slide_media_fit = 'cover'
+  if section.settings.slide_height == 'adaptive'
+    assign slide_media_fit = 'contain'
+  endif
+-%}
+
 {% render 'slideshow-slide',
   index: block_index,
   class: class,
@@ -164,6 +185,7 @@
   attributes: block.shopify_attributes,
   slide_size: section.settings.slide_height,
   slide_id: block.id,
+  media_fit: slide_media_fit,
   navigate_to_slide: true
 %}
 
@@ -226,6 +248,76 @@
     .slide__image-container > .slide__image--desktop {
       display: block;
     }
+  }
+
+  slideshow-slide.slideshow-slide--adaptive {
+    position: relative;
+    display: block;
+    height: auto;
+    max-height: none;
+    content-visibility: visible;
+  }
+
+  slideshow-slide.slideshow-slide--adaptive > .slide__image-container {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+
+  slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__image,
+  slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__video-poster {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  slideshow-slide.slideshow-slide--adaptive > .slide__content {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slideshow--content-below-media slideshow-slide.slideshow-slide--adaptive {
+    display: grid;
+    grid-template-rows: auto minmax(min-content, auto);
+  }
+
+  .slideshow--content-below-media slideshow-slide.slideshow-slide--adaptive > .slide__image-container,
+  .slideshow--content-below-media slideshow-slide.slideshow-slide--adaptive > .slide__content {
+    position: static;
+    height: auto;
+    width: 100%;
+  }
+
+  @media screen and (max-width: 749px) {
+    slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__image--desktop {
+      display: none;
+    }
+
+    slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__image--mobile {
+      display: block;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__image--mobile {
+      display: none;
+    }
+
+    slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__image--desktop {
+      display: block;
+    }
+  }
+
+  slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__video-wrapper .slide__video {
+    object-fit: contain;
   }
 
   .slide__video-wrapper {

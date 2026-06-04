@@ -95,6 +95,80 @@ export class Slideshow extends Component {
     if (this.#resizeObserver) {
       this.#resizeObserver.disconnect();
     }
+
+    this.#adaptiveHeightObserver?.disconnect();
+    this.#adaptiveHeightObserver = undefined;
+
+    if (this.#adaptiveHeightMediaQueryListener) {
+      mediaQueryLarge.removeEventListener('change', this.#adaptiveHeightMediaQueryListener);
+      this.#adaptiveHeightMediaQueryListener = undefined;
+    }
+  }
+
+  get #adaptiveHeightEnabled() {
+    return this.hasAttribute('adaptive-height');
+  }
+
+  /**
+   * Sizes the slideshow container to match the active slide's rendered height.
+   */
+  #updateAdaptiveHeight() {
+    if (!this.#adaptiveHeightEnabled) return;
+
+    const { slideshowContainer, scroller } = this.refs;
+    const slide = this.slides?.[this.current];
+
+    if (!(slideshowContainer instanceof HTMLElement) || !(scroller instanceof HTMLElement) || !(slide instanceof HTMLElement)) {
+      return;
+    }
+
+    const height = Math.ceil(slide.getBoundingClientRect().height);
+
+    if (height <= 0) return;
+
+    slideshowContainer.style.height = `${height}px`;
+    scroller.style.height = `${height}px`;
+  }
+
+  #scheduleAdaptiveHeightUpdate() {
+    if (!this.#adaptiveHeightEnabled) return;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => this.#updateAdaptiveHeight());
+    });
+  }
+
+  #setupAdaptiveHeight() {
+    if (!this.#adaptiveHeightEnabled) return;
+
+    const update = () => this.#scheduleAdaptiveHeightUpdate();
+
+    this.#adaptiveHeightObserver?.disconnect();
+
+    this.#adaptiveHeightObserver = new ResizeObserver(update);
+
+    this.slides?.forEach((slide) => {
+      this.#adaptiveHeightObserver?.observe(slide);
+
+      slide.querySelectorAll('img.slide__image, .slide__video').forEach((media) => {
+        if (media instanceof HTMLImageElement && !media.complete) {
+          media.addEventListener('load', update, { once: true });
+        }
+
+        if (media instanceof HTMLVideoElement) {
+          media.addEventListener('loadedmetadata', update, { once: true });
+        }
+      });
+    });
+
+    if (this.#adaptiveHeightMediaQueryListener) {
+      mediaQueryLarge.removeEventListener('change', this.#adaptiveHeightMediaQueryListener);
+    }
+
+    this.#adaptiveHeightMediaQueryListener = update;
+    mediaQueryLarge.addEventListener('change', this.#adaptiveHeightMediaQueryListener);
+
+    update();
   }
 
   /** Indicates whether the slideshow is nested inside another slideshow. */
@@ -231,6 +305,8 @@ export class Slideshow extends Component {
         id: slide.getAttribute('slide-id'),
       })
     );
+
+    this.#scheduleAdaptiveHeightUpdate();
   }
 
   /**
@@ -427,6 +503,15 @@ export class Slideshow extends Component {
   #resizeObserver;
 
   /**
+   * ResizeObserver for adaptive-height slideshow slides
+   * @type {ResizeObserver | undefined}
+   */
+  #adaptiveHeightObserver;
+
+  /** @type {(() => void) | undefined} */
+  #adaptiveHeightMediaQueryListener;
+
+  /**
    * Setup the slideshow without controls for zero or one slides
    */
   #setupSlideshowWithoutControls() {
@@ -441,6 +526,8 @@ export class Slideshow extends Component {
     if (this.refs.slides?.[0]) {
       this.refs.slides[0].setAttribute('aria-hidden', 'false');
     }
+
+    this.#setupAdaptiveHeight();
   }
 
   /**
@@ -502,7 +589,11 @@ export class Slideshow extends Component {
         }
       });
 
-      this.#resizeObserver.observe(this.refs.slideshowContainer);
+      if (this.refs.slideshowContainer instanceof HTMLElement) {
+        this.#resizeObserver.observe(this.refs.slideshowContainer);
+      }
+
+      this.#setupAdaptiveHeight();
     });
   }
 
@@ -529,6 +620,8 @@ export class Slideshow extends Component {
         id: slide.getAttribute('slide-id'),
       })
     );
+
+    this.#scheduleAdaptiveHeightUpdate();
   };
 
   #onTransitionInit = () => {
@@ -538,6 +631,7 @@ export class Slideshow extends Component {
   #onTransitionEnd = () => {
     this.#updateVisibleSlides();
     this.removeAttribute('transitioning');
+    this.#scheduleAdaptiveHeightUpdate();
   };
 
   /**

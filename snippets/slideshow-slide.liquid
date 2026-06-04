@@ -20,6 +20,10 @@
   assign class = class | strip | strip_newlines
   assign style = style | strip | strip_newlines
 
+  if slide_size == 'adaptive'
+    assign class = class | append: ' slideshow-slide--adaptive' | strip
+  endif
+
   assign grid_template_rows = '--grid-template-rows: 50dvh 1fr;'
   assign grid_template_rows_desktop = '--grid-template-rows-desktop: 70dvh 1fr;'
 
@@ -40,19 +44,21 @@
       assign grid_template_rows = '--grid-template-rows: auto 1fr;'
       assign grid_template_rows_desktop = '--grid-template-rows-desktop: auto 1fr;'
   endcase
+
+  assign combined_style = '--slideshow-timeline: --slide-' | append: index | append: '; --product-media-fit: ' | append: media_fit | default: 'cover' | append: '; ' | append: grid_template_rows | append: ' ' | append: grid_template_rows_desktop
+  if style != blank
+    assign combined_style = combined_style | append: ' ' | append: style
+  endif
 -%}
 
 <slideshow-slide
   ref="slides[]"
   aria-hidden="{% if index == 0 %}false{% else %}true{% endif %}"
-  style="--slideshow-timeline: --slide-{{ index }}; --product-media-fit: {{ media_fit | default: 'cover' }}; {{ grid_template_rows }} {{ grid_template_rows_desktop }}"
+  style="{{ combined_style }}"
   {% if class != blank %}
     class="{{ class }}"
   {% endif %}
   {{ attributes }}
-  {% if style != blank %}
-    style="{{ style }}"
-  {% endif %}
   {% if slide_id != blank %}
     slide-id="{{ slide_id }}"
   {% endif %}
@@ -62,7 +68,6 @@
   {% if navigate_to_slide %}
     on:click="/select/{{ index }}"
   {% endif %}
-  {{ attributes }}
 >
   {{ children }}
 </slideshow-slide>
