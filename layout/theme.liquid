@@ -19,6 +19,7 @@
       blocking="render"
       id="view-transition-render-blocker"
     >
+    <script src="https://cdn.rebuyengine.com/onsite/js/rebuy.js?shop={{ shop.permanent_domain }}" async></script>
 
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
@@ -109,6 +110,8 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
+
+    {% render 'rebuy-extensions' %}
     <!--script for loyalty rewards modules starts here-->
   <script data-src="https://cdn-widgetsrepository.yotpo.com/v1/loader/owWhxRAHSfdqSsrm02DsFA" async></script>
   <!--script for loyalty rewards modules ends here-->

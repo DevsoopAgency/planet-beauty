@@ -51,6 +51,9 @@
     when 'custom'
       assign slide_min_height = '--slide-min-height: var(--custom-height-mobile, 50dvh);'
       assign slide_min_height_desktop = '--slide-min-height-desktop: var(--custom-height-desktop, 70dvh);'
+    when 'adaptive'
+      assign slide_min_height = '--slide-min-height: auto;'
+      assign slide_min_height_desktop = '--slide-min-height-desktop: auto;'
   endcase
 
   case slide_position

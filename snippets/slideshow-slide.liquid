@@ -36,6 +36,9 @@
     when 'custom'
       assign grid_template_rows = '--grid-template-rows: var(--custom-height-mobile, 50dvh) 1fr;'
       assign grid_template_rows_desktop = '--grid-template-rows-desktop: var(--custom-height-desktop, 70dvh) 1fr;'
+    when 'adaptive'
+      assign grid_template_rows = '--grid-template-rows: auto 1fr;'
+      assign grid_template_rows_desktop = '--grid-template-rows-desktop: auto 1fr;'
   endcase
 -%}
 

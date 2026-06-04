@@ -406,7 +406,7 @@
     display: inline-flex;
     padding: var(--padding-2xs) 0;
     transition: color var(--animation-speed) var(--animation-easing);
-
+    text-align: start;
     &:hover {
       color: var(--menu-child-active-font-color);
     }
@@ -523,7 +523,7 @@
     display: grid;
     grid-template-columns: subgrid;
     grid-column: span var(--menu-columns-tablet);
-    gap: var(--menu-vertical-gap) var(--menu-horizontal-gap);
+
 
     @media screen and (min-width: 990px) {
       grid-column: span var(--menu-columns-desktop);

@@ -42,6 +42,9 @@
   if section.blocks.size == 1
     assign slideshow_class = slideshow_class | append: ' slideshow--single-media'
   endif
+  if section.settings.slide_height == 'adaptive'
+    assign slideshow_class = slideshow_class | append: ' slideshow--adaptive'
+  endif
   if section.settings.display_mode == 'with_hints'
     assign slideshow_class = slideshow_class | append: ' slideshow--with-hints'
     if section.settings.full_frame_on_mobile
@@ -181,6 +184,53 @@
     height: fit-content;
     margin: 0;
   }
+
+  .slideshow--adaptive slideshow-slides {
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  .slideshow--adaptive slideshow-slide {
+    height: auto;
+    max-height: none;
+  }
+
+  .slideshow--adaptive slideshow-slide > .slide__image-container {
+    position: relative;
+    height: auto;
+    width: 100%;
+  }
+
+  .slideshow--adaptive:not(.slideshow--content-below-media) slideshow-slide > .slide__content {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slideshow--adaptive .slide__image-container > .slide__image,
+  .slideshow--adaptive .slide__image-container > .slide__video-poster {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  .slideshow--adaptive .slide__image-container > .slide__video-wrapper.slide__video-wrapper--has-aspect-ratio {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  .slideshow--adaptive .slide__image-container > .slide__video-wrapper .slide__video {
+    object-fit: contain;
+  }
+
+  .slideshow--adaptive.slideshow--content-below-media slideshow-slide {
+    grid-template-rows: auto 1fr;
+  }
 {% endstylesheet %}
 
 {%- liquid
@@ -209,6 +259,8 @@
       assign mobile_media_row = '40dvh'
     when 'custom'
       assign mobile_media_row = 'var(--custom-height-mobile, 50dvh)'
+    when 'adaptive'
+      assign mobile_media_row = 'auto'
   endcase
 -%}
 
@@ -255,7 +307,7 @@
         height: auto !important;
         margin: revert !important;
       }
-    {% elsif show_mobile_override and mobile_pos == 'on-media' %}
+    {% elsif show_mobile_override and mobile_pos == 'on-media' and section.settings.slide_height != 'adaptive' %}
       #shopify-section-{{ section.id }} slideshow-slide {
         display: block !important;
       }
@@ -398,6 +450,10 @@
         {
           "value": "auto",
           "label": "t:options.auto"
+        },
+        {
+          "value": "adaptive",
+          "label": "Adaptive"
         },
         {
           "value": "small",
