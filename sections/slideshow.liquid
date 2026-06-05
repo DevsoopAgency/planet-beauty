@@ -196,13 +196,17 @@
 
   slideshow-component.slideshow--adaptive slideshow-slides {
     min-height: 0 !important;
+    height: auto;
     align-items: flex-start;
   }
 
   slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive {
     height: auto;
     max-height: none;
-    content-visibility: visible;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive[aria-hidden='false'] {
+    height: auto !important;
   }
 {% endstylesheet %}
 

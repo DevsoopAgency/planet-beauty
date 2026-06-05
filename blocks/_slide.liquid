@@ -35,6 +35,10 @@
 
       {%- liquid
         assign loading = 'lazy'
+        assign is_adaptive_slide = false
+        if section.settings.slide_height == 'adaptive'
+          assign is_adaptive_slide = true
+        endif
 
         if block_index == 0 and section_index <= 3
           assign loading = 'eager'
@@ -60,22 +64,43 @@
             assign mobile_widths = '375, 550, 750, 1100'
             assign mobile_sizes = '(max-width: 749px) 100vw, 0vw'
           -%}
-          {{
-            mobile_image
-            | image_url: width: 1200
-            | image_tag: height: mobile_height, sizes: mobile_sizes, widths: mobile_widths, loading: loading, fetchpriority: fetchpriority, class: 'slide__image slide__image--mobile'
-          }}
-          {{
-            block_settings.image_1
-            | image_url: width: 3840
-            | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image slide__image--desktop', loading: loading, fetchpriority: fetchpriority
-          }}
+          {%- if is_adaptive_slide -%}
+            {{
+              mobile_image
+              | image_url: width: 1200
+              | image_tag: sizes: mobile_sizes, widths: mobile_widths, loading: loading, fetchpriority: fetchpriority, class: 'slide__image slide__image--mobile'
+            }}
+            {{
+              block_settings.image_1
+              | image_url: width: 3840
+              | image_tag: sizes: sizes, widths: widths, class: 'slide__image slide__image--desktop', loading: loading, fetchpriority: fetchpriority
+            }}
+          {%- else -%}
+            {{
+              mobile_image
+              | image_url: width: 1200
+              | image_tag: height: mobile_height, sizes: mobile_sizes, widths: mobile_widths, loading: loading, fetchpriority: fetchpriority, class: 'slide__image slide__image--mobile'
+            }}
+            {{
+              block_settings.image_1
+              | image_url: width: 3840
+              | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image slide__image--desktop', loading: loading, fetchpriority: fetchpriority
+            }}
+          {%- endif -%}
         {%- else -%}
-          {{
-            block_settings.image_1
-            | image_url: width: 3840
-            | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image', loading: loading, fetchpriority: fetchpriority
-          }}
+          {%- if is_adaptive_slide -%}
+            {{
+              block_settings.image_1
+              | image_url: width: 3840
+              | image_tag: sizes: sizes, widths: widths, class: 'slide__image', loading: loading, fetchpriority: fetchpriority
+            }}
+          {%- else -%}
+            {{
+              block_settings.image_1
+              | image_url: width: 3840
+              | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image', loading: loading, fetchpriority: fetchpriority
+            }}
+          {%- endif -%}
         {%- endif -%}
       {%- else -%}
         {%- liquid
@@ -255,7 +280,29 @@
     display: block;
     height: auto;
     max-height: none;
+  }
+
+  slideshow-component[adaptive-height] slideshow-slide.slideshow-slide--adaptive[aria-hidden='false'] {
     content-visibility: visible;
+  }
+
+  slideshow-component[adaptive-height] slideshow-slide.slideshow-slide--adaptive:not([aria-hidden='false']) {
+    content-visibility: hidden;
+    contain-intrinsic-size: 0 0;
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  slideshow-component[adaptive-height]:not(.slideshow--content-below-media)
+    slideshow-slide.slideshow-slide--adaptive
+    > .slide__content.spacing-style {
+    --padding-block-start: 0px;
+    --padding-block-end: 0px;
+    --padding-inline-start: 0px;
+    --padding-inline-end: 0px;
+    padding: 0;
   }
 
   slideshow-slide.slideshow-slide--adaptive > .slide__image-container {

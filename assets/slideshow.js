@@ -110,6 +110,47 @@ export class Slideshow extends Component {
   }
 
   /**
+   * Returns the rendered media height for an adaptive slide.
+   * Uses the visible image/video so inactive slides cannot inflate the active slide.
+   *
+   * @param {HTMLElement} slide
+   * @returns {number}
+   */
+  #getAdaptiveSlideHeight(slide) {
+    const imageContainer = slide.querySelector('.slide__image-container');
+    if (!(imageContainer instanceof HTMLElement)) return 0;
+
+    const containerWidth = imageContainer.clientWidth;
+    let height = 0;
+
+    imageContainer.querySelectorAll('img.slide__image, .slide__video-poster, .slide__video').forEach((media) => {
+      if (!(media instanceof HTMLElement)) return;
+
+      const style = getComputedStyle(media);
+      if (style.display === 'none' || style.visibility === 'hidden') return;
+
+      if (media instanceof HTMLImageElement && media.complete && media.naturalWidth > 0 && containerWidth > 0) {
+        const scaledHeight = (containerWidth / media.naturalWidth) * media.naturalHeight;
+        if (scaledHeight > height) height = scaledHeight;
+        return;
+      }
+
+      if (media instanceof HTMLVideoElement && media.videoWidth > 0 && containerWidth > 0) {
+        const scaledHeight = (containerWidth / media.videoWidth) * media.videoHeight;
+        if (scaledHeight > height) height = scaledHeight;
+        return;
+      }
+
+      const rect = media.getBoundingClientRect();
+      if (rect.height > height) height = rect.height;
+    });
+
+    if (height > 0) return Math.ceil(height);
+
+    return Math.ceil(imageContainer.getBoundingClientRect().height);
+  }
+
+  /**
    * Sizes the slideshow container to match the active slide's rendered height.
    */
   #updateAdaptiveHeight() {
@@ -122,7 +163,10 @@ export class Slideshow extends Component {
       return;
     }
 
-    const height = Math.ceil(slide.getBoundingClientRect().height);
+    slideshowContainer.style.height = 'auto';
+    scroller.style.height = 'auto';
+
+    const height = this.#getAdaptiveSlideHeight(slide);
 
     if (height <= 0) return;
 
@@ -138,28 +182,42 @@ export class Slideshow extends Component {
     });
   }
 
+  /**
+   * Observes only the active slide so other slides cannot affect adaptive height.
+   */
+  #observeActiveAdaptiveSlide() {
+    if (!this.#adaptiveHeightEnabled) return;
+
+    const update = () => this.#scheduleAdaptiveHeightUpdate();
+    const slide = this.slides?.[this.current];
+
+    this.#adaptiveHeightObserver?.disconnect();
+    this.#adaptiveHeightObserver = new ResizeObserver(update);
+
+    if (!(slide instanceof HTMLElement)) return;
+
+    this.#adaptiveHeightObserver.observe(slide);
+
+    const imageContainer = slide.querySelector('.slide__image-container');
+    if (imageContainer instanceof HTMLElement) {
+      this.#adaptiveHeightObserver.observe(imageContainer);
+    }
+
+    slide.querySelectorAll('img.slide__image, .slide__video, .slide__video-poster').forEach((media) => {
+      if (media instanceof HTMLImageElement && !media.complete) {
+        media.addEventListener('load', update, { once: true });
+      }
+
+      if (media instanceof HTMLVideoElement) {
+        media.addEventListener('loadedmetadata', update, { once: true });
+      }
+    });
+  }
+
   #setupAdaptiveHeight() {
     if (!this.#adaptiveHeightEnabled) return;
 
     const update = () => this.#scheduleAdaptiveHeightUpdate();
-
-    this.#adaptiveHeightObserver?.disconnect();
-
-    this.#adaptiveHeightObserver = new ResizeObserver(update);
-
-    this.slides?.forEach((slide) => {
-      this.#adaptiveHeightObserver?.observe(slide);
-
-      slide.querySelectorAll('img.slide__image, .slide__video').forEach((media) => {
-        if (media instanceof HTMLImageElement && !media.complete) {
-          media.addEventListener('load', update, { once: true });
-        }
-
-        if (media instanceof HTMLVideoElement) {
-          media.addEventListener('loadedmetadata', update, { once: true });
-        }
-      });
-    });
 
     if (this.#adaptiveHeightMediaQueryListener) {
       mediaQueryLarge.removeEventListener('change', this.#adaptiveHeightMediaQueryListener);
@@ -168,6 +226,7 @@ export class Slideshow extends Component {
     this.#adaptiveHeightMediaQueryListener = update;
     mediaQueryLarge.addEventListener('change', this.#adaptiveHeightMediaQueryListener);
 
+    this.#observeActiveAdaptiveSlide();
     update();
   }
 
@@ -306,6 +365,7 @@ export class Slideshow extends Component {
       })
     );
 
+    this.#observeActiveAdaptiveSlide();
     this.#scheduleAdaptiveHeightUpdate();
   }
 

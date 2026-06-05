@@ -10,7 +10,7 @@
 {%- liquid
   assign scale_min = 20
   assign keys = 'padding-block-start,padding-block-end,padding-inline-start,padding-inline-end' | split: ','
-  assign mobile_keys = 'padding-block-start-mobile,padding-block-end-mobile' | split: ','
+  assign mobile_keys = 'padding-block-start-mobile,padding-block-end-mobile,padding-inline-start-mobile,padding-inline-end-mobile' | split: ','
 
   for key in keys
     assign value = settings[key]

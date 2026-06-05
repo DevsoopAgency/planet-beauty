@@ -2234,9 +2234,21 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
 .section.spacing-style,
 .slideshow-section.spacing-style {
   padding-block: calc(var(--padding-block-start-mobile, var(--padding-block-start)) + var(--section-top-offset, 0px)) var(--padding-block-end-mobile, var(--padding-block-end));
+  padding-inline: var(--padding-inline-start-mobile, var(--padding-inline-start)) var(--padding-inline-end-mobile, var(--padding-inline-end));
 
   @media screen and (min-width: 750px) {
     padding-block: calc(var(--padding-block-start) + var(--section-top-offset, 0px)) var(--padding-block-end);
+    padding-inline: var(--padding-inline-start) var(--padding-inline-end);
+  }
+}
+
+.group-block.spacing-style {
+  padding-block: var(--padding-block-start-mobile, var(--padding-block-start)) var(--padding-block-end-mobile, var(--padding-block-end));
+  padding-inline: var(--padding-inline-start-mobile, var(--padding-inline-start)) var(--padding-inline-end-mobile, var(--padding-inline-end));
+
+  @media screen and (min-width: 750px) {
+    padding-block: var(--padding-block-start) var(--padding-block-end);
+    padding-inline: var(--padding-inline-start) var(--padding-inline-end);
   }
 }
 
