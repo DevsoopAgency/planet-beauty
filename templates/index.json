@@ -17,6 +17,7 @@
           "settings": {
             "media_type_1": "image",
             "image_1": "shopify://shop_images/Group_7.png",
+            "mobile_image_1": "shopify://shop_images/Group_14.png",
             "video_aspect_ratio": "auto",
             "video_aspect_ratio_mobile": "inherit",
             "content_direction": "column",
