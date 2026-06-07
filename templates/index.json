@@ -683,6 +683,7 @@
           "bath-body",
           "accessories"
         ],
+        "use_metafield_image": true,
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "columns": 5,

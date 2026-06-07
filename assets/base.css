@@ -2514,6 +2514,13 @@ form.payment-terms {
   padding-inline: var(--padding-inline-start) var(--padding-inline-end);
   margin-block: var(--margin-block-start) var(--margin-block-end);
   margin-inline: var(--margin-inline-start) var(--margin-inline-end);
+
+  @media screen and (max-width: 749px) {
+    padding-block: calc(var(--padding-block-start-mobile, var(--padding-block-start)) + var(--section-top-offset, 0px))
+      var(--padding-block-end-mobile, var(--padding-block-end));
+    padding-inline: var(--padding-inline-start-mobile, var(--padding-inline-start))
+      var(--padding-inline-end-mobile, var(--padding-inline-end));
+  }
 }
 
 /* Size style */

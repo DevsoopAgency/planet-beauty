@@ -33,4 +33,17 @@
       echo ';'
     endif
   endfor
+
+  for key in keys
+    assign mobile_key = key | append: '-mobile'
+    assign mobile_value = settings[mobile_key]
+
+    if mobile_value != blank
+      echo '--'
+      echo mobile_key
+      echo ': '
+      echo mobile_value
+      echo 'px;'
+    endif
+  endfor
 -%}
