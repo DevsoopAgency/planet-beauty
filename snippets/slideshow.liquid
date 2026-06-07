@@ -48,6 +48,12 @@
     when 'large'
       assign slide_min_height = slide_min_height | replace: 'auto', '25rem'
       assign slide_min_height_desktop = slide_min_height_desktop | replace: 'auto', '45rem'
+    when 'custom'
+      assign slide_min_height = '--slide-min-height: var(--custom-height-mobile, 50dvh);'
+      assign slide_min_height_desktop = '--slide-min-height-desktop: var(--custom-height-desktop, 70dvh);'
+    when 'adaptive'
+      assign slide_min_height = '--slide-min-height: auto;'
+      assign slide_min_height_desktop = '--slide-min-height-desktop: auto;'
   endcase
 
   case slide_position
@@ -94,7 +100,6 @@
   {% unless infinite == false %}
     infinite
   {% endunless %}
-
   {{ attributes }}
 >
   {% if header != blank %}
@@ -120,4 +125,12 @@
   {{ controls }}
 </slideshow-component>
 
-{% render 'slideshow-styles' %}
+{% stylesheet %}
+  slideshow-slides {
+    align-items: var(--slideshow-align-items, normal);
+  }
+
+  .slideshow--stretch-content slideshow-slides > * {
+    height: auto;
+  }
+{% endstylesheet %}

@@ -36,8 +36,14 @@
   endif
 
   assign slideshow_class = 'slideshow--content-' | append: section.settings.content_position
+  if section.settings.content_position_mobile != blank and section.settings.content_position_mobile != section.settings.content_position
+    assign slideshow_class = slideshow_class | append: ' slideshow--content-mobile-' | append: section.settings.content_position_mobile
+  endif
   if section.blocks.size == 1
     assign slideshow_class = slideshow_class | append: ' slideshow--single-media'
+  endif
+  if section.settings.slide_height == 'adaptive'
+    assign slideshow_class = slideshow_class | append: ' slideshow--adaptive'
   endif
   if section.settings.display_mode == 'with_hints'
     assign slideshow_class = slideshow_class | append: ' slideshow--with-hints'
@@ -64,8 +70,14 @@
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
   class="slideshow-section spacing-style section {{ section_width_class }} color-{{ section.settings.color_scheme }} disable-section-top-offset"
-  style="{% render 'spacing-padding', settings: section.settings %}; --slideshow-gap: {{ section.settings.slideshow_gap }}px;{% if rounded_slide_corners %} --corner-radius: {{ section.settings.corner_radius }}px;{% endif %}"
+  style="{% render 'spacing-padding', settings: section.settings %}; --slideshow-gap: {{ section.settings.slideshow_gap }}px;{% if rounded_slide_corners %} --corner-radius: {{ section.settings.corner_radius }}px;{% endif %}{% if section.settings.slide_height == 'custom' %} --custom-height-mobile: {{ section.settings.custom_height_mobile }}dvh; --custom-height-desktop: {{ section.settings.custom_height_desktop }}dvh;{% endif %}"
 >
+  {%- liquid
+    assign slideshow_style = ''
+    if section.settings.slide_height == 'custom'
+      assign slideshow_style = '--custom-height-mobile: ' | append: section.settings.custom_height_mobile | append: 'dvh; --custom-height-desktop: ' | append: section.settings.custom_height_desktop | append: 'dvh;'
+    endif
+  -%}
   <h2 class="visually-hidden">{{ 'accessibility.slideshow' | t }}</h2>
   {% render 'slideshow',
     class: slideshow_class,
@@ -77,7 +89,8 @@
     autoplay_speed: section.settings.autoplay_speed,
     slides: slides,
     slide_count: section.blocks.size,
-    slide_size: section.settings.slide_height
+    slide_size: section.settings.slide_height,
+    style: slideshow_style
   %}
 </div>
 
@@ -118,7 +131,6 @@
       opacity: 0;
       pointer-events: none;
     }
-
     @media screen and (max-width: 749px) {
       .slideshow--with-hints--mobile-with-hints slideshow-slides {
         padding-inline: var(--page-margin);
@@ -167,7 +179,168 @@
       }
     }
   }
+  .slideshow-section .group-block-content{
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    margin: 0;
+  }
+
+  slideshow-component.slideshow--adaptive {
+    height: auto;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-container,
+  slideshow-component.slideshow--adaptive slideshow-slides {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-slides {
+    align-items: flex-start;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-slide {
+    content-visibility: visible;
+    max-height: none;
+  }
 {% endstylesheet %}
+
+{%- liquid
+  assign mobile_pos = section.settings.content_position_mobile
+  assign desktop_pos = section.settings.content_position
+  assign show_mobile_override = false
+  assign mobile_below_media = false
+
+  if mobile_pos == 'on-media' or mobile_pos == 'below-media'
+    if mobile_pos != desktop_pos
+      assign show_mobile_override = true
+    endif
+  endif
+
+  if mobile_pos == 'below-media' or mobile_pos == '' and desktop_pos == 'below-media'
+    assign mobile_below_media = true
+  endif
+
+  assign mobile_media_row = '35dvh'
+  case section.settings.slide_height
+    when 'auto'
+      assign mobile_media_row = '50dvh'
+    when 'small'
+      assign mobile_media_row = '30dvh'
+    when 'large'
+      assign mobile_media_row = '40dvh'
+    when 'custom'
+      assign mobile_media_row = 'var(--custom-height-mobile, 50dvh)'
+    when 'adaptive'
+      assign mobile_media_row = 'auto'
+  endcase
+-%}
+
+<style>
+  @media screen and (max-width: 749px) {
+    {% if mobile_below_media and section.settings.slide_height != 'adaptive' %}
+      #shopify-section-{{ section.id }} .slideshow-section slideshow-slides {
+        align-items: flex-start !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+      }
+
+      #shopify-section-{{ section.id }} slideshow-slide {
+        display: grid !important;
+        grid-template-rows: {{ mobile_media_row }} minmax(min-content, auto) !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
+
+      #shopify-section-{{ section.id }} slideshow-slide .slide__image-container {
+        position: static !important;
+        grid-row: 1 !important;
+        height: {{ mobile_media_row }} !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+      }
+
+      #shopify-section-{{ section.id }} slideshow-slide .slide__content {
+        position: static !important;
+        grid-row: 2 !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      #shopify-section-{{ section.id }} slideshow-slide .slide__content .group-block-content {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        width: auto !important;
+        height: auto !important;
+        margin: revert !important;
+      }
+    {% elsif show_mobile_override and mobile_pos == 'on-media' and section.settings.slide_height != 'adaptive' %}
+      #shopify-section-{{ section.id }} slideshow-slide {
+        display: block !important;
+      }
+
+      #shopify-section-{{ section.id }} slideshow-slide .slide__image-container {
+        position: absolute !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      #shopify-section-{{ section.id }} slideshow-slide .slide__content {
+        position: relative !important;
+        height: 100% !important;
+        z-index: 1 !important;
+      }
+    {% endif %}
+  }
+
+  {% if desktop_pos == 'below-media' %}
+    @media screen and (min-width: 750px) {
+      #shopify-section-{{ section.id }} slideshow-slide .slide__content .group-block-content {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        width: auto !important;
+        height: auto !important;
+        margin: revert !important;
+      }
+    }
+  {% endif %}
+</style>
+
+{% if section.settings.slide_height == 'custom' %}
+  {% style %}
+    .shopify-section-{{ section.id }} .slideshow-section slideshow-slides {
+      min-height: var(--custom-height-mobile, 50dvh);
+    }
+
+    @media screen and (min-width: 750px) {
+      .shopify-section-{{ section.id }} .slideshow-section slideshow-slides {
+        min-height: var(--custom-height-desktop, 70dvh);
+      }
+    }
+
+    .shopify-section-{{ section.id }} .slideshow-section .slideshow--content-below-media slideshow-slide {
+      --grid-template-rows: var(--custom-height-mobile, 50dvh) 1fr;
+    }
+
+    @media screen and (min-width: 750px) {
+      .shopify-section-{{ section.id }} .slideshow-section .slideshow--content-below-media slideshow-slide {
+        --grid-template-rows-desktop: var(--custom-height-desktop, 70dvh) 1fr;
+      }
+    }
+  {% endstyle %}
+{% endif %}
 
 {% schema %}
 {
@@ -253,6 +426,10 @@
           "label": "t:options.auto"
         },
         {
+          "value": "adaptive",
+          "label": "Adaptive"
+        },
+        {
           "value": "small",
           "label": "t:options.small"
         },
@@ -263,10 +440,36 @@
         {
           "value": "large",
           "label": "t:options.large"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
         }
       ],
       "default": "medium",
       "label": "t:settings.media_height"
+    },
+    {
+      "type": "range",
+      "id": "custom_height_mobile",
+      "label": "Custom height (mobile)",
+      "min": 25,
+      "max": 100,
+      "step": 5,
+      "unit": "dvh",
+      "default": 50,
+      "visible_if": "{{ section.settings.slide_height == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "custom_height_desktop",
+      "label": "Custom height (desktop)",
+      "min": 25,
+      "max": 100,
+      "step": 5,
+      "unit": "dvh",
+      "default": 70,
+      "visible_if": "{{ section.settings.slide_height == 'custom' }}"
     },
     {
       "type": "select",
@@ -283,6 +486,27 @@
         }
       ],
       "default": "on-media"
+    },
+    {
+      "type": "select",
+      "id": "content_position_mobile",
+      "label": "Content position (mobile)",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "on-media",
+          "label": "t:options.on_media"
+        },
+        {
+          "value": "below-media",
+          "label": "t:options.below_media"
+        }
+      ],
+      "default": "",
+      "info": "Override content position for mobile devices. Leave as 'Same as desktop' to use the desktop setting."
     },
     {
       "type": "color_scheme",
@@ -404,6 +628,30 @@
       "step": 1,
       "unit": "px",
       "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Mobile padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
     }
   ],
   "presets": [
@@ -427,7 +675,7 @@
               "type": "text",
               "name": "t:names.heading",
               "settings": {
-                "text": "t:html_defaults.new_arrivals_h3"
+                "text": "t:html_defaults.new_arrivals_h2"
               }
             },
             "text": {
@@ -505,7 +753,7 @@
               "type": "text",
               "name": "t:names.heading",
               "settings": {
-                "text": "t:html_defaults.new_arrivals_h3"
+                "text": "t:html_defaults.new_arrivals_h2"
               }
             },
             "text": {

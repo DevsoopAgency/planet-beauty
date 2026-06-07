@@ -4,31 +4,21 @@
 {%- assign block_index = section.blocks | find_index: 'id', block.id -%}
 {%- assign section_index = section.index -%}
 
+{% liquid
+  assign preview_image = block_settings.image_1
+  assign mobile_image = block_settings.mobile_image_1
+  if block_settings.media_type_1 == 'video'
+    assign preview_image = block_settings.video_1.preview_image
+  endif
+%}
+
 {% capture children %}
   {% liquid
-    assign preview_image = block_settings.image_1
-    if block_settings.media_type_1 == 'video'
-      assign preview_image = block_settings.video_1.preview_image
-    endif
-
     assign rounded_image_corners = false
     if block_settings.inherit_color_scheme == true or block_settings.inherit_color_scheme == false and section.settings.color_scheme.settings.background.rgb == block_settings.color_scheme.settings.background.rgb
       assign rounded_image_corners = true
     endif
   %}
-  {% if section.settings.slide_height == 'adapt_image' and block_index == 0 and preview_image != blank %}
-    {%
-      # Great example of why it can be helpful for a section to be able to read the settings of its direct child blocks.
-      # In this case, we want the section to be able to read the image aspect ratio of the first slide and apply it to the slideshow slides and slides.
-    %}
-    {% style %}
-      .shopify-section-{{ section.id }} slideshow-slides,
-      .shopify-section-{{ section.id }} slideshow-slide {
-        min-height: {{ 1 | divided_by: preview_image.aspect_ratio | times: 100 }}vw;
-      }
-    {% endstyle %}
-  {% endif %}
-
   <div class="slide__image-container{% if rounded_image_corners %} slide__image-container--rounded{% endif %}">
     {%- if block_settings.toggle_overlay -%}
       {% render 'overlay', settings: block_settings %}
@@ -45,6 +35,10 @@
 
       {%- liquid
         assign loading = 'lazy'
+        assign is_adaptive_slide = false
+        if section.settings.slide_height == 'adaptive'
+          assign is_adaptive_slide = true
+        endif
 
         if block_index == 0 and section_index <= 3
           assign loading = 'eager'
@@ -58,12 +52,87 @@
       -%}
 
       {%- if block_settings.media_type_1 == 'image' -%}
-        {{
-          block_settings.image_1
-          | image_url: width: 3840
-          | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image', loading: loading, fetchpriority: fetchpriority
-        }}
+        {%- liquid
+          assign use_separate_mobile_image = false
+          if mobile_image != blank
+            assign mobile_image_src = mobile_image | image_url: width: 10
+            assign desktop_image_src = block_settings.image_1 | image_url: width: 10
+            if mobile_image_src != desktop_image_src
+              assign use_separate_mobile_image = true
+            endif
+          endif
+        -%}
+        {%- if use_separate_mobile_image -%}
+          {%- liquid
+            assign mobile_widths = '375, 550, 750, 1100'
+            assign mobile_widths_array = mobile_widths | split: ', '
+            assign mobile_sizes = '100vw'
+          -%}
+          <picture class="slide__picture">
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {%- for mobile_width in mobile_widths_array -%}
+                  {{ mobile_image | image_url: width: mobile_width }} {{ mobile_width }}w{% unless forloop.last %},{% endunless %}
+                {%- endfor -%}
+              "
+              sizes="{{ mobile_sizes }}"
+              width="{{ mobile_image.width }}"
+              height="{{ mobile_image.height }}"
+            >
+            {{
+              block_settings.image_1
+              | image_url: width: 3840
+              | image_tag:
+                width: block_settings.image_1.width,
+                height: height,
+                sizes: sizes,
+                widths: widths,
+                class: 'slide__image',
+                loading: loading,
+                fetchpriority: fetchpriority
+            }}
+          </picture>
+        {%- else -%}
+          {%- if is_adaptive_slide -%}
+            {{
+              block_settings.image_1
+              | image_url: width: 3840
+              | image_tag:
+                width: block_settings.image_1.width,
+                height: height,
+                sizes: sizes,
+                widths: widths,
+                class: 'slide__image',
+                loading: loading,
+                fetchpriority: fetchpriority
+            }}
+          {%- else -%}
+            {{
+              block_settings.image_1
+              | image_url: width: 3840
+              | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image', loading: loading, fetchpriority: fetchpriority
+            }}
+          {%- endif -%}
+        {%- endif -%}
       {%- else -%}
+        {%- liquid
+          assign video_aspect_ratio = block_settings.video_aspect_ratio | default: 'auto'
+          assign video_aspect_ratio_mobile = block_settings.video_aspect_ratio_mobile | default: 'inherit'
+          if video_aspect_ratio_mobile == 'inherit'
+            assign video_aspect_ratio_mobile = video_aspect_ratio
+          endif
+          if block_settings.video_1.preview_image and video_aspect_ratio == 'auto'
+            assign video_aspect_ratio = block_settings.video_1.aspect_ratio | default: 'auto'
+            if video_aspect_ratio_mobile == 'inherit'
+              assign video_aspect_ratio_mobile = video_aspect_ratio
+            endif
+          endif
+          assign video_wrapper_class = 'slide__video-wrapper'
+          if video_aspect_ratio != 'auto'
+            assign video_wrapper_class = video_wrapper_class | append: ' slide__video-wrapper--has-aspect-ratio'
+          endif
+        -%}
         {%- if block_settings.video_1.preview_image -%}
 
           {{
@@ -78,10 +147,12 @@
               fetchpriority: fetchpriority
           }}
         {%- endif -%}
-        {{
-          block_settings.video_1
-          | video_tag: poster: nil, autoplay: true, loop: true, controls: false, muted: true, class: 'slide__video'
-        }}
+        <div class="{{ video_wrapper_class }}" style="--video-aspect-ratio-desktop: {{ video_aspect_ratio }}; --video-aspect-ratio-mobile: {{ video_aspect_ratio_mobile }};">
+          {{
+            block_settings.video_1
+            | video_tag: poster: nil, autoplay: true, loop: true, controls: false, muted: true, class: 'slide__video'
+          }}
+        </div>
       {%- endif -%}
     {%- else -%}
       {%- liquid
@@ -92,8 +163,20 @@
       {{ placeholder_name | placeholder_svg_tag: 'slide__image' }}
     {%- endif -%}
   </div>
+  {%- liquid
+    assign color_classes = ''
+    if block_settings.inherit_color_scheme == false
+      assign desktop_scheme_id = block_settings.color_scheme.id | default: block_settings.color_scheme
+      assign mobile_scheme_id = block_settings.color_scheme_mobile.id | default: block_settings.color_scheme_mobile
+      if mobile_scheme_id != blank and mobile_scheme_id != desktop_scheme_id
+        assign color_classes = ' color-' | append: desktop_scheme_id | append: ' color-' | append: mobile_scheme_id | append: ' slide__content--mobile-scheme'
+      else
+        assign color_classes = ' color-' | append: desktop_scheme_id
+      endif
+    endif
+  -%}
   <div
-    class="spacing-style slide__content{% if block_settings.inherit_color_scheme == false %} color-{{ block_settings.color_scheme }}{% endif %}{% if preview_image or block_settings.toggle_overlay %} background-transparent{% endif %}"
+    class="spacing-style slide__content{{ color_classes }}{% if preview_image or block_settings.toggle_overlay %} background-transparent{% endif %}"
     style="{% render 'spacing-style', settings: block_settings %}"
     {{ block.shopify_attributes }}
   >
@@ -102,25 +185,32 @@
       layout-panel-flex
       layout-panel-flex--{{ block_settings.content_direction }}
       {% if block_settings.vertical_on_mobile %}mobile-column{% endif %}"
-      style="{% render 'layout-panel-style', settings: block_settings %}"
+      style="{% render 'layout-panel-style', settings: block_settings %}{% if block_settings.content_position_x != blank or block_settings.content_position_y != blank %}{% liquid
+        assign pos_x = block_settings.content_position_x | default: 50
+        assign pos_y = block_settings.content_position_y | default: 50
+        assign translate_x = pos_x | times: -1 | append: '%'
+        assign translate_y = pos_y | times: -1 | append: '%'
+      %} left: {{ pos_x }}%; top: {{ pos_y }}%; transform: translate({{ translate_x }}, {{ translate_y }});{% endif %}"
     >
       {% content_for 'blocks' %}
     </div>
   </div>
 {% endcapture %}
 
-{%- capture class -%}
-  {%- if block_settings.inherit_color_scheme == false -%}
-    color-{{ block_settings.color_scheme }}
-  {%- endif -%}
-{%- endcapture -%}
+{%- liquid
+  assign slide_media_fit = 'cover'
+  if section.settings.slide_height == 'adaptive'
+    assign slide_media_fit = 'contain'
+  endif
+-%}
 
 {% render 'slideshow-slide',
   index: block_index,
-  class: class,
   children: children,
   attributes: block.shopify_attributes,
   slide_size: section.settings.slide_height,
+  slide_id: block.id,
+  media_fit: slide_media_fit,
   navigate_to_slide: true
 %}
 
@@ -129,17 +219,6 @@
     height: 100%;
     position: relative;
     z-index: var(--layer-flat);
-
-    @supports (animation-timeline: auto) {
-      opacity: 0;
-      animation: slide-reveal both linear;
-      animation-timeline: var(--slideshow-timeline);
-    }
-
-    @media (prefers-reduced-motion) {
-      opacity: 1;
-      animation: none;
-    }
   }
 
   .slide__content > * {
@@ -150,17 +229,25 @@
     background-color: transparent;
   }
 
-  slideshow-slide > .slide__image-container {
+  slideshow-slide:not(.slideshow-slide--adaptive) > .slide__image-container {
     display: flex;
     width: 100%;
     height: 100%;
     overflow: hidden;
     position: absolute;
+    align-items: center;
+    justify-content: center;
   }
 
-  .slide__image-container > .slide__image,
-  .slide__image-container > .slide__video,
-  .slide__image-container > .slide__video-poster {
+  slideshow-slide:not(.slideshow-slide--adaptive) .slide__image-container > .slide__picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  slideshow-slide:not(.slideshow-slide--adaptive) .slide__image-container > .slide__image,
+  slideshow-slide:not(.slideshow-slide--adaptive) .slide__image-container > .slide__picture > .slide__image,
+  slideshow-slide:not(.slideshow-slide--adaptive) .slide__image-container > .slide__video-poster {
     position: relative;
     width: 100%;
     height: 100%;
@@ -172,17 +259,309 @@
     position: absolute;
   }
 
-  /*
-   * Force Safari to recalculate the timeline state on timeline refresh (after loop)
-   */
-  slideshow-component[refreshing-timeline] .slide__content {
-    animation: none;
+  .slide__image-container > .slide__video-wrapper {
+    width: 100%;
+    max-width: 100%;
   }
 
-  slideshow-slide .slide__image-container--rounded {
-    border-radius: var(--corner-radius, 0);
+  slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    height: auto;
+    max-height: none;
+    background: transparent;
+    content-visibility: visible;
+    overflow: visible;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive > .slide__image-container {
+    position: relative;
+    display: block;
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__picture {
+    display: block;
+    width: 100%;
+    height: auto;
+    line-height: 0;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__image,
+  slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__picture > .slide__image,
+  slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__video-poster {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive > .slide__content {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: transparent !important;
+    pointer-events: none;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-slide.slideshow-slide--adaptive > .slide__content * {
+    pointer-events: auto;
+  }
+
+  .slideshow--content-below-media slideshow-slide.slideshow-slide--adaptive {
+    display: grid;
+    grid-template-rows: auto minmax(min-content, auto);
+  }
+
+  .slideshow--content-below-media slideshow-slide.slideshow-slide--adaptive > .slide__image-container,
+  .slideshow--content-below-media slideshow-slide.slideshow-slide--adaptive > .slide__content {
+    position: static;
+    grid-column: auto;
+    grid-row: auto;
+    height: auto;
+    width: 100%;
+  }
+
+  slideshow-slide.slideshow-slide--adaptive .slide__image-container > .slide__video-wrapper .slide__video {
+    object-fit: contain;
+  }
+
+  .slide__video-wrapper {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    margin: auto;
+    height: 100%;
+  }
+
+  /* When aspect-ratio is set (not auto), use it */
+  .slide__video-wrapper--has-aspect-ratio {
+    height: auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .slide__video-wrapper--has-aspect-ratio {
+      aspect-ratio: var(--video-aspect-ratio-mobile, var(--video-aspect-ratio-desktop));
+      max-height: 100%;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .slide__video-wrapper--has-aspect-ratio {
+      aspect-ratio: var(--video-aspect-ratio-desktop);
+      max-height: 100%;
+    }
+  }
+
+  .slide__video-wrapper .slide__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
   }
 {% endstylesheet %}
+
+{%- liquid
+  assign desktop_scheme_id = block_settings.color_scheme.id | default: block_settings.color_scheme
+  assign mobile_scheme_id = block_settings.color_scheme_mobile.id | default: block_settings.color_scheme_mobile
+  
+  if block_settings.inherit_color_scheme == false and mobile_scheme_id != blank and mobile_scheme_id != desktop_scheme_id
+    assign mobile_scheme = mobile_scheme_id
+    assign desktop_scheme = desktop_scheme_id
+    
+    # Find both color scheme objects
+    for scheme in settings.color_schemes
+      if scheme.id == desktop_scheme
+        assign desktop_scheme_obj = scheme
+      endif
+      if scheme.id == mobile_scheme
+        assign mobile_scheme_obj = scheme
+      endif
+    endfor
+  endif
+-%}
+{%- if mobile_scheme and desktop_scheme_obj and mobile_scheme_obj -%}
+  {% style %}
+    /* Mobile color scheme override - applies mobile color scheme on mobile devices */
+    /* On mobile, ensure mobile color scheme takes precedence */
+    @media screen and (max-width: 749px) {
+      slideshow-slide.slide__content--mobile-scheme.color-{{ desktop_scheme }}.color-{{ mobile_scheme }},
+      .slide__content.slide__content--mobile-scheme.color-{{ desktop_scheme }}.color-{{ mobile_scheme }},
+      .slide__content.slide__content--mobile-scheme.color-{{ desktop_scheme }}.color-{{ mobile_scheme }} * {
+        {%- assign background_brightness = mobile_scheme_obj.settings.background | color_brightness -%}
+        {%- if background_brightness < 64 -%}
+          {%- assign opacity_5_15 = 0.15 -%}
+          {%- assign opacity_10_25 = 0.25 -%}
+          {%- assign opacity_35_55 = 0.55 -%}
+          {%- assign opacity_40_60 = 0.60 -%}
+          {%- assign opacity_30_60 = 0.60 -%}
+        {%- else -%}
+          {%- assign opacity_5_15 = 0.05 -%}
+          {%- assign opacity_10_25 = 0.1 -%}
+          {%- assign opacity_35_55 = 0.35 -%}
+          {%- assign opacity_40_60 = 0.40 -%}
+          {%- assign opacity_30_60 = 0.30 -%}
+        {%- endif -%}
+        --color-background: rgb({{ mobile_scheme_obj.settings.background.rgba }});
+        --color-background-rgb: {{ mobile_scheme_obj.settings.background.rgb }};
+        background-color: rgb({{ mobile_scheme_obj.settings.background.rgba }});
+        --opacity-5-15: {{ opacity_5_15 }};
+        --opacity-10-25: {{ opacity_10_25 }};
+        --opacity-35-55: {{ opacity_35_55 }};
+        --opacity-40-60: {{ opacity_40_60 }};
+        --opacity-30-60: {{ opacity_30_60 }};
+        --color-foreground: rgb({{ mobile_scheme_obj.settings.foreground.rgba }});
+        --color-foreground-rgb: {{ mobile_scheme_obj.settings.foreground.rgb }};
+        --color-foreground-heading: rgb({{ mobile_scheme_obj.settings.foreground_heading.rgba }});
+        --color-foreground-heading-rgb: {{ mobile_scheme_obj.settings.foreground_heading.rgb }};
+        --color-primary: rgb({{ mobile_scheme_obj.settings.primary.rgba }});
+        --color-primary-rgb: {{ mobile_scheme_obj.settings.primary.rgb }};
+        --color-primary-hover: rgb({{ mobile_scheme_obj.settings.primary_hover.rgba }});
+        --color-primary-hover-rgb: {{ mobile_scheme_obj.settings.primary_hover.rgb }};
+        --color-border: rgb({{ mobile_scheme_obj.settings.border.rgba }});
+        --color-border-rgb: {{ mobile_scheme_obj.settings.border.rgb }};
+        --color-shadow: rgb({{ mobile_scheme_obj.settings.shadow.rgba }});
+        --color-shadow-rgb: {{ mobile_scheme_obj.settings.shadow.rgb }};
+        --color-primary-button-text: rgb({{ mobile_scheme_obj.settings.primary_button_text.rgba }});
+        --color-primary-button-background: rgb({{ mobile_scheme_obj.settings.primary_button_background.rgba }});
+        --color-primary-button-border: rgb({{ mobile_scheme_obj.settings.primary_button_border.rgba }});
+        --color-primary-button-hover-text: rgb({{ mobile_scheme_obj.settings.primary_button_hover_text.rgba }});
+        --color-primary-button-hover-background: rgb({{ mobile_scheme_obj.settings.primary_button_hover_background.rgba }});
+        --color-primary-button-hover-border: rgb({{ mobile_scheme_obj.settings.primary_button_hover_border.rgba }});
+        --color-secondary-button-text: rgb({{ mobile_scheme_obj.settings.secondary_button_text.rgba }});
+        --color-secondary-button-background: rgb({{ mobile_scheme_obj.settings.secondary_button_background.rgba }});
+        --color-secondary-button-border: rgb({{ mobile_scheme_obj.settings.secondary_button_border.rgba }});
+        --color-secondary-button-hover-text: rgb({{ mobile_scheme_obj.settings.secondary_button_hover_text.rgba }});
+        --color-secondary-button-hover-background: rgb({{ mobile_scheme_obj.settings.secondary_button_hover_background.rgba }});
+        --color-secondary-button-hover-border: rgb({{ mobile_scheme_obj.settings.secondary_button_hover_border.rgba }});
+        --color-input-background: rgb({{ mobile_scheme_obj.settings.input_background.rgba }});
+        --color-input-text: rgb({{ mobile_scheme_obj.settings.input_text_color.rgba }});
+        --color-input-text-rgb: {{ mobile_scheme_obj.settings.input_text_color.rgb }};
+        --color-input-border: rgb({{ mobile_scheme_obj.settings.input_border_color.rgba }});
+        --color-input-hover-background: rgb({{ mobile_scheme_obj.settings.input_hover_background.rgba }});
+        --color-variant-background: rgb({{ mobile_scheme_obj.settings.variant_background_color.rgba }});
+        --color-variant-border: rgb({{ mobile_scheme_obj.settings.variant_border_color.rgba }});
+        --color-variant-text: rgb({{ mobile_scheme_obj.settings.variant_text_color.rgba }});
+        --color-variant-text-rgb: {{ mobile_scheme_obj.settings.variant_text_color.rgb }};
+        --color-variant-hover-background: rgb({{ mobile_scheme_obj.settings.variant_hover_background_color.rgba }});
+        --color-variant-hover-text: rgb({{ mobile_scheme_obj.settings.variant_hover_text_color.rgba }});
+        --color-variant-hover-border: rgb({{ mobile_scheme_obj.settings.variant_hover_border_color.rgba }});
+        --color-selected-variant-background: rgb({{ mobile_scheme_obj.settings.selected_variant_background_color.rgba }});
+        --color-selected-variant-border: rgb({{ mobile_scheme_obj.settings.selected_variant_border_color.rgba }});
+        --color-selected-variant-text: rgb({{ mobile_scheme_obj.settings.selected_variant_text_color.rgba }});
+        --color-selected-variant-hover-background: rgb({{ mobile_scheme_obj.settings.selected_variant_hover_background_color.rgba }});
+        --color-selected-variant-hover-text: rgb({{ mobile_scheme_obj.settings.selected_variant_hover_text_color.rgba }});
+        --color-selected-variant-hover-border: rgb({{ mobile_scheme_obj.settings.selected_variant_hover_border_color.rgba }});
+        --input-disabled-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10));
+        --input-disabled-border-color: rgb(var(--color-foreground-rgb) / var(--opacity-5-15));
+        --input-disabled-text-color: rgb(var(--color-foreground-rgb) / var(--opacity-50));
+        --color-foreground-muted: rgb(var(--color-foreground-rgb) / var(--opacity-60));
+        --font-h1--color: var(--color-foreground-heading);
+        --font-h2--color: var(--color-foreground-heading);
+        --font-h3--color: var(--color-foreground-heading);
+        --font-h4--color: var(--color-foreground-heading);
+        --font-h5--color: var(--color-foreground-heading);
+        --font-h6--color: var(--color-foreground-heading);
+      }
+    }
+    /* On desktop, re-apply desktop color scheme variables to override mobile */
+    @media screen and (min-width: 750px) {
+      slideshow-slide.slide__content--mobile-scheme.color-{{ desktop_scheme }}.color-{{ mobile_scheme }},
+      .slide__content.slide__content--mobile-scheme.color-{{ desktop_scheme }}.color-{{ mobile_scheme }},
+      .slide__content.slide__content--mobile-scheme.color-{{ desktop_scheme }}.color-{{ mobile_scheme }} * {
+        {%- assign background_brightness = desktop_scheme_obj.settings.background | color_brightness -%}
+        {%- if background_brightness < 64 -%}
+          {%- assign opacity_5_15 = 0.15 -%}
+          {%- assign opacity_10_25 = 0.25 -%}
+          {%- assign opacity_35_55 = 0.55 -%}
+          {%- assign opacity_40_60 = 0.60 -%}
+          {%- assign opacity_30_60 = 0.60 -%}
+        {%- else -%}
+          {%- assign opacity_5_15 = 0.05 -%}
+          {%- assign opacity_10_25 = 0.1 -%}
+          {%- assign opacity_35_55 = 0.35 -%}
+          {%- assign opacity_40_60 = 0.40 -%}
+          {%- assign opacity_30_60 = 0.30 -%}
+        {%- endif -%}
+        --color-background: rgb({{ desktop_scheme_obj.settings.background.rgba }});
+        --color-background-rgb: {{ desktop_scheme_obj.settings.background.rgb }};
+        background-color: rgb({{ desktop_scheme_obj.settings.background.rgba }});
+        --opacity-5-15: {{ opacity_5_15 }};
+        --opacity-10-25: {{ opacity_10_25 }};
+        --opacity-35-55: {{ opacity_35_55 }};
+        --opacity-40-60: {{ opacity_40_60 }};
+        --opacity-30-60: {{ opacity_30_60 }};
+        --color-foreground: rgb({{ desktop_scheme_obj.settings.foreground.rgba }});
+        --color-foreground-rgb: {{ desktop_scheme_obj.settings.foreground.rgb }};
+        --color-foreground-heading: rgb({{ desktop_scheme_obj.settings.foreground_heading.rgba }});
+        --color-foreground-heading-rgb: {{ desktop_scheme_obj.settings.foreground_heading.rgb }};
+        --color-primary: rgb({{ desktop_scheme_obj.settings.primary.rgba }});
+        --color-primary-rgb: {{ desktop_scheme_obj.settings.primary.rgb }};
+        --color-primary-hover: rgb({{ desktop_scheme_obj.settings.primary_hover.rgba }});
+        --color-primary-hover-rgb: {{ desktop_scheme_obj.settings.primary_hover.rgb }};
+        --color-border: rgb({{ desktop_scheme_obj.settings.border.rgba }});
+        --color-border-rgb: {{ desktop_scheme_obj.settings.border.rgb }};
+        --color-shadow: rgb({{ desktop_scheme_obj.settings.shadow.rgba }});
+        --color-shadow-rgb: {{ desktop_scheme_obj.settings.shadow.rgb }};
+        --color-primary-button-text: rgb({{ desktop_scheme_obj.settings.primary_button_text.rgba }});
+        --color-primary-button-background: rgb({{ desktop_scheme_obj.settings.primary_button_background.rgba }});
+        --color-primary-button-border: rgb({{ desktop_scheme_obj.settings.primary_button_border.rgba }});
+        --color-primary-button-hover-text: rgb({{ desktop_scheme_obj.settings.primary_button_hover_text.rgba }});
+        --color-primary-button-hover-background: rgb({{ desktop_scheme_obj.settings.primary_button_hover_background.rgba }});
+        --color-primary-button-hover-border: rgb({{ desktop_scheme_obj.settings.primary_button_hover_border.rgba }});
+        --color-secondary-button-text: rgb({{ desktop_scheme_obj.settings.secondary_button_text.rgba }});
+        --color-secondary-button-background: rgb({{ desktop_scheme_obj.settings.secondary_button_background.rgba }});
+        --color-secondary-button-border: rgb({{ desktop_scheme_obj.settings.secondary_button_border.rgba }});
+        --color-secondary-button-hover-text: rgb({{ desktop_scheme_obj.settings.secondary_button_hover_text.rgba }});
+        --color-secondary-button-hover-background: rgb({{ desktop_scheme_obj.settings.secondary_button_hover_background.rgba }});
+        --color-secondary-button-hover-border: rgb({{ desktop_scheme_obj.settings.secondary_button_hover_border.rgba }});
+        --color-input-background: rgb({{ desktop_scheme_obj.settings.input_background.rgba }});
+        --color-input-text: rgb({{ desktop_scheme_obj.settings.input_text_color.rgba }});
+        --color-input-text-rgb: {{ desktop_scheme_obj.settings.input_text_color.rgb }};
+        --color-input-border: rgb({{ desktop_scheme_obj.settings.input_border_color.rgba }});
+        --color-input-hover-background: rgb({{ desktop_scheme_obj.settings.input_hover_background.rgba }});
+        --color-variant-background: rgb({{ desktop_scheme_obj.settings.variant_background_color.rgba }});
+        --color-variant-border: rgb({{ desktop_scheme_obj.settings.variant_border_color.rgba }});
+        --color-variant-text: rgb({{ desktop_scheme_obj.settings.variant_text_color.rgba }});
+        --color-variant-text-rgb: {{ desktop_scheme_obj.settings.variant_text_color.rgb }};
+        --color-variant-hover-background: rgb({{ desktop_scheme_obj.settings.variant_hover_background_color.rgba }});
+        --color-variant-hover-text: rgb({{ desktop_scheme_obj.settings.variant_hover_text_color.rgba }});
+        --color-variant-hover-border: rgb({{ desktop_scheme_obj.settings.variant_hover_border_color.rgba }});
+        --color-selected-variant-background: rgb({{ desktop_scheme_obj.settings.selected_variant_background_color.rgba }});
+        --color-selected-variant-border: rgb({{ desktop_scheme_obj.settings.selected_variant_border_color.rgba }});
+        --color-selected-variant-text: rgb({{ desktop_scheme_obj.settings.selected_variant_text_color.rgba }});
+        --color-selected-variant-hover-background: rgb({{ desktop_scheme_obj.settings.selected_variant_hover_background_color.rgba }});
+        --color-selected-variant-hover-text: rgb({{ desktop_scheme_obj.settings.selected_variant_hover_text_color.rgba }});
+        --color-selected-variant-hover-border: rgb({{ desktop_scheme_obj.settings.selected_variant_hover_border_color.rgba }});
+        --input-disabled-background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10));
+        --input-disabled-border-color: rgb(var(--color-foreground-rgb) / var(--opacity-5-15));
+        --input-disabled-text-color: rgb(var(--color-foreground-rgb) / var(--opacity-50));
+        --color-foreground-muted: rgb(var(--color-foreground-rgb) / var(--opacity-60));
+        --font-h1--color: var(--color-foreground-heading);
+        --font-h2--color: var(--color-foreground-heading);
+        --font-h3--color: var(--color-foreground-heading);
+        --font-h4--color: var(--color-foreground-heading);
+        --font-h5--color: var(--color-foreground-heading);
+        --font-h6--color: var(--color-foreground-heading);
+      }
+    }
+    /* On mobile, mobile color scheme naturally takes precedence since it comes last in the class list */
+  {% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -244,9 +623,74 @@
       "visible_if": "{{ block.settings.media_type_1 == 'image' }}"
     },
     {
+      "type": "image_picker",
+      "id": "mobile_image_1",
+      "label": "Mobile image (optional)",
+      "info": "If set, this image will be displayed on mobile devices instead of the main image",
+      "visible_if": "{{ block.settings.media_type_1 == 'image' }}"
+    },
+    {
       "type": "video",
       "id": "video_1",
       "label": "t:settings.video",
+      "visible_if": "{{ block.settings.media_type_1 == 'video' }}"
+    },
+    {
+      "type": "select",
+      "id": "video_aspect_ratio",
+      "label": "Video aspect ratio",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto (use video's natural ratio)"
+        },
+        {
+          "value": "16/9",
+          "label": "16:9 (Landscape)"
+        },
+        {
+          "value": "9/16",
+          "label": "9:16 (Portrait)"
+        },
+        {
+          "value": "1/1",
+          "label": "1:1 (Square)"
+        },
+        {
+          "value": "21/9",
+          "label": "21:9 (Ultra-wide)"
+        }
+      ],
+      "default": "auto",
+      "visible_if": "{{ block.settings.media_type_1 == 'video' }}"
+    },
+    {
+      "type": "select",
+      "id": "video_aspect_ratio_mobile",
+      "label": "Video aspect ratio (mobile)",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Use desktop setting"
+        },
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "16/9",
+          "label": "16:9"
+        },
+        {
+          "value": "9/16",
+          "label": "9:16"
+        },
+        {
+          "value": "1/1",
+          "label": "1:1"
+        }
+      ],
+      "default": "inherit",
       "visible_if": "{{ block.settings.media_type_1 == 'video' }}"
     },
     {
@@ -387,6 +831,32 @@
     },
     {
       "type": "header",
+      "content": "Content Position"
+    },
+    {
+      "type": "range",
+      "id": "content_position_x",
+      "label": "Horizontal Position (X)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Horizontal position of content (0% = left, 50% = center, 100% = right)"
+    },
+    {
+      "type": "range",
+      "id": "content_position_y",
+      "label": "Vertical Position (Y)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Vertical position of content (0% = top, 50% = center, 100% = bottom)"
+    },
+    {
+      "type": "header",
       "content": "t:content.appearance"
     },
     {
@@ -400,6 +870,13 @@
       "id": "color_scheme",
       "label": "t:settings.color_scheme",
       "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme_mobile",
+      "label": "Color scheme (mobile)",
+      "info": "Optional: Use a different color scheme on mobile devices. If not set, the desktop color scheme will be used.",
       "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
     },
     {
@@ -511,7 +988,7 @@
           "type": "text",
           "name": "t:names.heading",
           "settings": {
-            "text": "t:html_defaults.new_arrivals_h3"
+            "text": "t:html_defaults.new_arrivals_h2"
           }
         },
         "text": {
