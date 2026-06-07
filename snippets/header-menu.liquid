@@ -26,7 +26,7 @@
   {% for link in settings.menu.links %}
     <li
       role="presentation"
-      class="menu-list__list-item"
+      class="menu-list__list-item {% if link.title == "Sale" or link.title == "sale" or link.title == "SALE" or link.title == "sale" %}sale-link{% endif %}"
       on:focus="/activate"
       on:blur="/deactivate"
       on:pointerenter="/activate"

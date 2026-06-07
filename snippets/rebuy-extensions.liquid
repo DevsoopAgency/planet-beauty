@@ -1,8 +1,6 @@
 {% if template.name == 'index' %}
-    <!-- Buy it again --> <div data-rebuy-id="85478" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
-    <!-- Best Sellers --> <div data-rebuy-id="181852" data-rebuy-shopify-product-ids="{{ product.id }}"></div> 
-    <!-- Gifts Under $50--> <div data-rebuy-id="181855" data-rebuy-shopify-product-ids="{{ product.id }}"></div> 
-    <!-- Widget : Homepage VDAY 2025 --> <div data-rebuy-id="196236" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
+    {% comment %} <!-- Gifts Under $50--> <div data-rebuy-id="181855" data-rebuy-shopify-product-ids="{{ product.id }}"></div>  {% endcomment %}
+    {% comment %} <!-- Widget : Homepage VDAY 2025 --> <div data-rebuy-id="196236" data-rebuy-shopify-product-ids="{{ product.id }}"></div> {% endcomment %}
   {% elsif template.name == 'account' %}
     <!-- Account Page Recs --> <div data-rebuy-id="82694"></div>
   {% elsif product %}

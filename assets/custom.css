@@ -1,0 +1,37 @@
+.rebuy-widget {
+    max-width: 1440px;
+}
+
+.rebuy-product-grid {
+    text-align: center;
+}
+
+.rebuy-product-grid img { 
+    border: 1px solid #00000033;
+    border-radius: 10px;
+}
+
+.rebuy-widget-content {
+    text-align: left;
+}
+
+.rebuy-widget .rebuy-product-block, .rebuy-recommended-products .rebuy-product-block {
+    padding-inline: 10px;
+}
+
+.rebuy-product-title-link.clickable {
+    font-weight: 500;
+}
+
+.rebuy-widget .rebuy-product-block .rebuy-product-info .rebuy-product-price {
+    margin-top: 0;
+}
+
+.rebuy-widget .rebuy-product-block .rebuy-product-info .rebuy-product-price .rebuy-money span {
+    font-weight: 500;
+}
+
+.menu-list__list-item.sale-link a span {
+    color: #EF0180;
+    text-decoration: underline;
+}
