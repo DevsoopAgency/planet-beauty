@@ -39,7 +39,14 @@
             role="list"
           >
             {% for link in block_settings.menu.links %}
-              <li>
+              {%- liquid
+                assign sale_link_class = ''
+                assign link_title_downcase = link.title | downcase
+                if link_title_downcase == 'sale'
+                  assign sale_link_class = ' sale-link'
+                endif
+              -%}
+              <li class="{{ sale_link_class | strip }}">
                 <a
                   href="{{ link.url }}"
                   id="MenuItem-{{ link.handle }}"
@@ -84,9 +91,16 @@
 
     {% capture children %}
       {% for link in block_settings.menu.links %}
+        {%- liquid
+          assign sale_link_class = ''
+          assign link_title_downcase = link.title | downcase
+          if link_title_downcase == 'sale'
+            assign sale_link_class = ' sale-link'
+          endif
+        -%}
         <li
           role="presentation"
-          class="menu-list__list-item"
+          class="menu-list__list-item{{ sale_link_class }}"
           on:focus="/activate"
           on:blur="/deactivate"
           on:pointerenter="/activate"
