@@ -4213,3 +4213,8 @@ product-recommendations:has([data-has-recommendations='false']) {
     translate: 0px var(--atc-destination, 0px);
   }
 }
+
+.static-page__heading .highlight{
+  text-align: center;
+  margin-top: 60px;
+}

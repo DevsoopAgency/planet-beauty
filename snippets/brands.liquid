@@ -1,0 +1,140 @@
+{{ 'brands-component.css' | asset_url | stylesheet_tag }}
+
+<brands-component>
+
+  {%- comment -%}
+  {% assign alphabet = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z" | split: ',' %}
+  {%- endcomment -%}
+
+  {% assign string_alphabet = '' %}
+  {% assign has_number = 0 %}
+
+  {% for level1 in linklists[menu].links %}
+
+      {% if level1.levels > 0 %}
+
+        {% assign title_level = level1.title | escape | downcase %}
+
+        {% if title_level == "brands" %}
+
+          {% for level2 in level1.links %}
+
+              {% assign first_letter = level2.title | downcase | slice: 0, 1 %}
+
+              {% unless string_alphabet contains first_letter %}
+                
+                {% assign is_number = first_letter | times: 1 %}
+
+                {% if is_number != 0 %}
+                  {% assign has_number = 1 %}
+                {% else %}
+                  {% assign string_alphabet = string_alphabet | append: first_letter | append: "," %}
+                {% endif %}
+ 
+              {% endunless %}
+
+          {% endfor %}
+
+        {% endif %}
+
+      {% endif %}
+
+  {% endfor %}
+
+  {%- comment -%} Add new section for the numbers {%- endcomment -%}
+  {% if has_number == 1 %}
+    {% assign string_alphabet = string_alphabet | append: "#" %}
+  {% endif %}
+
+  {% assign alphabet = string_alphabet | split: ',' %}
+
+  <div class="brands-grid" data-brands>
+
+    <nav class="brands-grid__brands-alphabet">
+      {% for letter in alphabet %}
+
+        <div class="brands-grid__letter-link-wrapper">
+          {% if letter == "#" %}
+            <a class="brands-grid__letter-link" href="/" data-letter-link="number">{{ letter | upcase }}</a>
+          {% else %}
+              <a class="brands-grid__letter-link" href="/" data-letter-link="{{ letter }}">{{ letter | upcase }}</a>
+          {% endif %}
+        </div>
+
+      {% endfor %}
+    </nav>
+
+    {% for level1 in linklists[menu].links %}
+
+      {% if level1.levels > 0 %}
+
+        {% assign title_level = level1.title | escape | downcase %}
+
+        {% if title_level == "brands" %}
+
+          {% for letter in alphabet %}
+
+            {% if letter == "#" %}
+              <div class="brands-grid__letter-group" id="letter-group-number" data-letter-group="number">
+            {% else %}
+              <div class="brands-grid__letter-group" id="letter-group-{{ letter }}" data-letter-group="{{ letter }}">
+            {% endif %}
+
+              <div class="brands-grid__letter-title">
+                {{ letter | upcase }}
+              </div>
+
+              <div class="brands-grid__brand-items">
+
+                {%- comment -%} Load all brands that start with a number {%- endcomment -%}
+                {% if letter == "#" %}
+
+                  {% for level2 in level1.links %}
+
+                      {% assign is_number = level2.title | times: 1 %}
+
+                      {% if is_number != 0 %}
+
+                        <div class="brands-grid__brand-item">
+                          <a class="brands-grid__brand-item-link" href="{{ level2.url }}" ><span>{{ level2.title | escape }}</span></a>
+                        </div>
+
+                      {% endif %}
+
+                  {% endfor %}
+
+                {% else %}
+
+                  {% for level2 in level1.links %}
+
+                    {% assign first_letter = level2.title | downcase | slice: 0, 1 %}
+
+                    {% if first_letter == letter %}
+
+                        <div class="brands-grid__brand-item">
+                          <a class="brands-grid__brand-item-link" href="{{ level2.url }}" ><span>{{ level2.title | escape }}</span></a>
+                        </div>
+
+                    {% endif %}
+
+                  {% endfor %}
+
+                {% endif %}
+
+              </div>
+
+            </div>
+
+          {% endfor %}
+
+        {% endif %}
+        
+      {% endif %}
+
+    {% endfor %}
+
+  </div>
+
+</brands-component>
+
+{{ 'brands-component.js' | asset_url | script_tag }}
