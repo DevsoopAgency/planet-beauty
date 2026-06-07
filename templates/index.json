@@ -1130,7 +1130,7 @@
         "image_TwfNNL": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/IntensiveExf2.jpg",
+            "image": "shopify://shop_images/image_8.png",
             "link": "shopify://collections/all",
             "image_ratio": "square",
             "width": "fill",
