@@ -1,0 +1,76 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "custom_liquid_TwPBV6": {
+      "type": "custom-liquid",
+      "name": "t:names.custom_liquid",
+      "settings": {
+        "custom_liquid": "<div class=\"page-container static-page\" data-static-page >\n\n    <div class=\"container\">\n    \n        {%- comment -%}\n        <div class=\"static-page__heading\">\n            <h1 class=\"highlight\">{{ page.title }}</h1>\n        </div>\n        {%- endcomment -%}\n    \n        <div>{{ page.content }}</div>\n\n        {% unless settings.power_reviews_api == blank %}\n            {% unless settings.power_reviews_locale == blank %}\n                {% unless settings.power_reviews_merchant_group_id == blank %}\n                    {% unless settings.power_reviews_merchant_id == blank %}\n\n                        <div class=\"power-reviews power-reviews__write-a-review\">\n                            <div id=\"pr-write\"></div>\n                        </div>\n\n                        <script>\n                            window.pwr = window.pwr || function () {\n                            (pwr.q = pwr.q || []).push(arguments); \n                            };\n                            pwr(\"render\", {\n                                api_key: \"{{ settings.power_reviews_api }}\",\n                                locale: \"{{ settings.power_reviews_locale }}\",\n                                merchant_group_id: \"{{ settings.power_reviews_merchant_group_id }}\",\n                                merchant_id: \"{{ settings.power_reviews_merchant_id }}\",\n                                style_sheet: \"{{ 'power-reviews.css' | asset_url }}\",\n                            on_submit:function(config, data){\n                                    window.scrollTo(0,0);\n                                    },\n                            components: {\n                                Write: 'pr-write',\n                            }\n                            });\n                        </script>\n                \n                    {% endunless %}\n                {% endunless %}\n            {% endunless %}\n        {% endunless %}\n    \n    </div>\n  \n</div>",
+        "color_scheme": "",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "custom_liquid_TwPBV6"
+  ]
+}

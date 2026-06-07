@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "section": {
       "type": "section",
@@ -19,7 +20,7 @@
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "h2",
+            "type_preset": "h3",
             "font": "var(--font-primary--family)",
             "font_size": "",
             "line_height": "normal",
@@ -68,16 +69,19 @@
         "text_tqQTNE",
         "text_twGGkJ"
       ],
+      "disabled": true,
       "name": "Collection heading",
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
+        "flip_on_mobile": false,
         "horizontal_alignment": "flex-start",
         "vertical_alignment": "center",
         "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
+        "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
+        "gap-mobile": 12,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
@@ -89,12 +93,19 @@
         "border_width": 1,
         "border_opacity": 100,
         "border_radius": 0,
+        "toggle_background_corner_radius": false,
+        "background_corner_radius_top_left": 0,
+        "background_corner_radius_top_right": 0,
+        "background_corner_radius_bottom_left": 0,
+        "background_corner_radius_bottom_right": 0,
         "toggle_overlay": false,
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-end": 48,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "main": {
@@ -105,7 +116,7 @@
           "static": true,
           "settings": {
             "enable_filtering": true,
-            "filter_style": "horizontal",
+            "filter_style": "vertical",
             "filter_width": "centered",
             "text_label_case": "default",
             "show_swatch_label": false,
@@ -120,6 +131,20 @@
             "padding-inline-end": 0,
             "facets_margin_bottom": 8,
             "facets_margin_right": 20
+          },
+          "blocks": {}
+        },
+        "variant-card": {
+          "type": "_variant-card",
+          "static": true,
+          "settings": {
+            "title_type_preset": "rte",
+            "show_vendor": false,
+            "show_price": true,
+            "price_type_preset": "h6",
+            "title_source": "variant",
+            "image_source": "variant",
+            "image_ratio": "adapt"
           },
           "blocks": {}
         },
@@ -210,10 +235,16 @@
           ]
         }
       },
+      "disabled": true,
       "settings": {
+        "enable_comparison": true,
+        "expand_variants_as_cards": false,
+        "hide_unavailable_variants": false,
         "layout_type": "grid",
-        "product_card_size": "medium",
+        "product_card_size": "small",
         "mobile_product_card_size": "small",
+        "enable_infinite_scroll": true,
+        "products_per_page": 24,
         "product_grid_width": "centered",
         "full_width_on_mobile": true,
         "columns_gap_horizontal": 16,
@@ -224,10 +255,59 @@
         "padding-block-start": 0,
         "padding-block-end": 32
       }
+    },
+    "17797255580a95bcdb": {
+      "type": "_blocks",
+      "blocks": {
+        "boost_ai_search_filter_product_filter_6gzakE": {
+          "type": "shopify://apps/boost-ai-search-filter/blocks/product-filter/7fc998ae-a150-4367-bab8-505d8a4503f7",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "boost_ai_search_filter_product_filter_6gzakE"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "gap-mobile": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_background_corner_radius": false,
+        "background_corner_radius_top_left": 0,
+        "background_corner_radius_top_right": 0,
+        "background_corner_radius_bottom_left": 0,
+        "background_corner_radius_bottom_right": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
+      }
     }
   },
   "order": [
     "section",
-    "main"
+    "main",
+    "17797255580a95bcdb"
   ]
 }
+
