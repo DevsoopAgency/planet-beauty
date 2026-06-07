@@ -120,7 +120,7 @@
         "detailed_collection_menu_m6P3Hc"
       ],
       "settings": {
-        "logo_position": "center",
+        "logo_position": "left",
         "hide_logo_on_home_page": false,
         "custom_height": 30,
         "custom_height_mobile": 20,
@@ -129,7 +129,7 @@
         "padding-inline-start": 0,
         "padding-inline-end": 0,
         "menu_position": "center",
-        "menu_row": "bottom",
+        "menu_row": "top",
         "menu": "main-menu",
         "menu_mob": "footer",
         "menu_style": "custom_content",
