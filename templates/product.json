@@ -24,7 +24,7 @@
             "slideshow_controls_style": "thumbnails",
             "slideshow_mobile_controls_style": "dots",
             "thumbnail_position": "left",
-            "thumbnail_width": 60,
+            "thumbnail_width": 56,
             "thumbnail_radius": 0,
             "aspect_ratio": "adapt",
             "constrain_to_viewport": true,
@@ -201,17 +201,6 @@
                 "custom_liquid_Uweb8q",
                 "price_tVjtKg"
               ]
-            },
-            "recharge_subscriptions_subscription_widget_v2_tT9wpR": {
-              "type": "shopify://apps/recharge-subscriptions/blocks/subscription-widget-v2/371eed76-0b44-4869-9813-730372ea378e",
-              "disabled": true,
-              "settings": {}
-            },
-            "recharge_subscriptions_subscription_widget_DfR4tr": {
-              "type": "shopify://apps/recharge-subscriptions/blocks/subscription-widget/371eed76-0b44-4869-9813-730372ea378e",
-              "settings": {
-                "product": "{{closest.product}}"
-              }
             },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
@@ -415,8 +404,6 @@
           },
           "block_order": [
             "group_icgrde",
-            "recharge_subscriptions_subscription_widget_v2_tT9wpR",
-            "recharge_subscriptions_subscription_widget_DfR4tr",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "accordion_CRGaD4"
@@ -424,7 +411,7 @@
         }
       },
       "custom_css": [
-        ".variant-option--buttons:not(.variant-option--swatches) .variant-option__button-label {padding: 10px 30px;}",
+        ".variant-option__button-label {padding: 10px 30px;}",
         ".quantity-selector {border: 2px solid black;}"
       ],
       "settings": {
@@ -435,7 +422,7 @@
         "gap": 48,
         "enable_sticky_add_to_cart": true,
         "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
-        "padding-block-start": 20,
+        "padding-block-start": 0,
         "padding-block-end": 0
       }
     },
@@ -604,7 +591,6 @@
       "block_order": [
         "text_cbcgyb"
       ],
-      "disabled": true,
       "name": "t:names.product_recommendations",
       "settings": {
         "product": "{{ closest.product }}",
