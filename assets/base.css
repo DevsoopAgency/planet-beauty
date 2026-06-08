@@ -4226,7 +4226,7 @@ product-recommendations:has([data-has-recommendations='false']) {
   margin-top: 60px;
 }
 .mega-menu__column--span-1{
-  grid-column-start: 1;
-  grid-column-end: 8;
-  columns: 7;
+  grid-column-start: 1!Important;
+  grid-column-end: 8!Important;;
+  columns: 7!Important;;
 }
