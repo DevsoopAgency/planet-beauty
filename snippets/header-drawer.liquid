@@ -91,6 +91,15 @@
         "
         aria-label="{{ 'accessibility.header_navigation_label' | t }}"
       >
+        {% if section.settings.show_search %}
+          <div class="menu-drawer__search">
+            {% render 'search',
+              style: 'modal',
+              display_style: section.settings.actions_display_style,
+              class: 'menu-drawer__search-action'
+            %}
+          </div>
+        {% endif %}
         <ul
           class="menu-drawer__menu has-submenu"
           role="list"
@@ -775,12 +784,42 @@
     justify-content: center;
     align-items: center;
     padding: var(--padding-lg);
+    line-height: 0;
+
+    @media screen and (max-width: 749px) {
+      width: 34px;
+      height: 38px;
+      min-height: 38px;
+      padding: 0;
+    }
+  }
+
+  #header-component[data-menu-style='drawer'] .menu-drawer-container .header__icon--summary {
+    width: 34px;
+    height: 38px;
+    min-height: 38px;
+    padding: 0;
+  }
+
+  .menu-drawer__search {
+    padding: var(--padding-md) var(--padding-xl) var(--padding-lg);
+    border-bottom: var(--style-border-width) solid var(--color-border);
+  }
+
+  .menu-drawer__search .search-action,
+  .menu-drawer__search .search-action__trigger {
+    width: 100%;
   }
 
   .header__icon--summary .header-drawer-icon {
     margin: auto;
-    width: var(--icon-size-xs);
-    height: var(--icon-size-xs);
+    width: 18px;
+    height: 18px;
+  }
+
+  .header__icon--summary .header-drawer-icon svg {
+    width: 18px;
+    height: 18px;
   }
 
   .menu-drawer__featured-content {

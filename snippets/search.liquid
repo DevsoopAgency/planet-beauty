@@ -11,20 +11,18 @@
 
 {% unless style == 'none' %}
   <search-button
-    class="search-action{% if display_style == 'text' %} search-action--text{% endif %}{% if class != blank %} {{ class | strip }}{% endif %}"
+    class="search-action{% if class != blank %} {{ class | strip }}{% endif %}"
   >
     <button
       on:click="#search-modal/showDialog"
-      class="button-unstyled header-actions__action{% if display_style == 'text' %} header-actions__text-style{% endif %}"
+      class="button-unstyled search-action__trigger"
       aria-label="{{ 'content.search_input_label' | t }}"
       aria-haspopup="dialog"
+      type="button"
     >
-      <span class="{% if display_style == 'icon' %}hidden{% else %}mobile:hidden{% endif %}">
-        {{ 'content.search' | t }}
-      </span>
-
-      <span class="svg-wrapper {% if display_style != 'icon' %}desktop:hidden{% endif %}">
-        {{ 'icon-search.svg' | inline_asset_content }}
+      <span class="search-action__field">
+        <span class="search-action__field-text">What can we help you find?</span>
+        <span class="search-action__field-line" aria-hidden="true"></span>
       </span>
     </button>
   </search-button>
@@ -32,15 +30,59 @@
 
 {% stylesheet %}
   .search-action {
-    --search-border-radius: var(--style-border-radius-inputs);
-    --search-border-width: var(--style-border-width-inputs);
-
     display: flex;
+  }
+
+  .search-action__trigger {
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    text-align: start;
+  }
+
+  .search-action__field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    min-width: 182px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .search-action__field-text {
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+    white-space: nowrap;
+  }
+
+  .search-action__field-line {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid var(--color-border);
   }
 
   @media screen and (max-width: 749px) {
     .search-action--hidden-on-drawer {
       display: none;
+    }
+
+    .search-action:not(.menu-drawer__search-action) {
+      display: none;
+    }
+
+    .menu-drawer__search-action {
+      display: flex;
+      width: 100%;
+    }
+
+    .menu-drawer__search-action .search-action__field {
+      width: 100%;
+      min-width: 0;
     }
   }
 
@@ -52,26 +94,8 @@
     [data-menu-style='menu'] .search-action--hidden-on-menu {
       display: none;
     }
-  }
 
-  [data-menu-style='menu'] .header__column--left .search-action {
-    @media screen and (min-width: 750px) {
-      margin-inline: calc(var(--padding-lg) * -1);
-    }
-  }
-
-  .header__column--right .search-action {
-    @media screen and (min-width: 750px) {
-      margin-inline: calc(var(--gap-md) * -1) calc(var(--gap-xs) * -1);
-    }
-  }
-
-  @media screen and (min-width: 750px) {
-    .header__column--right .search-action--text {
-      margin-inline: 0;
-    }
-
-    [data-menu-style='menu'] .header__column--left .search-action--text {
+    [data-menu-style='menu'] .header__column--right .search-action {
       margin-inline: 0;
     }
   }

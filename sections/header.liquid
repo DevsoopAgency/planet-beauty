@@ -730,6 +730,12 @@
     .overflow-menu::part(list) {
       justify-content: flex-end;
     }
+
+    @media screen and (min-width: 750px) {
+      #header-component[data-menu-style='menu'] & {
+        gap: 8px;
+      }
+    }
   }
 
   .header__columns {
@@ -776,34 +782,29 @@
     }
 
     @media screen and (max-width: 749px) {
-      --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr
-        var(--header-mobile-bookend) var(--header-mobile-bookend);
-
-      grid-template-areas: 'leftA leftB center rightA rightB';
-      grid-column: span 3;
-      column-gap: 0;
+      display: flex;
       align-items: center;
       padding-block: 0;
-      padding-inline: 0 var(--padding-3xs);
+      padding-inline: 17px var(--padding-3xs);
+      column-gap: 0;
 
       .header-logo {
-        grid-area: center;
-      }
-
-      &:not(:has(header-actions)) .search-action {
-        grid-area: leftB;
-      }
-
-      &:not(:has(shopify-account)) .search-action {
-        grid-area: rightA;
-      }
-
-      .search-action {
-        grid-area: leftB;
+        order: 1;
+        justify-content: flex-start;
       }
 
       header-actions {
-        grid-area: rightB;
+        order: 2;
+        margin-inline-start: auto;
+      }
+
+      .header__drawer {
+        order: 3;
+        margin-inline-start: 0;
+      }
+
+      .search-action {
+        display: none;
       }
     }
   }
@@ -811,34 +812,29 @@
   /* not ideal but we need to duplicate these styles for when touch comes into play
     We could avoid the duplication using js to set the data-menu-style attribute on small screens instead of using @media queries */
   #header-component[data-menu-style='drawer'] .header__columns {
-    --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr
-      var(--header-mobile-bookend) var(--header-mobile-bookend);
-
-    grid-template-areas: 'leftA leftB center rightA rightB';
-    grid-column: span 3;
-    column-gap: 0;
+    display: flex;
     align-items: center;
     padding-block: 0;
-    padding-inline: 0 var(--padding-3xs);
+    padding-inline: 17px var(--padding-3xs);
+    column-gap: 0;
 
     .header-logo {
-      grid-area: center;
-    }
-
-    &:not(:has(header-actions)) .search-action {
-      grid-area: leftB;
-    }
-
-    &:not(:has(shopify-account)) .search-action {
-      grid-area: rightA;
-    }
-
-    .search-action {
-      grid-area: leftB;
+      order: 1;
+      justify-content: flex-start;
     }
 
     header-actions {
-      grid-area: rightB;
+      order: 2;
+      margin-inline-start: auto;
+    }
+
+    .header__drawer {
+      order: 3;
+      margin-inline-start: 0;
+    }
+
+    .search-action {
+      display: none;
     }
   }
 
@@ -889,8 +885,13 @@
   }
 
   .header-actions__action:not(.account-button) svg {
-    width: var(--icon-size-md);
-    height: var(--icon-size-md);
+    width: 18px;
+    height: 18px;
+  }
+
+  .account-button__icon {
+    width: 18px;
+    height: 18px;
   }
 
   .header:has(#Details-menu-drawer-container[open]) {

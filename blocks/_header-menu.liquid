@@ -211,11 +211,23 @@
     display: flex;
     min-height: var(--header-drawer-min-height);
     align-items: center;
+    line-height: 0;
   }
 
   #header-component[data-menu-style='drawer'] .header__drawer {
     display: flex;
     min-height: var(--header-drawer-min-height);
+    align-items: center;
+    line-height: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .header__drawer,
+    #header-component[data-menu-style='drawer'] .header__drawer {
+      --header-drawer-min-height: 38px;
+      min-height: 38px;
+      height: 38px;
+    }
   }
 
   @media screen and (min-width: 750px) {
