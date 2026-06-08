@@ -1,0 +1,43 @@
+{%- doc -%}
+  Checks if product media alt text belongs to a variant option value.
+  Planet Beauty format: "Product Title / OPTION" or "Product Title / OPTION / Swatch"
+
+  @param {object} media - Product media object
+  @param {string} option_value_name - Option value name (e.g. "INGENUITY", "Spark")
+  @param {string} [purpose] - 'gallery' or 'swatch'
+  @output {string} "true" when matched, empty otherwise
+{%- enddoc -%}
+
+{%- liquid
+  assign is_match = false
+  assign alt_normalized = media.alt | downcase | strip
+  assign option_normalized = option_value_name | strip | downcase
+  assign purpose = purpose | default: 'gallery'
+
+  if option_normalized != blank and alt_normalized != blank
+    assign alt_segments = alt_normalized | split: '/'
+    assign has_swatch_segment = false
+    assign matches_option = false
+
+    for segment in alt_segments
+      assign segment_clean = segment | strip
+
+      if segment_clean == 'swatch'
+        assign has_swatch_segment = true
+      endif
+
+      if segment_clean == option_normalized
+        assign matches_option = true
+      endif
+    endfor
+
+    if matches_option
+      if purpose == 'swatch' and has_swatch_segment
+        assign is_match = true
+      elsif purpose == 'gallery' and has_swatch_segment == false
+        assign is_match = true
+      endif
+    endif
+  endif
+-%}
+{%- if is_match -%}true{%- endif -%}

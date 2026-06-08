@@ -1,0 +1,24 @@
+{%- doc -%}
+  Finds swatch media for a variant option value.
+  Planet Beauty format: "Product Title / OPTION / Swatch"
+
+  @param {object} product - Product object
+  @param {string} option_value_name - Option value name
+  @output {string} Matched media ID, or empty string
+{%- enddoc -%}
+
+{%- liquid
+  assign matched_media_id = ''
+
+  for media in product.media
+    capture alt_match
+      render 'util-variant-media-matches-option', media: media, option_value_name: option_value_name, purpose: 'swatch'
+    endcapture
+
+    if alt_match contains 'true'
+      assign matched_media_id = media.id
+      break
+    endif
+  endfor
+-%}
+{{- matched_media_id -}}

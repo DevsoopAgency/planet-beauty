@@ -1,49 +1,87 @@
 
 {% if shop.policies.size > 0 %}
-  <anchored-popover-component
-    data-hover-triggered="true"
-  >
-    <button
-      class="policy-list-trigger button-unstyled"
-      popovertarget="terms-policies-popover"
-      popovertargetaction="toggle"
-      ref="trigger"
+  {% if block.settings.layout == 'inline' %}
+    <ul
+      class="
+        policy_list policy_list--inline list-unstyled
+        custom-typography
+        {% if block.settings.font_size != "" %}custom-font-size{% endif %}
+      "
       style="{% render 'typography-style', preset: 'custom', settings: block.settings %}"
       {{ block.shopify_attributes }}
     >
-      {{ 'content.terms_and_policies' | t }}
-    </button>
-    <div
-      class="terms-policies-popover color-{{ settings.popover_color_scheme }}"
-      id="terms-policies-popover"
-      popover="auto"
-      ref="popover"
+      {%- for policy in shop.policies -%}
+        {%- if policy != blank -%}
+          <li>
+            <a href="{{ policy.url }}" class="footer-utilities__text">
+              {{- policy.title | escape -}}
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {% else %}
+    <anchored-popover-component
+      data-hover-triggered="true"
     >
-      <ul
-        class="
-          policy_list list-unstyled
-          custom-typography
-          {% if block.settings.font_size != "" %}custom-font-size{% endif %}
-        "
+      <button
+        class="policy-list-trigger button-unstyled"
+        popovertarget="terms-policies-popover-{{ block.id }}"
+        popovertargetaction="toggle"
+        ref="trigger"
+        style="{% render 'typography-style', preset: 'custom', settings: block.settings %}"
+        {{ block.shopify_attributes }}
       >
-        {%- for policy in shop.policies -%}
-          {%- if policy != blank -%}
-            <li>
-              <a
-                href="{{ policy.url }}"
-                class="footer-utilities__text"
-              >
-                {{- policy.title | escape -}}
-              </a>
-            </li>
-          {%- endif -%}
-        {%- endfor -%}
-      </ul>
-    </div>
-  </anchored-popover-component>
+        {{ 'content.terms_and_policies' | t }}
+      </button>
+      <div
+        class="terms-policies-popover color-{{ settings.popover_color_scheme }}"
+        id="terms-policies-popover-{{ block.id }}"
+        popover="auto"
+        ref="popover"
+      >
+        <ul
+          class="
+            policy_list list-unstyled
+            custom-typography
+            {% if block.settings.font_size != "" %}custom-font-size{% endif %}
+          "
+        >
+          {%- for policy in shop.policies -%}
+            {%- if policy != blank -%}
+              <li>
+                <a
+                  href="{{ policy.url }}"
+                  class="footer-utilities__text"
+                >
+                  {{- policy.title | escape -}}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </anchored-popover-component>
+  {% endif %}
 {% endif %}
 
 {% stylesheet %}
+  .policy_list--inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin: 0;
+
+    @media screen and (min-width: 750px) {
+      justify-content: flex-end;
+    }
+  }
+
+  .policy_list--inline a {
+    white-space: nowrap;
+  }
+
   .policy-list-trigger {
     anchor-name: --terms-policies-trigger;
     cursor: pointer;
@@ -149,6 +187,22 @@
     {
       "type": "paragraph",
       "content": "t:content.manage_policies"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "inline",
+          "label": "Inline links"
+        },
+        {
+          "value": "popover",
+          "label": "Popover menu"
+        }
+      ],
+      "default": "popover"
     },
     {
       "type": "select",

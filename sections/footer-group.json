@@ -11,12 +11,12 @@
   "type": "footer",
   "name": "Footer",
   "sections": {
-    "section_krtqkF": {
-      "type": "section",
+    "footer_main": {
+      "type": "footer",
       "blocks": {
-        "group_dxeEyp": {
+        "newsletter_group": {
           "type": "group",
-          "name": "t:names.column",
+          "name": "Newsletter",
           "settings": {
             "content_direction": "column",
             "vertical_on_mobile": true,
@@ -25,7 +25,7 @@
             "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "flex-start",
             "vertical_alignment_flex_direction_column": "flex-start",
-            "gap": 8,
+            "gap": 16,
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -48,23 +48,25 @@
             "link": "",
             "open_in_new_tab": false,
             "placeholder": "",
-            "padding-block-start": 10,
+            "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
             "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {
-            "text_tQWArg": {
+            "newsletter_heading": {
               "type": "text",
-              "name": "t:names.description",
+              "name": "Heading",
               "settings": {
-                "text": "<h5>Company </h5><p><a href=\"https://www.planetbeauty.com/pages/store-locator\">Store Locator<br/></a><a href=\"https://www.planetbeauty.com/pages/about-us\">About Us<br/></a><a href=\"https://www.planetbeauty.com/pages/careers\">Careers<br/></a><a href=\"https://www.planetbeauty.com/pages/contact-us\">Contact Us</a><br/><a href=\"https://www.planetbeauty.com/pages/website-accessibility\">Website<br/> Accessibility</a></p>",
+                "text": "<h2>Don't miss out!</h2>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "rte",
+                "type_preset": "h2",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -81,279 +83,13 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_tQWArg"
-          ]
-        },
-        "group_werULV": {
-          "type": "group",
-          "name": "t:names.column",
-          "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "flex-start",
-            "gap": 8,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
-            "padding-block-start": 10,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0
-          },
-          "blocks": {
-            "text_bb7FH8": {
+            },
+            "newsletter_subtext": {
               "type": "text",
-              "name": "t:names.description",
+              "name": "Subtext",
               "settings": {
-                "text": "<h5>Policies</h5><p><a href=\"https://www.planetbeauty.com/pages/shipping\">Shipping<br/></a><a href=\"https://www.planetbeauty.com/pages/returns\">Returns</a><br/><a href=\"https://www.planetbeauty.com/pages/price-match-guarantee\">Price Match Guarantee</a><br/><a href=\"https://www.planetbeauty.com/pages/subscription-policy\">Subscription policy</a></p>",
+                "text": "<p>Exclusive sales, savings and offers!</p>",
                 "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_bb7FH8"
-          ]
-        },
-        "group_WnLqT8": {
-          "type": "group",
-          "name": "t:names.column",
-          "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "flex-start",
-            "gap": 8,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
-            "padding-block-start": 10,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0
-          },
-          "blocks": {
-            "text_PhnDjG": {
-              "type": "text",
-              "name": "t:names.description",
-              "settings": {
-                "text": "<h5>Community</h5><p><a href=\"https://www.planetbeauty.com/blogs/news\">Planet Beauty Blog</a></p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_PhnDjG"
-          ]
-        },
-        "group_RTTqhh": {
-          "type": "group",
-          "name": "t:names.column",
-          "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "flex-start",
-            "gap": 8,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
-            "padding-block-start": 10,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0
-          },
-          "blocks": {
-            "text_NpXRQP": {
-              "type": "text",
-              "name": "t:names.description",
-              "settings": {
-                "text": "<h5>Quick Links</h5><p><a href=\"https://planet-beauty-production.myshopify.com/collections/bestseller\">Best Selling Products</a><br/><a href=\"https://planet-beauty-production.myshopify.com/pages/coupon-exclusions\">Coupon Exclusions</a><br/><a href=\"https://planetbeauty.refersion.com/affiliate/registration\">Affiliate Marketing<br/> Program<br/></a><a href=\"https://planet-beauty-production.myshopify.com/pages/faq\">FAQ</a></p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_NpXRQP"
-          ]
-        },
-        "group_33tKjE": {
-          "type": "group",
-          "name": "t:names.column",
-          "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "flex-start",
-            "gap": 8,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
-            "padding-block-start": 10,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0
-          },
-          "blocks": {
-            "text_kzdiQ9": {
-              "type": "text",
-              "name": "t:names.heading",
-              "settings": {
-                "text": "<p><strong>Don't miss out!</strong></p><p>Exclusive sales, savings and offers!</p>",
-                "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
                 "type_preset": "rte",
@@ -374,9 +110,9 @@
               },
               "blocks": {}
             },
-            "email_signup_LFqKNr": {
+            "newsletter_signup": {
               "type": "email-signup",
-              "name": "t:names.email_signup",
+              "name": "Email signup",
               "settings": {
                 "width": "fill",
                 "custom_width": 100,
@@ -384,12 +120,12 @@
                 "color_scheme": "",
                 "heading": "",
                 "heading_preset": "h3",
-                "border_style": "all",
+                "border_style": "underline",
                 "border_width": 1,
-                "border_radius": 100,
+                "border_radius": 0,
                 "input_type_preset": "paragraph",
-                "style_class": "button",
-                "display_type": "text",
+                "style_class": "button-unstyled",
+                "display_type": "arrow",
                 "label": "Sign up",
                 "integrated_button": false,
                 "button_type_preset": "paragraph",
@@ -400,12 +136,12 @@
               },
               "blocks": {}
             },
-            "text_tB8FFp": {
+            "newsletter_note": {
               "type": "text",
-              "name": "t:names.text",
+              "name": "Preferences note",
               "settings": {
-                "text": "<p>Subscribed already?<a href=\"https://www.planetbeauty.com/pages/stay-beautiful\">Manage your preferences</a></p>",
-                "width": "fit-content",
+                "text": "<p>Subscribed already? <a href=\"/pages/stay-beautiful\">Manage your preferences</a></p>",
+                "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
                 "type_preset": "rte",
@@ -426,9 +162,9 @@
               },
               "blocks": {}
             },
-            "social_links_t6cw7U": {
+            "social_links": {
               "type": "social-links",
-              "name": "t:names.social_media_links",
+              "name": "Social links",
               "settings": {
                 "facebook_url": "https://www.facebook.com/planetbeauty.us/",
                 "instagram_url": "https://www.instagram.com/planetbeautyofficial/",
@@ -445,50 +181,166 @@
                 "custom_url": ""
               },
               "blocks": {}
+            },
+            "image_7KWdhY": {
+              "type": "image",
+              "name": "t:names.image",
+              "settings": {
+                "image": "shopify://shop_images/image_12.png",
+                "link": "",
+                "image_ratio": "adapt",
+                "width": "custom",
+                "custom_width": 23,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
             }
           },
           "block_order": [
-            "text_kzdiQ9",
-            "email_signup_LFqKNr",
-            "text_tB8FFp",
-            "social_links_t6cw7U"
+            "newsletter_heading",
+            "newsletter_subtext",
+            "newsletter_signup",
+            "newsletter_note",
+            "social_links",
+            "image_7KWdhY"
+          ]
+        },
+        "group_9DBaaY": {
+          "type": "group",
+          "name": "t:names.group",
+          "settings": {
+            "content_direction": "row",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {
+            "menu_bizFdJ": {
+              "type": "menu",
+              "name": "Quick Links",
+              "settings": {
+                "menu": "main-menu",
+                "heading": "Quick Links",
+                "menu_spacing": 0,
+                "show_as_accordion": false,
+                "accordion_icon": "caret",
+                "accordion_dividers": false,
+                "inherit_color_scheme": true,
+                "color_scheme": "scheme-1",
+                "heading_preset": "h6",
+                "link_preset": "paragraph",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "menu_ndLk3j": {
+              "type": "menu",
+              "name": "Policies",
+              "settings": {
+                "menu": "main-menu",
+                "heading": "Policies",
+                "menu_spacing": 0,
+                "show_as_accordion": false,
+                "accordion_icon": "caret",
+                "accordion_dividers": false,
+                "inherit_color_scheme": true,
+                "color_scheme": "scheme-1",
+                "heading_preset": "h6",
+                "link_preset": "paragraph",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "menu_FbQNkr": {
+              "type": "menu",
+              "name": "Company",
+              "settings": {
+                "menu": "main-menu",
+                "heading": "Company",
+                "menu_spacing": 0,
+                "show_as_accordion": false,
+                "accordion_icon": "caret",
+                "accordion_dividers": false,
+                "inherit_color_scheme": true,
+                "color_scheme": "scheme-1",
+                "heading_preset": "h6",
+                "link_preset": "paragraph",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "menu_bizFdJ",
+            "menu_ndLk3j",
+            "menu_FbQNkr"
           ]
         }
       },
       "block_order": [
-        "group_dxeEyp",
-        "group_werULV",
-        "group_WnLqT8",
-        "group_RTTqhh",
-        "group_33tKjE"
+        "newsletter_group",
+        "group_9DBaaY"
       ],
-      "name": "t:names.multicolumn",
+      "name": "Footer",
       "settings": {
-        "content_direction": "row",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "flex-start",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 16,
         "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
+        "gap": 32,
+        "color_scheme": "scheme-5",
         "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-end": 32
       }
     },
     "footer_utilities_jLGE8U": {
@@ -497,8 +349,8 @@
         "footer_copyright_jweRK8": {
           "type": "footer-copyright",
           "settings": {
-            "show_powered_by": true,
-            "font_size": "0.75rem",
+            "show_powered_by": false,
+            "font_size": "0.8125rem",
             "case": "none"
           },
           "blocks": {}
@@ -506,7 +358,8 @@
         "footer_policy_list_VCdnpa": {
           "type": "footer-policy-list",
           "settings": {
-            "font_size": "0.75rem",
+            "layout": "inline",
+            "font_size": "0.8125rem",
             "case": "none"
           },
           "blocks": {}
@@ -520,15 +373,15 @@
       "settings": {
         "section_width": "page-width",
         "gap": 24,
-        "divider_thickness": 0,
-        "color_scheme": "",
-        "padding-block-start": 20,
+        "divider_thickness": 1,
+        "color_scheme": "scheme-5",
+        "padding-block-start": 0,
         "padding-block-end": 48
       }
     }
   },
   "order": [
-    "section_krtqkF",
+    "footer_main",
     "footer_utilities_jLGE8U"
   ]
 }

@@ -39,9 +39,29 @@
         {%- liquid
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
           assign variant_style = block_settings.variant_style
+          assign image_swatch_count = 0
+          assign has_image_swatches = false
 
-          if swatch_count > 0 and block_settings.show_swatches
-            if block_settings.variant_style == 'dropdown'
+          if block_settings.show_swatches
+            for product_option_value in product_option.values
+              capture swatch_media_id
+                render 'util-variant-swatch-media', product: product_resource, option_value_name: product_option_value.name
+              endcapture
+              assign swatch_media_id = swatch_media_id | strip
+              if swatch_media_id != blank
+                assign image_swatch_count = image_swatch_count | plus: 1
+              endif
+            endfor
+
+            if image_swatch_count > 0
+              assign has_image_swatches = true
+            endif
+          endif
+
+          if has_image_swatches and block_settings.variant_style != 'dropdowns'
+            assign variant_style = 'swatch'
+          elsif swatch_count > 0 and block_settings.show_swatches
+            if block_settings.variant_style == 'dropdowns'
               assign variant_style = 'swatch_dropdown'
             else
               assign variant_style = 'swatch'
@@ -116,19 +136,34 @@
                 >
                 {% if variant_style == 'swatch' %}
                   {% liquid
-                    assign featured_media = product_option_value.variant.featured_media
+                    assign swatch_media = blank
 
-                    # If the variant has no featured media, and we have a combined listing product, then fall back to
-                    # using the featured media of the child product that is linked to this option value.
+                    capture swatch_media_id
+                      render 'util-variant-swatch-media', product: product_resource, option_value_name: product_option_value.name
+                    endcapture
+                    assign swatch_media_id = swatch_media_id | strip
+
+                    if swatch_media_id != blank
+                      for media in product_resource.media
+                        assign media_id_str = media.id | append: ''
+                        if media_id_str == swatch_media_id
+                          assign swatch_media = media
+                          break
+                        endif
+                      endfor
+                    endif
+
+                    assign featured_media = swatch_media | default: product_option_value.variant.featured_media
+
                     if featured_media == blank and product_option_value.product_url
                       assign featured_media = product_option_value.variant.product.featured_media
                     endif
                   %}
-
                   {% render 'swatch',
                     swatch: product_option_value.swatch,
                     variant_image: featured_media,
-                    mode: 'unscaled'
+                    mode: 'unscaled',
+                    label: product_option_value.name
                   %}
                 {% else %}
                   {% if product_option_value.available == true %}
@@ -308,5 +343,22 @@
   .variant-picker--right .variant-option {
     text-align: right;
     justify-content: right;
+  }
+
+  /* Alt-text image swatches in main variant picker */
+  .variant-picker .variant-option--swatches {
+    --variant-picker-swatch-width: 44px;
+    --variant-picker-swatch-height: 44px;
+  }
+
+  .variant-picker .variant-option--swatches .variant-option__button-label--has-swatch {
+    padding: 0;
+    min-width: var(--variant-picker-swatch-width);
+    min-height: var(--variant-picker-swatch-height);
+    border-radius: var(--variant-picker-swatch-radius);
+  }
+
+  .variant-picker .variant-option--swatches .variant-option__button-label__text {
+    display: none;
   }
 {% endstylesheet %}

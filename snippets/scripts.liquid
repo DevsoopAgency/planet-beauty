@@ -267,6 +267,11 @@
     type="module"
     fetchpriority="low"
   ></script>
+  <script
+    src="{{ 'recharge-price-sync.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
   <script type="module">
     import { RecentlyViewed } from '@theme/recently-viewed-products';
     RecentlyViewed.addProduct('{{ product.id }}');

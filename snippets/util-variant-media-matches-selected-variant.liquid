@@ -1,0 +1,32 @@
+{%- doc -%}
+  Checks if media belongs to the selected variant using Planet Beauty alt text segments.
+
+  @param {object} media - Product media object
+  @param {object} selected_variant - Selected variant object
+  @param {string} [purpose] - 'gallery' or 'swatch'
+  @output {string} "true" when matched, empty otherwise
+{%- enddoc -%}
+
+{%- liquid
+  assign is_match = false
+  assign purpose = purpose | default: 'gallery'
+
+  for option_index in (1..3)
+    assign option_key = 'option' | append: option_index
+    assign option_value_name = selected_variant[option_key]
+
+    if option_value_name == blank
+      continue
+    endif
+
+    capture option_match
+      render 'util-variant-media-matches-option', media: media, option_value_name: option_value_name, purpose: purpose
+    endcapture
+
+    if option_match contains 'true'
+      assign is_match = true
+      break
+    endif
+  endfor
+-%}
+{%- if is_match -%}true{%- endif -%}
