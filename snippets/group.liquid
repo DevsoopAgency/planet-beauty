@@ -70,6 +70,18 @@
 </div>
 
 {% stylesheet %}
+  /* Stop group padding CSS variables from cascading into child blocks */
+  .group-block-content {
+    --padding-block-start: 0px;
+    --padding-block-end: 0px;
+    --padding-inline-start: 0px;
+    --padding-inline-end: 0px;
+    --padding-block-start-mobile: 0px;
+    --padding-block-end-mobile: 0px;
+    --padding-inline-start-mobile: 0px;
+    --padding-inline-end-mobile: 0px;
+  }
+
   .group-block__link {
     position: absolute;
     inset: 0;

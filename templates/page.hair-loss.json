@@ -1,1 +1,229 @@
-{"sections":{"main":{"type":"main-page","blocks":{"heading":{"type":"text","name":"Title","settings":{"text":"<h1>{{ closest.page.title }}<\/h1>","width":"100%","max_width":"normal","alignment":"left","type_preset":"h2","font":"var(--font-primary--family)","font_size":"","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"page-content":{"type":"page-content","settings":{},"blocks":{}}},"block_order":["heading","page-content"],"disabled":true,"settings":{"content_direction":"column","gap":32,"color_scheme":"","padding-block-start":40,"padding-block-end":80}},"section_GUbyXa":{"type":"section","blocks":{"text_NDXfdh":{"type":"text","name":"t:names.heading","settings":{"text":"<h2>Hair loss and how to prevent it<\/h2>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"image_CPXRqh":{"type":"image","name":"t:names.image","settings":{"image":"shopify:\/\/shop_images\/hair-loss-section1_1300x_688416d4-3f4c-4b2f-b692-0e42d96e4fdd.webp","link":"","image_ratio":"adapt","width":"custom","custom_width":70,"width_mobile":"custom","custom_width_mobile":70,"height":"fit","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"text_HUCfYF":{"type":"text","name":"t:names.text","settings":{"text":"<p>When the amount of hair swirling around the shower drain becomes noticeably more robust, panic inevitably follows — which never helps the issue, considering surging stress levels can be a key factor in hair loss. But there are plenty of things you can do to help stop the shedding before you even step out of the shower — as long as you know what's causing it in the first place.<\/p>","width":"100%","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"image_nffx7a":{"type":"image","name":"t:names.image","settings":{"image":"shopify:\/\/shop_images\/hair-loss-section3_1300x_f55e100e-bde8-4504-a5af-0bbe14cda3e0.webp","link":"","image_ratio":"adapt","width":"custom","custom_width":70,"width_mobile":"custom","custom_width_mobile":70,"height":"fit","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":100,"padding-inline-end":100},"blocks":{}},"text_ULCiDf":{"type":"text","name":"t:names.text","settings":{"text":"<p>There are typically a few factors contributing to thinning hair, including stress, poor diet, and physiological changes. For women, that includes a weakening of the connective tissue on the scalp (the stuff responsible for anchoring new hair growth), which happens naturally with age.<\/p><p>Hormonal changes also come into play: Temporary hair loss is common after childbirth, for example, while perimenopause and Polycystic Ovarian Syndrome (PCOS) can mean an increase in androgens, like testosterone, which our bodies naturally convert to dihydrotestoserone (DHT). DHT can damage and shrink hair follicles, resulting in the growth of finer and shorter hair.<\/p><p><strong>While tackling an ongoing issue with a doctor is the best way to fix whichever root cause it might be, there are things you can do immediately and from home to help. For one, shampoos stocked with circulation boosters and DHT blockers can optimize scalp health, protect weakening hair follicles, and build the illusion of having grown more hair while you work out the issue.<\/strong><\/p>","width":"100%","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["text_NDXfdh","image_CPXRqh","text_HUCfYF","image_nffx7a","text_ULCiDf"],"name":"t:names.rich_text_section","settings":{"content_direction":"column","vertical_on_mobile":true,"flip_on_mobile":false,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"center","vertical_alignment_flex_direction_column":"center","gap":25,"gap-mobile":12,"section_width":"page-width","section_height":"small","section_height_custom":50,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_background_corner_radius":false,"background_corner_radius_top_left":0,"background_corner_radius_top_right":0,"background_corner_radius_bottom_left":0,"background_corner_radius_bottom_right":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","padding-block-start":48,"padding-block-end":48,"padding-block-start-mobile":0,"padding-block-end-mobile":0}}},"order":["main","section_GUbyXa"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "section_GUbyXa": {
+      "type": "section",
+      "blocks": {
+        "text_NDXfdh": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<h2>Hair loss and how to prevent it</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_CPXRqh": {
+          "type": "image",
+          "name": "t:names.image",
+          "settings": {
+            "image": "shopify://shop_images/hair-loss-section1_1300x_688416d4-3f4c-4b2f-b692-0e42d96e4fdd.webp",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "custom",
+            "custom_width": 70,
+            "width_mobile": "custom",
+            "custom_width_mobile": 70,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_HUCfYF": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>When the amount of hair swirling around the shower drain becomes noticeably more robust, panic inevitably follows — which never helps the issue, considering surging stress levels can be a key factor in hair loss. But there are plenty of things you can do to help stop the shedding before you even step out of the shower — as long as you know what's causing it in the first place.</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "image_nffx7a": {
+          "type": "image",
+          "name": "t:names.image",
+          "settings": {
+            "image": "shopify://shop_images/hair-loss-section3_1300x_f55e100e-bde8-4504-a5af-0bbe14cda3e0.webp",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "custom",
+            "custom_width": 70,
+            "width_mobile": "custom",
+            "custom_width_mobile": 70,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 100,
+            "padding-inline-end": 100
+          },
+          "blocks": {}
+        },
+        "text_ULCiDf": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>There are typically a few factors contributing to thinning hair, including stress, poor diet, and physiological changes. For women, that includes a weakening of the connective tissue on the scalp (the stuff responsible for anchoring new hair growth), which happens naturally with age.</p><p>Hormonal changes also come into play: Temporary hair loss is common after childbirth, for example, while perimenopause and Polycystic Ovarian Syndrome (PCOS) can mean an increase in androgens, like testosterone, which our bodies naturally convert to dihydrotestoserone (DHT). DHT can damage and shrink hair follicles, resulting in the growth of finer and shorter hair.</p><p><strong>While tackling an ongoing issue with a doctor is the best way to fix whichever root cause it might be, there are things you can do immediately and from home to help. For one, shampoos stocked with circulation boosters and DHT blockers can optimize scalp health, protect weakening hair follicles, and build the illusion of having grown more hair while you work out the issue.</strong></p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_NDXfdh",
+        "image_CPXRqh",
+        "text_HUCfYF",
+        "image_nffx7a",
+        "text_ULCiDf"
+      ],
+      "name": "t:names.rich_text_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 25,
+        "section_width": "page-width",
+        "section_height": "small",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    }
+  },
+  "order": [
+    "main",
+    "section_GUbyXa"
+  ]
+}

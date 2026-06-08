@@ -74,14 +74,12 @@
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
-        "flip_on_mobile": false,
         "horizontal_alignment": "flex-start",
         "vertical_alignment": "center",
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
-        "gap-mobile": 12,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
@@ -93,19 +91,12 @@
         "border_width": 1,
         "border_opacity": 100,
         "border_radius": 0,
-        "toggle_background_corner_radius": false,
-        "background_corner_radius_top_left": 0,
-        "background_corner_radius_top_right": 0,
-        "background_corner_radius_bottom_left": 0,
-        "background_corner_radius_bottom_right": 0,
         "toggle_overlay": false,
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "padding-block-start": 48,
-        "padding-block-end": 48,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0
+        "padding-block-end": 48
       }
     },
     "main": {
@@ -237,9 +228,6 @@
       },
       "disabled": true,
       "settings": {
-        "enable_comparison": true,
-        "expand_variants_as_cards": false,
-        "hide_unavailable_variants": false,
         "layout_type": "grid",
         "product_card_size": "small",
         "mobile_product_card_size": "small",
@@ -276,7 +264,6 @@
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
-        "gap-mobile": 12,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
@@ -288,19 +275,12 @@
         "border_width": 1,
         "border_opacity": 100,
         "border_radius": 0,
-        "toggle_background_corner_radius": false,
-        "background_corner_radius_top_left": 0,
-        "background_corner_radius_top_right": 0,
-        "background_corner_radius_bottom_left": 0,
-        "background_corner_radius_bottom_right": 0,
         "toggle_overlay": false,
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "padding-block-start": 0,
-        "padding-block-end": 0,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0
+        "padding-block-end": 0
       }
     }
   },
@@ -310,4 +290,3 @@
     "17797255580a95bcdb"
   ]
 }
-
