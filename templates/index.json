@@ -671,7 +671,7 @@
         ],
         "use_metafield_image": true,
         "layout_type": "grid",
-        "carousel_on_mobile": false,
+        "carousel_on_mobile": true,
         "columns": 5,
         "mobile_columns": "2",
         "mobile_card_size": "60cqw",
@@ -684,7 +684,7 @@
         "section_width": "full-width",
         "gap": 12,
         "color_scheme": "scheme-6",
-        "padding-block-start": 64,
+        "padding-block-start": 30,
         "padding-block-end": 64
       }
     },
