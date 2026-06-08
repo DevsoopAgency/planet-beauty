@@ -30,10 +30,11 @@
       if link_title_downcase == 'sale'
         assign sale_link_class = ' sale-link'
       endif
+      assign link_title_class = link.handle
     -%}
     <li
       role="presentation"
-      class="menu-list__list-item{{ sale_link_class }}"
+      class="menu-list__list-item {{ link_title_class }}{{ sale_link_class }}"
       on:focus="/activate"
       on:blur="/deactivate"
       on:pointerenter="/activate"

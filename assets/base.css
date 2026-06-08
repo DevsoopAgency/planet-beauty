@@ -4225,7 +4225,7 @@ product-recommendations:has([data-has-recommendations='false']) {
   text-align: center;
   margin-top: 60px;
 }
-.menu-list__list-item .mega-menu__column--span-1{
+.menu-list__list-item.brands .mega-menu__column--span-1{
   grid-column-start: 1!Important;
   grid-column-end: 8!Important;;
   columns: 7!Important;;
