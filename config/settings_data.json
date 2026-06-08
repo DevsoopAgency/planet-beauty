@@ -10,8 +10,8 @@
 {
   "current": {
     "logo": "shopify://shop_images/Checkout_logo_9a923151-3e65-4d2d-a2d2-4ec8cfde7900.png",
-    "logo_height": 36,
-    "logo_height_mobile": 28,
+    "logo_height": 26,
+    "logo_height_mobile": 20,
     "type_body_font": "muli_n5",
     "type_subheading_font": "muli_n8",
     "type_heading_font": "inter_n7",
