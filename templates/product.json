@@ -202,6 +202,12 @@
                 "price_tVjtKg"
               ]
             },
+            "recharge_subscriptions_subscription_widget_HW3xkm": {
+              "type": "shopify://apps/recharge-subscriptions/blocks/subscription-widget/371eed76-0b44-4869-9813-730372ea378e",
+              "settings": {
+                "product": "{{closest.product}}"
+              }
+            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -404,6 +410,7 @@
           },
           "block_order": [
             "group_icgrde",
+            "recharge_subscriptions_subscription_widget_HW3xkm",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "accordion_CRGaD4"
