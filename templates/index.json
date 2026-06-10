@@ -441,7 +441,7 @@
       ],
       "name": "Grid Slider",
       "settings": {
-        "section_width": "full-width",
+        "section_width": "page-width",
         "color_scheme": "",
         "slider_desktop": false,
         "columns_desktop": 5,
@@ -681,7 +681,7 @@
         "max_collections": 5,
         "icons_style": "arrow",
         "icons_shape": "none",
-        "section_width": "full-width",
+        "section_width": "page-width",
         "gap": 12,
         "color_scheme": "scheme-6",
         "padding-block-start": 30,
@@ -887,8 +887,11 @@
     "custom_liquid_qLjjxM": {
       "type": "custom-liquid",
       "name": "t:names.custom_liquid",
+      "custom_css": [
+        "@media (min-width: 750px) { .homepage-rebuy-bestsellers .rebuy-product-grid { display: grid !important; grid-template-columns: repeat(6, minmax(0, 1fr)) !important; gap: 25px; } .homepage-rebuy-bestsellers .rebuy-product-block { width: 100% !important; max-width: none !important; flex: none !important; } }"
+      ],
       "settings": {
-        "custom_liquid": "<!-- Best Sellers --> <div data-rebuy-id=\"181852\" data-rebuy-shopify-product-ids=\"{{ product.id }}\"></div>",
+        "custom_liquid": "<!-- Best Sellers -->\n<div class=\"homepage-rebuy-bestsellers\">\n  <div data-rebuy-id=\"181852\"></div>\n</div>\n<script src=\"{{ 'rebuy-home.js' | asset_url }}\" defer></script>",
         "color_scheme": "",
         "section_width": "page-width",
         "padding-block-start": 0,
@@ -2021,7 +2024,7 @@
         "horizontal_alignment_flex_direction_column": "flex-start",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 0,
-        "section_width": "full-width",
+        "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
         "color_scheme": "scheme-3",
@@ -2220,7 +2223,7 @@
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 0,
-        "section_width": "full-width",
+        "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
         "color_scheme": "scheme-3",
