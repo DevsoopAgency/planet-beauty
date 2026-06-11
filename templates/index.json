@@ -886,7 +886,9 @@
     },
     "custom_liquid_qLjjxM": {
       "type": "custom-liquid",
-      "custom_css": [],
+      "custom_css": [
+        ".rebuy-widget {max-width: 100%;}"
+      ],
       "name": "t:names.custom_liquid",
       "settings": {
         "custom_liquid": "<!-- Best Sellers -->\n<div class=\"homepage-rebuy-bestsellers\">\n  <div data-rebuy-id=\"181852\"></div>\n</div>\n<script src=\"{{ 'rebuy-home.js' | asset_url }}\" defer></script>",
@@ -1271,6 +1273,9 @@
     },
     "custom_liquid_4PUtGP": {
       "type": "custom-liquid",
+      "custom_css": [
+        ".rebuy-widget{max-width: 100%;}"
+      ],
       "name": "t:names.custom_liquid",
       "settings": {
         "custom_liquid": "<!-- Buy it again --> <div data-rebuy-id=\"85478\" data-rebuy-shopify-product-ids=\"{{ product.id }}\"></div>",
