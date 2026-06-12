@@ -1,0 +1,190 @@
+<div class="contact-chat-widget" data-contact-chat-widget>
+  <div class="contact-chat-widget__overlay" data-contact-chat-overlay>
+    <div class="contact-chat-widget__modal" role="dialog" aria-labelledby="contact-chat-privacy-title" aria-modal="true">
+      <h4 id="contact-chat-privacy-title" class="contact-chat-widget__modal-title">We Respect Your Privacy</h4>
+      <p class="contact-chat-widget__modal-text">
+        Before you chat or contact us, please review and accept our Privacy Policy. Conversations with the chatbot are
+        recorded to ensure quality and improve your experience.
+      </p>
+      <label class="contact-chat-widget__checkbox">
+        <input type="checkbox" data-contact-chat-privacy-check>
+        <span>
+          I agree to the
+          <a href="/policies/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>.
+        </span>
+      </label>
+      <div
+        class="g-recaptcha contact-chat-widget__recaptcha"
+        data-sitekey="6Ldg_scrAAAAALoyiTQ0fSjIrEPR7Njz3R52WXqJ"
+        data-callback="onContactChatCaptchaSuccess"
+      ></div>
+      <button type="button" class="button contact-chat-widget__accept" data-contact-chat-accept disabled>Accept</button>
+    </div>
+  </div>
+
+  <div class="contact-chat-widget__container" data-contact-chat-container hidden>
+    <div class="contact-chat-widget__frame">
+      <n8nchatui-inpage></n8nchatui-inpage>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script type="module" defer>
+  import n8nChatUiWidget from 'https://proxy.n8nchatui.com/api/embed/g0Ul9R';
+  n8nChatUiWidget.load();
+</script>
+
+<script>
+  (() => {
+    if (window.__contactChatWidgetInitialized) return;
+    window.__contactChatWidgetInitialized = true;
+
+    let isCaptchaSolved = false;
+
+    window.onContactChatCaptchaSuccess = () => {
+      isCaptchaSolved = true;
+      document.querySelectorAll('[data-contact-chat-widget]').forEach((widget) => {
+        widget.dispatchEvent(new CustomEvent('contact-chat:validate'));
+      });
+    };
+
+    document.querySelectorAll('[data-contact-chat-widget]').forEach((widget) => {
+      const overlay = widget.querySelector('[data-contact-chat-overlay]');
+      const privacyCheck = widget.querySelector('[data-contact-chat-privacy-check]');
+      const acceptBtn = widget.querySelector('[data-contact-chat-accept]');
+      const container = widget.querySelector('[data-contact-chat-container]');
+
+      if (overlay && overlay.parentElement !== document.body) {
+        document.body.appendChild(overlay);
+      }
+
+      const validateForm = () => {
+        const isValid = privacyCheck.checked && isCaptchaSolved;
+        acceptBtn.disabled = !isValid;
+      };
+
+      privacyCheck.addEventListener('change', validateForm);
+      widget.addEventListener('contact-chat:validate', validateForm);
+
+      acceptBtn.addEventListener('click', () => {
+        overlay.hidden = true;
+        container.hidden = false;
+      });
+    });
+  })();
+</script>
+
+{% stylesheet %}
+  .contact-chat-widget__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: calc(infinity);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgb(0 0 0 / 70%);
+    box-sizing: border-box;
+    pointer-events: auto;
+  }
+
+  .contact-chat-widget__overlay[hidden] {
+    display: none;
+  }
+
+  .contact-chat-widget__modal {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+    text-align: center;
+  }
+
+  .contact-chat-widget__modal-title {
+    margin-block-end: 16px;
+    font-size: 18px;
+    color: #333;
+  }
+
+  .contact-chat-widget__modal-text {
+    margin-block-end: 16px;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .contact-chat-widget__checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-block-end: 16px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+  }
+
+  .contact-chat-widget__checkbox input {
+    width: 18px;
+    height: 18px;
+    accent-color: #f3bfe1;
+    cursor: pointer;
+  }
+
+  .contact-chat-widget__checkbox a {
+    color: #f3bfe1;
+    text-decoration: none;
+  }
+
+  .contact-chat-widget__checkbox a:hover {
+    text-decoration: underline;
+  }
+
+  .contact-chat-widget__recaptcha {
+    display: flex;
+    justify-content: center;
+    margin-block: 16px;
+  }
+
+  .contact-chat-widget__accept {
+    width: 100%;
+  }
+
+  .contact-chat-widget__accept:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .contact-chat-widget__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 500px;
+    padding-block: 32px;
+  }
+
+  .contact-chat-widget__container[hidden] {
+    display: none;
+  }
+
+  .contact-chat-widget__frame {
+    width: 100%;
+    max-width: 800px;
+    height: 500px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  }
+
+  .contact-chat-widget__frame n8nchatui-inpage {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+{% endstylesheet %}

@@ -123,9 +123,10 @@
     "contact_form": {
       "name": "Name",
       "email": "Email",
-      "phone": "Phone",
-      "comment": "Comment",
-      "post_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
+      "phone": "Phone Number",
+      "comment": "What's on your mind?",
+      "post_success_heading": "Thank you for contacting us",
+      "post_success": "We'll get back to you as soon as possible.",
       "error_heading": "Please adjust the following:"
     },
     "email_signup": {
