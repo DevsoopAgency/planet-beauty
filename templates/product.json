@@ -418,7 +418,6 @@
         }
       },
       "custom_css": [
-        ".variant-option__button-label {padding: 10px 30px;}",
         ".quantity-selector {border: 2px solid black;}"
       ],
       "settings": {
@@ -444,10 +443,19 @@
             "product_id_enabled": true,
             "collection_id_enabled": false
           }
+        },
+        "rebuy_fbt_template": {
+          "type": "custom-liquid",
+          "name": "Rebuy FBT template",
+          "settings": {
+            "custom_liquid": "{% render 'rebuy-fbt-widget-82672' %}"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "rebuy_personalization_engine_rebuy_widget_VUabhx"
+        "rebuy_personalization_engine_rebuy_widget_VUabhx",
+        "rebuy_fbt_template"
       ],
       "settings": {
         "content_direction": "column",
