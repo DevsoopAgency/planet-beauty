@@ -1,0 +1,60 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------
+  Planet Beauty — Tag-based product message (parity with live "tag_base" block).
+
+  Shows a short message under the product title when the product carries a given
+  tag (e.g. tag "No Returnable item" -> final-sale message). Add one block per
+  tag/message pair in the theme editor, exactly like the live store.
+
+  Live-configured pairs (for reference):
+    - "SALE"               -> "no coupons can be applied to this item"
+    - "No Returnable item" -> "Final sale: Refunds are only available for sealed,
+                                unopened items returned within 30 days. ..."
+    - "Limited Shipping"   -> "Maximum order allowed of 6 per customer per month"
+  ----------------------------------------------------------------------------
+{%- endcomment -%}
+{%- liquid
+  assign pb_product = closest.product | default: product
+-%}
+{%- if block.settings.tag != blank and pb_product.tags contains block.settings.tag -%}
+  <span class="pb-tag-message" {{ block.shopify_attributes }}>{{ block.settings.message }}</span>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Matches the live theme's .custom-message styling exactly. */
+  .pb-tag-message {
+    color: red;
+    font-weight: bold;
+    font-size: 12px;
+    display: block;
+    line-height: 14px;
+  }
+  /* Small gap so stacked messages (and the SKU above) don't collide. */
+  .pb-tag-message + .pb-tag-message {
+    margin-top: 4px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tag message",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Product tag",
+      "info": "Message shows only when the product has this exact tag."
+    },
+    {
+      "type": "textarea",
+      "id": "message",
+      "label": "Message"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tag message"
+    }
+  ]
+}
+{% endschema %}

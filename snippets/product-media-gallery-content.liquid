@@ -130,7 +130,11 @@
     endif
   endif
 
-  if sorted_media.size == 0 and block_settings.hide_variants == false
+  # Planet Beauty: if variant-media filtering produced no media (e.g. single-variant
+  # products, or media not associated with any variant), fall back to ALL product
+  # media so the gallery is never blank. Previously this only ran when hide_variants
+  # was off, which left single-variant products with no media when hide_variants was on.
+  if sorted_media.size == 0
     assign sorted_media = selected_product.media
   endif
   assign has_image_drop = sorted_media | has: 'media_type', 'image'

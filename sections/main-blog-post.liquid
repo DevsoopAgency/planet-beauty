@@ -15,8 +15,26 @@
       {% render 'spacing-style', settings: section.settings %}
     "
   >
+    {%- comment -%}
+      Planet Beauty: article hero banner from metafield (parity with live theme).
+      Metafield: article.metafields.article.banner. Only renders when set.
+      Commented migration add — safe to remove if not approved.
+    {%- endcomment -%}
+    {%- if article.metafields.article.banner != blank -%}
+      <div
+        class="pb-article-banner"
+        role="img"
+        aria-label="{{ article.title | escape }}"
+        style="background-image: url('{{ article.metafields.article.banner | image_url: width: 2000 }}');"
+      ></div>
+    {%- endif -%}
+
     <header>
       {%- content_for 'block', id: 'blog-post-title', type: 'text' %}
+      {%- comment -%} Planet Beauty: article subtitle from article.metafields.custom.subtitle (parity with live). {%- endcomment -%}
+      {%- if article.metafields.custom.subtitle != blank -%}
+        <h2 class="pb-article-subtitle">{{ article.metafields.custom.subtitle }}</h2>
+      {%- endif -%}
       {%- content_for 'block', id: 'blog-post-details', type: '_blog-post-info-text' %}
     </header>
 
@@ -24,6 +42,17 @@
       {%- content_for 'block', id: 'blog-post-image', type: '_blog-post-featured-image' %}
     {%- endif -%}
     {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
+
+    {%- comment -%}
+      Planet Beauty: social share row (parity with live theme). Accessible links,
+      no external SDK. Commented migration add — safe to remove if not approved.
+    {%- endcomment -%}
+    <div class="pb-article-share">
+      <span class="pb-article-share__label">Share This</span>
+      <a class="pb-article-share__link" href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">Facebook</a>
+      <a class="pb-article-share__link" href="https://www.pinterest.com/pin/create/button/?url={{ shop.url }}{{ article.url }}&media={{ article.image | image_url: width: 800 }}&description={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Pinterest">Pinterest</a>
+      <a class="pb-article-share__link" href="https://twitter.com/share?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on X (Twitter)">X</a>
+    </div>
 
     {% comment %} Dynamic area for @app blocks only, at the bottom {% endcomment %}
     {% content_for 'blocks' %}
@@ -64,6 +93,42 @@
 </script>
 
 {% stylesheet %}
+  /* Planet Beauty: article parity styles (banner / subtitle / social share). Safe to remove. */
+  .pb-article-banner {
+    width: 100%;
+    aspect-ratio: 3 / 1;
+    background-size: cover;
+    background-position: center;
+    border-radius: var(--style-border-radius-base, 0);
+  }
+
+  .pb-article-subtitle {
+    text-align: center;
+    font-weight: 400;
+    margin: var(--margin-xs) 0 0;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+  }
+
+  .pb-article-share {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--gap-sm, 12px);
+    width: 100%;
+    max-width: var(--normal-content-width);
+    margin: 0 auto;
+  }
+
+  .pb-article-share__label {
+    font-weight: 600;
+  }
+
+  .pb-article-share__link {
+    color: var(--color-foreground);
+    text-decoration: underline;
+  }
+
   .blog-post-comments-container {
     width: 100%;
     max-width: var(--normal-content-width);

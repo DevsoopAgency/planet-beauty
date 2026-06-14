@@ -1,0 +1,53 @@
+{% comment %}
+  OneTrust must be the first script in <head> so auto-blocking can run before other tags.
+  OtAutoBlock blocks categorized scripts (e.g. TikTok) before consent.
+  OptanonWrapper runs after the banner loads and on every consent change.
+{% endcomment %}
+{% # theme-check-disable ParserBlockingScript,RemoteAsset %}
+{%- comment -%}
+  These scripts are intentionally parser-blocking and served from OneTrust's own
+  CDN (cookielaw.org). OtAutoBlock must run and finish before any categorized tag
+  loads, so defer/async or self-hosting would break consent auto-blocking.
+  Matches the live theme's integration.
+{%- endcomment -%}
+<script
+  type="text/javascript"
+  src="https://cdn.cookielaw.org/consent/6de6c5c0-b6ec-464f-8291-9377a7d50585/OtAutoBlock.js"
+></script>
+<script
+  src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
+  type="text/javascript"
+  charset="UTF-8"
+  data-domain-script="6de6c5c0-b6ec-464f-8291-9377a7d50585"
+></script>
+{% # theme-check-enable ParserBlockingScript %}
+<script type="text/javascript">
+  function OptanonWrapper() {
+    var label = 'Your Privacy Choices';
+    function applyFooterCookieLinkLabel() {
+      var el = document.getElementById('footer-cookie-preferences');
+      if (!el || el.textContent === label) return;
+      el.textContent = label;
+    }
+    applyFooterCookieLinkLabel();
+    setTimeout(applyFooterCookieLinkLabel, 0);
+    setTimeout(applyFooterCookieLinkLabel, 250);
+    setTimeout(applyFooterCookieLinkLabel, 1000);
+    var footerEl = document.getElementById('footer-cookie-preferences');
+    if (footerEl && typeof MutationObserver !== 'undefined') {
+      try {
+        new MutationObserver(applyFooterCookieLinkLabel).observe(footerEl, {
+          childList: true,
+          characterData: true,
+          subtree: true,
+        });
+      } catch (e) {}
+    }
+
+    if (typeof window.planetBeautyApplyConsentAfterChoice === 'function') {
+      window.planetBeautyApplyConsentAfterChoice('OptanonWrapper');
+    } else if (typeof window.planetBeautyDenyShopifyConsent === 'function') {
+      window.planetBeautyDenyShopifyConsent();
+    }
+  }
+</script>

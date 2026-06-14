@@ -1,0 +1,114 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------
+  Planet Beauty — shared styles + helpers for classic customer/account pages.
+
+  The store uses CLASSIC customer accounts (theme-rendered login/register/etc.).
+  Horizon ships no customer sections, so these pages are plain .liquid templates
+  rendered inside the normal theme layout. This snippet centralises their styling
+  using the theme's CSS variables so the look stays consistent with the theme.
+
+  Migration add — CSS is intentionally minimal and commented; safe to remove or
+  restyle later. Rendered once at the top of each templates/customers/*.liquid.
+  ----------------------------------------------------------------------------
+{%- endcomment -%}
+{% stylesheet %}{% endstylesheet %}
+<style>
+  .pb-account {
+    width: 100%;
+    max-width: var(--page-width, 1200px);
+    margin: 0 auto;
+    padding: var(--padding-2xl, 40px) var(--padding-lg, 20px);
+    color: var(--color-foreground);
+  }
+  .pb-account--narrow {
+    max-width: 480px;
+  }
+  .pb-account__title {
+    margin: 0 0 var(--margin-md, 16px);
+  }
+  .pb-account__intro {
+    margin: 0 0 var(--margin-lg, 24px);
+  }
+  .pb-account__notice {
+    margin: 0 0 var(--margin-lg, 24px);
+    padding: var(--padding-sm, 12px) var(--padding-md, 16px);
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.15);
+    border-radius: var(--style-border-radius-base, 4px);
+    background: rgb(var(--color-foreground-rgb) / 0.03);
+    font-size: var(--font-size--body-sm, 0.875rem);
+  }
+  .pb-account__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: var(--margin-md, 16px);
+  }
+  .pb-account__field label {
+    font-weight: 600;
+    font-size: var(--font-size--body-sm, 0.875rem);
+  }
+  .pb-account__field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.25);
+    border-radius: var(--style-border-radius-base, 4px);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font: inherit;
+  }
+  .pb-account__field input:focus {
+    outline: 2px solid var(--color-foreground);
+    outline-offset: 1px;
+  }
+  .pb-account__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--gap-md, 16px);
+    margin-top: var(--margin-md, 16px);
+  }
+  .pb-account__link {
+    color: var(--color-foreground);
+    text-decoration: underline;
+  }
+  .pb-account__errors {
+    margin: 0 0 var(--margin-lg, 24px);
+    padding: var(--padding-sm, 12px) var(--padding-md, 16px);
+    border: 1px solid #d02b2b;
+    border-radius: var(--style-border-radius-base, 4px);
+    color: #d02b2b;
+  }
+  .pb-account__errors ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+  .pb-account__success {
+    margin: 0 0 var(--margin-lg, 24px);
+    padding: var(--padding-sm, 12px) var(--padding-md, 16px);
+    border: 1px solid #2b8a3e;
+    border-radius: var(--style-border-radius-base, 4px);
+    color: #2b8a3e;
+  }
+  .pb-account__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--margin-md, 16px);
+  }
+  .pb-account__table th,
+  .pb-account__table td {
+    text-align: left;
+    padding: 12px 10px;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+    font-size: var(--font-size--body-sm, 0.875rem);
+  }
+  .pb-account__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-xl, 32px);
+  }
+  @media (min-width: 750px) {
+    .pb-account__grid--2 {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+</style>

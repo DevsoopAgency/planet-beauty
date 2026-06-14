@@ -1,0 +1,89 @@
+{% comment %}
+  Marketing / analytics tags must not load until OneTrust consent is granted.
+  C0002 = Performance (analytics), C0004 = Targeting (marketing) — verify IDs in OneTrust admin.
+{% endcomment %}
+<script type="text/javascript">
+  (function () {
+    var GTM_ID = 'GTM-542GFXP';
+    var TABOOLA_ID = '1820245';
+    var loaded = { gtm: false, taboola: false };
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    window.gtag = window.gtag || gtag;
+
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      functionality_storage: 'denied',
+      personalization_storage: 'denied',
+      security_storage: 'granted',
+      wait_for_update: 500,
+    });
+
+    function hasGroup(id) {
+      return (
+        typeof OnetrustActiveGroups !== 'undefined' &&
+        OnetrustActiveGroups.indexOf(id) > -1
+      );
+    }
+
+    function updateConsentMode() {
+      gtag('consent', 'update', {
+        analytics_storage: hasGroup('C0002') ? 'granted' : 'denied',
+        ad_storage: hasGroup('C0004') ? 'granted' : 'denied',
+        ad_user_data: hasGroup('C0004') ? 'granted' : 'denied',
+        ad_personalization: hasGroup('C0004') ? 'granted' : 'denied',
+        personalization_storage: hasGroup('C0004') ? 'granted' : 'denied',
+      });
+    }
+
+    function loadGTM() {
+      if (loaded.gtm) return;
+      loaded.gtm = true;
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0];
+        var j = d.createElement(s);
+        var dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', GTM_ID);
+    }
+
+    function loadTaboola() {
+      if (loaded.taboola || !hasGroup('C0004')) return;
+      loaded.taboola = true;
+      window._tfa = window._tfa || [];
+      window._tfa.push({ notify: 'event', name: 'page_view', id: TABOOLA_ID });
+      if (document.getElementById('tb_tfa_script')) return;
+      var t = document.createElement('script');
+      t.async = true;
+      t.src = '//cdn.taboola.com/libtrc/unip/' + TABOOLA_ID + '/tfa.js';
+      t.id = 'tb_tfa_script';
+      var f = document.getElementsByTagName('script')[0];
+      f.parentNode.insertBefore(t, f);
+    }
+
+    window.planetBeautyLoadConsentTags = function () {
+      if (
+        typeof window.planetBeautyHasConsentChoice === 'function' &&
+        !window.planetBeautyHasConsentChoice()
+      ) {
+        return;
+      }
+
+      updateConsentMode();
+      if (hasGroup('C0002') || hasGroup('C0004')) {
+        loadGTM();
+      }
+      loadTaboola();
+    };
+  })();
+</script>

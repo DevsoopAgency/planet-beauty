@@ -1,0 +1,67 @@
+{% comment %}
+  Must run immediately before {{ content_for_header }} so Shopify pixels (TikTok shopify_pixel, etc.)
+  stay denied until the user accepts or rejects the OneTrust banner.
+{% endcomment %}
+<script type="text/javascript">
+  (function () {
+    var DENY_ALL = {
+      analytics: false,
+      marketing: false,
+      preferences: false,
+      sale_of_data: false,
+    };
+    var apiLoaded = false;
+
+    function applyConsent(consent) {
+      if (
+        !window.Shopify ||
+        !window.Shopify.customerPrivacy ||
+        typeof window.Shopify.customerPrivacy.setTrackingConsent !== 'function'
+      ) {
+        return false;
+      }
+      window.Shopify.customerPrivacy.setTrackingConsent(consent);
+      return true;
+    }
+
+    function lockDeny() {
+      applyConsent(DENY_ALL);
+    }
+
+    function initPrivacyApi() {
+      if (apiLoaded) return;
+      if (!window.Shopify || typeof window.Shopify.loadFeatures !== 'function') return;
+
+      apiLoaded = true;
+      window.Shopify.loadFeatures(
+        [{ name: 'consent-tracking-api', version: '0.1' }],
+        function (error) {
+          if (error) return;
+          if (
+            typeof window.planetBeautyHasConsentChoice === 'function' &&
+            window.planetBeautyHasConsentChoice() &&
+            typeof window.planetBeautyApplyConsentAfterChoice === 'function'
+          ) {
+            window.planetBeautyApplyConsentAfterChoice();
+          } else {
+            lockDeny();
+          }
+        }
+      );
+    }
+
+    initPrivacyApi();
+
+    var attempts = 0;
+    var poll = setInterval(function () {
+      initPrivacyApi();
+      if (
+        typeof window.planetBeautyHasConsentChoice === 'function' &&
+        !window.planetBeautyHasConsentChoice()
+      ) {
+        lockDeny();
+      }
+      if (++attempts >= 80) clearInterval(poll);
+    }, 10);
+  })();
+</script>

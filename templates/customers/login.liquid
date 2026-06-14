@@ -1,0 +1,81 @@
+{%- comment -%}
+  Classic customer login (parity with live store, which uses classic accounts).
+  Includes the "re-register" migration notice shown on the live store.
+{%- endcomment -%}
+{% render 'pb-customer-account' %}
+
+<div class="pb-account pb-account--narrow" id="pb-login">
+  {%- comment -%} Live migration notice — edit/remove as needed. {%- endcomment -%}
+  <p class="pb-account__notice">
+    We recently switched our online systems. If you had an account previously,
+    please <a class="pb-account__link" href="{{ routes.account_register_url }}">re-register with a new account here</a>.
+  </p>
+
+  {%- comment -%} ===== Recover password ===== {%- endcomment -%}
+  <div id="recover-password" style="display:none;">
+    <h1 class="pb-account__title">Reset your password</h1>
+    <p class="pb-account__intro">We will send you an email to reset your password.</p>
+
+    {%- form 'recover_customer_password' -%}
+      {%- if form.errors -%}
+        <div class="pb-account__errors" role="alert">{{ form.errors | default_errors }}</div>
+      {%- endif -%}
+      <div class="pb-account__field">
+        <label for="RecoverEmail">Email</label>
+        <input type="email" name="email" id="RecoverEmail" autocomplete="email" autocorrect="off" autocapitalize="off" required>
+      </div>
+      <div class="pb-account__actions">
+        <button type="submit" class="button">Submit</button>
+        <a class="pb-account__link" href="#" onclick="document.getElementById('recover-password').style.display='none';document.getElementById('login').style.display='block';return false;">Cancel</a>
+      </div>
+    {%- endform -%}
+  </div>
+
+  {%- comment -%} ===== Login ===== {%- endcomment -%}
+  <div id="login">
+    <h1 class="pb-account__title">Login</h1>
+
+    {%- form 'customer_login', novalidate: 'novalidate' -%}
+      {%- if form.errors -%}
+        <div class="pb-account__errors" role="alert">{{ form.errors | default_errors }}</div>
+      {%- endif -%}
+
+      <div class="pb-account__field">
+        <label for="CustomerEmail">Email</label>
+        <input type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" autocorrect="off" autocapitalize="off" required>
+      </div>
+
+      {%- if form.password_needed -%}
+        <div class="pb-account__field">
+          <label for="CustomerPassword">Password</label>
+          <input type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required>
+        </div>
+        <p>
+          <a class="pb-account__link" href="#" onclick="document.getElementById('login').style.display='none';document.getElementById('recover-password').style.display='block';return false;">Forgot your password?</a>
+        </p>
+      {%- endif -%}
+
+      <div class="pb-account__actions">
+        <button type="submit" class="button">Sign in</button>
+        <a class="pb-account__link" href="{{ routes.account_register_url }}">Create account</a>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+{%- if shop.checkout.guest_login -%}
+  <div class="pb-account pb-account--narrow">
+    <h2 class="pb-account__title">Continue as a guest</h2>
+    {%- form 'guest_login' -%}
+      <button type="submit" class="button button-secondary">Continue</button>
+    {%- endform -%}
+  </div>
+{%- endif -%}
+
+<script>
+  // Deep-link to the recover-password view via #recover
+  if (window.location.hash === '#recover') {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('recover-password').style.display = 'block';
+  }
+</script>

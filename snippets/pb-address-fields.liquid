@@ -1,0 +1,54 @@
+{%- comment -%}
+  Address form fields for classic customer addresses.
+  Params: address (the address object), id_suffix (unique string).
+  Country is pre-selected via a tiny inline script (no Shopify.CountryProvinceSelector
+  dependency); province is a plain text field so it works for any country.
+{%- endcomment -%}
+<div class="pb-account__field">
+  <label for="AddressFirstName_{{ id_suffix }}">First name</label>
+  <input type="text" id="AddressFirstName_{{ id_suffix }}" name="address[first_name]" value="{{ address.first_name }}" autocomplete="given-name">
+</div>
+<div class="pb-account__field">
+  <label for="AddressLastName_{{ id_suffix }}">Last name</label>
+  <input type="text" id="AddressLastName_{{ id_suffix }}" name="address[last_name]" value="{{ address.last_name }}" autocomplete="family-name">
+</div>
+<div class="pb-account__field">
+  <label for="AddressCompany_{{ id_suffix }}">Company</label>
+  <input type="text" id="AddressCompany_{{ id_suffix }}" name="address[company]" value="{{ address.company }}" autocomplete="organization">
+</div>
+<div class="pb-account__field">
+  <label for="AddressAddress1_{{ id_suffix }}">Address 1</label>
+  <input type="text" id="AddressAddress1_{{ id_suffix }}" name="address[address1]" value="{{ address.address1 }}" autocomplete="address-line1">
+</div>
+<div class="pb-account__field">
+  <label for="AddressAddress2_{{ id_suffix }}">Address 2</label>
+  <input type="text" id="AddressAddress2_{{ id_suffix }}" name="address[address2]" value="{{ address.address2 }}" autocomplete="address-line2">
+</div>
+<div class="pb-account__field">
+  <label for="AddressCity_{{ id_suffix }}">City</label>
+  <input type="text" id="AddressCity_{{ id_suffix }}" name="address[city]" value="{{ address.city }}" autocomplete="address-level2">
+</div>
+<div class="pb-account__field">
+  <label for="AddressCountry_{{ id_suffix }}">Country/Region</label>
+  <select id="AddressCountry_{{ id_suffix }}" name="address[country]" autocomplete="country">{{ country_option_tags }}</select>
+</div>
+<div class="pb-account__field">
+  <label for="AddressProvince_{{ id_suffix }}">State/Province</label>
+  <input type="text" id="AddressProvince_{{ id_suffix }}" name="address[province]" value="{{ address.province }}" autocomplete="address-level1">
+</div>
+<div class="pb-account__field">
+  <label for="AddressZip_{{ id_suffix }}">Postal/Zip code</label>
+  <input type="text" id="AddressZip_{{ id_suffix }}" name="address[zip]" value="{{ address.zip }}" autocomplete="postal-code" autocapitalize="characters">
+</div>
+<div class="pb-account__field">
+  <label for="AddressPhone_{{ id_suffix }}">Phone</label>
+  <input type="tel" id="AddressPhone_{{ id_suffix }}" name="address[phone]" value="{{ address.phone }}" autocomplete="tel">
+</div>
+{%- if address.country != blank -%}
+  <script>
+    (function () {
+      var sel = document.getElementById('AddressCountry_{{ id_suffix }}');
+      if (sel) sel.value = {{ address.country | json }};
+    })();
+  </script>
+{%- endif -%}

@@ -27,6 +27,10 @@
     gap: 12px;
     width: 100%;
 }
+#rebuy-widget-82672 .rebuy-product-block{
+  max-width: 100%!important;
+  width: 100%!important;
+}
 
 #rebuy-widget-82672 .rebuy-bundle__image {
     flex: 1 1 120px;
@@ -58,11 +62,11 @@
     align-items: flex-start;
     gap: 12px;
 }
-
+/* 
 #rebuy-widget-82672 .bundle-single-image {
     flex: 0 0 96px;
     max-width: 96px;
-}
+} */
 
 .rebuy-widget-content {
     text-align: left;
@@ -88,7 +92,10 @@
     color: #EF0180;
     text-decoration: underline;
 }
-
+#rebuy-widget-82672{
+  max-width: 100%!important;
+  width: 100%;
+}
 /* Mobile header icon row */
 @media screen and (max-width: 749px) {
   #header-component .header__columns {

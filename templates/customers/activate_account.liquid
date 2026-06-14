@@ -1,0 +1,30 @@
+{%- comment -%}
+  Classic customer account activation (reached from the activation email link).
+{%- endcomment -%}
+{% render 'pb-customer-account' %}
+
+<div class="pb-account pb-account--narrow">
+  <h1 class="pb-account__title">Activate account</h1>
+  <p class="pb-account__intro">Create your password to activate your account.</p>
+
+  {%- form 'activate_customer_password' -%}
+    {%- if form.errors -%}
+      <div class="pb-account__errors" role="alert">{{ form.errors | default_errors }}</div>
+    {%- endif -%}
+
+    <div class="pb-account__field">
+      <label for="ActivatePassword">Password</label>
+      <input type="password" name="customer[password]" id="ActivatePassword" autocomplete="new-password" required>
+    </div>
+
+    <div class="pb-account__field">
+      <label for="ActivatePasswordConfirm">Confirm password</label>
+      <input type="password" name="customer[password_confirmation]" id="ActivatePasswordConfirm" autocomplete="new-password" required>
+    </div>
+
+    <div class="pb-account__actions">
+      <button type="submit" class="button" name="commit">Activate account</button>
+      <button type="submit" class="button button-secondary" name="decline">Decline invitation</button>
+    </div>
+  {%- endform -%}
+</div>

@@ -1,0 +1,111 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------
+  Planet Beauty — style the modern Recharge subscription widget (app block) to
+  match the LIVE theme's legacy ReCharge widget design: card-style purchase
+  options ("One-time purchase" / "Subscribe & save") with the selected option
+  highlighted. Live design values (ReCharge widget defaults used on the live store):
+    label color  #000000
+    active color #676767
+    active bg    #F8F8F8
+
+  Targets the modern Recharge "no-code" widget DOM (.rc-widget / [id^="RechargeWidget_"],
+  .rc-radio, .onetime-radio, .subscription-radio, .rc-radio__label, .rc-radio__price)
+  — the same hooks used by assets/recharge-price-sync.js. The selling-plan mechanism
+  is left untouched; this is design only.
+
+  NOTE: exact colors live in the Recharge admin widget settings; tune here if needed.
+  Commented migration add — safe to remove.
+  ----------------------------------------------------------------------------
+{%- endcomment -%}
+<style>
+  /* Stack the purchase options as cards */
+  .rc-widget .rc-radio,
+  [id^="RechargeWidget_"] .rc-radio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgb(0 0 0 / 0.12);
+    border-radius: var(--style-border-radius-base, 6px);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+
+  .rc-widget .rc-radio__label,
+  [id^="RechargeWidget_"] .rc-radio__label {
+    color: #000000;
+    font-weight: 500;
+  }
+
+  .rc-widget .rc-radio__price,
+  [id^="RechargeWidget_"] .rc-radio__price {
+    margin-left: auto;
+    font-weight: 600;
+  }
+
+  /* Selected / active option — highlight like the live widget */
+  .rc-widget .rc-radio:has(input[name="purchaseOption"]:checked),
+  .rc-widget .onetime-radio:has(input:checked) .rc-radio,
+  .rc-widget .subscription-radio:has(input:checked) .rc-radio,
+  .rc-widget .rc-radio.is-selected,
+  [id^="RechargeWidget_"] .rc-radio:has(input[name="purchaseOption"]:checked) {
+    background-color: #F8F8F8;
+    border-color: #676767;
+  }
+
+  /* Keep the selected label readable (dark), not washed-out gray */
+  .rc-widget .rc-radio:has(input:checked) .rc-radio__label,
+  [id^="RechargeWidget_"] .rc-radio:has(input:checked) .rc-radio__label {
+    color: #000000;
+    font-weight: 600;
+  }
+
+  /* Frequency / "deliver every" select inherits theme input look */
+  .rc-widget select,
+  [id^="RechargeWidget_"] select {
+    font: inherit;
+    color: var(--color-foreground);
+  }
+
+  /* Subscription-details / info icon should be a 16x16 square (was 16x19) */
+  .rc-widget img,
+  [id^="RechargeWidget_"] img,
+  .rc-widget .rc-tooltip__icon,
+  .rc-widget svg.rc-icon {
+    width: 16px !important;
+    height: 16px !important;
+    object-fit: contain;
+    flex: 0 0 auto;
+  }
+
+  /* Selected radio "dot" in brand pink — native radio rendering (clean dot) */
+  .rc-widget input[type="radio"],
+  [id^="RechargeWidget_"] input[type="radio"] {
+    accent-color: #ef0180;
+    width: 18px!important;
+    height: 18px!important;
+  }
+
+  /* Tidy spacing to match live: comfortable padding, consistent gaps */
+  .rc-widget,
+  [id^="RechargeWidget_"] {
+    margin-block: var(--margin-md, 16px);
+  }
+  .rc-widget .rc-radio__label,
+  [id^="RechargeWidget_"] .rc-radio__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rc-widget .rc-option__inner,
+  .rc-widget .rc-selling-plans,
+  [id^="RechargeWidget_"] .rc-selling-plans {
+    padding: 10px 14px;
+  }
+  .rc-selling-plans{
+    margin-top: 5px;
+  }
+  .rc-widget .px-3{
+    margin-bottom: 5px!important;
+  }
+</style>

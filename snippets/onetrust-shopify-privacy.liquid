@@ -1,0 +1,109 @@
+{% comment %}
+  Syncs OneTrust cookie groups to Shopify Customer Privacy API so app/custom pixels
+  (TikTok, Meta, Klaviyo, etc. in content_for_header) respect consent.
+  Events must NOT fire until the user accepts or rejects the banner (first visit).
+{% endcomment %}
+<script type="text/javascript">
+  (function () {
+    var GROUP_ANALYTICS = 'C0002';
+    var GROUP_PREFERENCES = 'C0003';
+    var GROUP_MARKETING = 'C0004';
+
+    window.planetBeautyMarketingAllowed = function () {
+      var groups = window.OnetrustActiveGroups || window.OptanonActiveGroups || '';
+      return groups.indexOf(GROUP_MARKETING) > -1;
+    };
+
+    window.planetBeautyHasConsentChoice = function () {
+      if (window.OneTrust && typeof window.OneTrust.IsAlertBoxClosed === 'function') {
+        return window.OneTrust.IsAlertBoxClosed();
+      }
+      return document.cookie.indexOf('OptanonConsent=') > -1;
+    };
+
+    function hasGroup(id) {
+      var groups = window.OnetrustActiveGroups || window.OptanonActiveGroups || '';
+      return groups.indexOf(id) > -1;
+    }
+
+    function buildTrackingConsent() {
+      return {
+        analytics: hasGroup(GROUP_ANALYTICS),
+        marketing: hasGroup(GROUP_MARKETING),
+        preferences: hasGroup(GROUP_PREFERENCES),
+        sale_of_data: hasGroup(GROUP_MARKETING),
+      };
+    }
+
+    function loadConsentApi(callback) {
+      if (!window.Shopify || typeof window.Shopify.loadFeatures !== 'function') {
+        callback(new Error('Shopify.loadFeatures unavailable'));
+        return;
+      }
+      window.Shopify.loadFeatures(
+        [{ name: 'consent-tracking-api', version: '0.1' }],
+        function (error) {
+          callback(error || null);
+        }
+      );
+    }
+
+    window.planetBeautySyncShopifyConsent = function () {
+      if (!window.planetBeautyHasConsentChoice()) return;
+
+      var consent = buildTrackingConsent();
+      loadConsentApi(function (error) {
+        if (error) return;
+        if (!window.Shopify.customerPrivacy || typeof window.Shopify.customerPrivacy.setTrackingConsent !== 'function') {
+          return;
+        }
+        window.Shopify.customerPrivacy.setTrackingConsent(consent);
+      });
+    };
+
+    window.planetBeautyDenyShopifyConsent = function () {
+      loadConsentApi(function (error) {
+        if (error) return;
+        if (!window.Shopify.customerPrivacy || typeof window.Shopify.customerPrivacy.setTrackingConsent !== 'function') {
+          return;
+        }
+        window.Shopify.customerPrivacy.setTrackingConsent({
+          analytics: false,
+          marketing: false,
+          preferences: false,
+          sale_of_data: false,
+        });
+      });
+    };
+
+    window.planetBeautyApplyConsentAfterChoice = function () {
+      if (!window.planetBeautyHasConsentChoice()) {
+        window.planetBeautyDenyShopifyConsent();
+        return;
+      }
+
+      window.planetBeautySyncShopifyConsent();
+
+      if (typeof window.planetBeautyLoadConsentTags === 'function') {
+        window.planetBeautyLoadConsentTags();
+      }
+    };
+
+    window.planetBeautyDenyShopifyConsent();
+
+    document.addEventListener('OneTrustGroupsUpdated', function () {
+      window.planetBeautyApplyConsentAfterChoice();
+    });
+
+    function bindOneTrustConsentChanged() {
+      if (window.OneTrust && typeof window.OneTrust.OnConsentChanged === 'function') {
+        window.OneTrust.OnConsentChanged(function () {
+          window.planetBeautyApplyConsentAfterChoice();
+        });
+      }
+    }
+
+    bindOneTrustConsentChanged();
+    document.addEventListener('DOMContentLoaded', bindOneTrustConsentChanged);
+  })();
+</script>

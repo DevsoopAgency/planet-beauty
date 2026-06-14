@@ -1,0 +1,49 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------
+  Planet Beauty — Power Reviews PDP integration (parity with live theme).
+
+  Custom integration (third-party app). Credentials are the client's, taken from
+  the live theme settings. Renders two parts via the `part` param:
+    - part: 'snippet'  -> star-rating snippet, placed under the product title
+    - part: 'display'  -> full reviews + Q&A, placed lower on the PDP, and fires
+                          the single pwr("render", ...) call + loads ui.js
+
+  page_id uses product.id to match the rating snippet shown on product cards
+  (Boost) in the live theme. Adjust if the Power Reviews catalog keys by SKU/handle.
+  Safe to remove if Power Reviews is dropped.
+  ----------------------------------------------------------------------------
+{%- endcomment -%}
+{%- liquid
+  assign pr_product = closest.product | default: product
+-%}
+{%- case part -%}
+  {%- when 'snippet' -%}
+    <div id="pr-reviewsnippet" class="pb-pr-snippet"></div>
+
+  {%- when 'display' -%}
+    <div id="pr-reviewdisplay" class="pb-pr-display"></div>
+    <div id="pr-questiondisplay" class="pb-pr-display"></div>
+
+    {% # theme-check-disable RemoteAsset %}
+    {%- comment -%} Power Reviews UI must load from its own CDN. {%- endcomment -%}
+    <script src="https://ui.powerreviews.com/stable/4.1/ui.js" async></script>
+    {% # theme-check-enable RemoteAsset %}
+    <script>
+      window.pwr = window.pwr || function () {
+        (pwr.q = pwr.q || []).push(arguments);
+      };
+      pwr("render", [{
+        ENABLE_CLIENT_SIDE_STRUCTURED_DATA: true,
+        api_key: '0ce9048c-1959-4821-8783-8bb2e0ac07ba',
+        locale: 'en_US',
+        merchant_group_id: '1720210388',
+        merchant_id: '1424023529',
+        page_id: {{ pr_product.id }},
+        components: {
+          ReviewSnippet: 'pr-reviewsnippet',
+          ReviewDisplay: 'pr-reviewdisplay',
+          QuestionDisplay: 'pr-questiondisplay'
+        }
+      }]);
+    </script>
+{%- endcase -%}

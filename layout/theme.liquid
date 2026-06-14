@@ -6,6 +6,15 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    {%- comment -%}
+      OneTrust cookie consent — ported from live theme. OtAutoBlock must be the
+      first script in <head> so categorized tags are blocked before consent.
+      Order: onetrust-head → consent-gated-tags → onetrust-shopify-privacy.
+    {%- endcomment -%}
+    {%- render 'onetrust-head' -%}
+    {%- render 'consent-gated-tags' -%}
+    {%- render 'onetrust-shopify-privacy' -%}
+
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"
@@ -36,6 +45,8 @@
       {%- render 'theme-editor' -%}
     {% endif %}
 
+    {%- comment -%} Keep Shopify pixels denied until OneTrust consent choice (ported from live) {%- endcomment -%}
+    {%- render 'pre-header-privacy-lock' -%}
     {{ content_for_header }}
     {% # theme-check-enable RemoteAsset %}
   </head>
@@ -134,5 +145,13 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
+
+    {%- comment -%}
+      OneTrust "Your Privacy Choices" trigger (ported from live). Hidden button that
+      reopens the OneTrust preference center. To expose it, add a footer link with
+      id="footer-cookie-preferences" that calls OneTrust.ToggleInfoDisplay() — the
+      footer is out of scope for now, so this hidden trigger is provided for parity.
+    {%- endcomment -%}
+    <button style="display:none;" id="ot-sdk-btn" class="ot-sdk-show-settings">Cookie Settings</button>
   </body>
 </html>

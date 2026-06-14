@@ -1,0 +1,76 @@
+{%- comment -%}
+  Classic customer addresses: list / add / edit / delete.
+  Country uses {{ country_option_tags }}; province is a text field so no external
+  Shopify.CountryProvinceSelector dependency is needed. Delete uses a POST form
+  with _method=delete (no JS dependency). Edit forms toggle with minimal vanilla JS.
+{%- endcomment -%}
+{% render 'pb-customer-account' %}
+
+<div class="pb-account">
+  <p><a class="pb-account__link" href="{{ routes.account_url }}">&larr; Back to my account</a></p>
+  <h1 class="pb-account__title">Your addresses</h1>
+
+  {%- paginate customer.addresses by 10 -%}
+    {%- comment -%} ===== Add new address ===== {%- endcomment -%}
+    <button type="button" class="button" onclick="pbToggle('pb-address-new')">Add a new address</button>
+
+    <div id="pb-address-new" style="display:none;margin-top:24px;">
+      <h2>Add a new address</h2>
+      {%- form 'customer_address', customer.new_address -%}
+        {% render 'pb-address-fields', address: customer.new_address, id_suffix: 'new' %}
+        <div class="pb-account__field" style="flex-direction:row;align-items:center;gap:8px;">
+          <input type="checkbox" id="address_default_new" name="address[default]" value="1" style="width:auto;">
+          <label for="address_default_new" style="font-weight:400;">Set as default address</label>
+        </div>
+        <div class="pb-account__actions">
+          <button type="submit" class="button">Add address</button>
+          <button type="button" class="pb-account__link" onclick="pbToggle('pb-address-new')">Cancel</button>
+        </div>
+      {%- endform -%}
+    </div>
+
+    {%- comment -%} ===== Existing addresses ===== {%- endcomment -%}
+    <div style="margin-top:32px;">
+      {%- for address in customer.addresses -%}
+        <div class="pb-account__notice" style="background:none;">
+          {%- if address == customer.default_address -%}<strong>Default</strong><br>{%- endif -%}
+          {{ address | format_address }}
+
+          <div class="pb-account__actions">
+            <button type="button" class="pb-account__link" onclick="pbToggle('pb-address-edit-{{ address.id }}')">Edit</button>
+            <form method="post" action="{{ address.url }}" onsubmit="return confirm('Delete this address?');" style="display:inline;">
+              <input type="hidden" name="_method" value="delete">
+              <button type="submit" class="pb-account__link" style="border:none;background:none;cursor:pointer;">Delete</button>
+            </form>
+          </div>
+
+          <div id="pb-address-edit-{{ address.id }}" style="display:none;margin-top:16px;">
+            <h3>Edit address</h3>
+            {%- form 'customer_address', address -%}
+              {% render 'pb-address-fields', address: address, id_suffix: address.id %}
+              <div class="pb-account__field" style="flex-direction:row;align-items:center;gap:8px;">
+                <input type="checkbox" id="address_default_{{ address.id }}" name="address[default]" value="1" {% if address == customer.default_address %}checked{% endif %} style="width:auto;">
+                <label for="address_default_{{ address.id }}" style="font-weight:400;">Set as default address</label>
+              </div>
+              <div class="pb-account__actions">
+                <button type="submit" class="button">Update address</button>
+                <button type="button" class="pb-account__link" onclick="pbToggle('pb-address-edit-{{ address.id }}')">Cancel</button>
+              </div>
+            {%- endform -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <nav class="pb-account__actions" role="navigation">{{ paginate | default_pagination }}</nav>
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>
+
+<script>
+  function pbToggle(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = (el.style.display === 'none' || !el.style.display) ? 'block' : 'none';
+  }
+</script>

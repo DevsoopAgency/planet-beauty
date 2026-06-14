@@ -1,0 +1,77 @@
+{%- comment -%}
+  Classic customer order detail page.
+{%- endcomment -%}
+{% render 'pb-customer-account' %}
+
+<div class="pb-account">
+  <p><a class="pb-account__link" href="{{ routes.account_url }}">&larr; Back to my account</a></p>
+  <h1 class="pb-account__title">Order {{ order.name }}</h1>
+  <p class="pb-account__intro">Placed on {{ order.created_at | date: "%B %d, %Y %I:%M%p" }}</p>
+
+  {%- if order.cancelled -%}
+    <div class="pb-account__errors">
+      Order cancelled on {{ order.cancelled_at | date: "%B %d, %Y %I:%M%p" }}
+      {%- if order.cancel_reason %} ({{ order.cancel_reason_label }}){% endif -%}
+    </div>
+  {%- endif -%}
+
+  <table class="pb-account__table">
+    <thead>
+      <tr>
+        <th scope="col">Product</th>
+        <th scope="col">SKU</th>
+        <th scope="col">Price</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for line_item in order.line_items -%}
+        <tr>
+          <td>
+            <a class="pb-account__link" href="{{ line_item.product.url }}">{{ line_item.title }}</a>
+          </td>
+          <td>{{ line_item.sku }}</td>
+          <td>{{ line_item.price | money }}</td>
+          <td>{{ line_item.quantity }}</td>
+          <td>{{ line_item.quantity | times: line_item.price | money }}</td>
+        </tr>
+      {%- endfor -%}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4">Subtotal</td>
+        <td>{{ order.line_items_subtotal_price | money }}</td>
+      </tr>
+      {%- for shipping_method in order.shipping_methods -%}
+        <tr>
+          <td colspan="4">Shipping ({{ shipping_method.title }})</td>
+          <td>{{ shipping_method.price | money }}</td>
+        </tr>
+      {%- endfor -%}
+      {%- for tax_line in order.tax_lines -%}
+        <tr>
+          <td colspan="4">Tax ({{ tax_line.title }} {{ tax_line.rate | times: 100 }}%)</td>
+          <td>{{ tax_line.price | money }}</td>
+        </tr>
+      {%- endfor -%}
+      <tr>
+        <td colspan="4"><strong>Total</strong></td>
+        <td><strong>{{ order.total_net_amount | money }} {{ order.currency }}</strong></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="pb-account__grid pb-account__grid--2" style="margin-top:24px;">
+    <div>
+      <h2>Billing address</h2>
+      <p>Status: {{ order.financial_status_label }}</p>
+      {{ order.billing_address | format_address }}
+    </div>
+    <div>
+      <h2>Shipping address</h2>
+      <p>Status: {{ order.fulfillment_status_label }}</p>
+      {{ order.shipping_address | format_address }}
+    </div>
+  </div>
+</div>
