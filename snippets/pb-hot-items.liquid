@@ -1,0 +1,156 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------
+  Planet Beauty — "Hot Deals For You" hot-items grid (parity with live theme).
+
+  Replicates how the live article/blog templates render product cards:
+  loops `collections[handle].products` (default the catch-all "all" collection,
+  exactly like live's `collections['all'].products`) and shows image, title,
+  short description, price and a pink "View Item" link.
+
+  Params (via render): heading, collection (handle, default 'all'), limit
+  (default 4), view_all_url, view_all_label.
+
+  Custom markup/CSS added for design parity — clearly commented, safe to remove.
+  ----------------------------------------------------------------------------
+{%- endcomment -%}
+{%- liquid
+  assign pb_coll = collection | default: 'all'
+  assign pb_limit = limit | default: 4
+  assign pb_layout = layout | default: 'grid'
+  assign pb_products = collections[pb_coll].products
+-%}
+{%- if pb_products.size > 0 -%}
+  <section class="pb-hot-items pb-hot-items--{{ pb_layout }}">
+    {%- if heading != blank -%}
+      <h2 class="pb-hot-items__title">{{ heading }}</h2>
+    {%- endif -%}
+    <ul class="pb-hot-items__grid">
+      {%- for product in pb_products limit: pb_limit -%}
+        <li class="pb-hot-items__card">
+          <a class="pb-hot-items__img" href="{{ product.url }}">
+            {%- if product.featured_image -%}
+              <img
+                src="{{ product.featured_image | image_url: width: 300 }}"
+                alt="{{ product.title | escape }}"
+                width="300"
+                height="300"
+                loading="lazy"
+              >
+            {%- endif -%}
+          </a>
+          <div class="pb-hot-items__content">
+            <h3 class="pb-hot-items__name">
+              <a href="{{ product.url }}">{{ product.title | strip_html | truncate: 40 }}</a>
+            </h3>
+            <p class="pb-hot-items__desc">{{ product.description | strip_html | truncate: 60 }}</p>
+            <span class="pb-hot-items__price">{{ product.price | money }}</span>
+            <a class="pb-hot-items__link" href="{{ product.url }}">View Item</a>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {%- if view_all_url != blank -%}
+      <div class="pb-hot-items__viewall">
+        <a href="{{ view_all_url }}">{{ view_all_label | default: 'View All Deals' }}</a>
+      </div>
+    {%- endif -%}
+  </section>
+{%- endif -%}
+
+<style>
+  /* Planet Beauty: hot-items cards (ported from live single-article.css). Safe to remove. */
+  .pb-hot-items {
+    width: 100%;
+    max-width: var(--page-content-width, 1200px);
+    margin: 0 auto;
+    padding-inline: var(--page-margin, 16px);
+  }
+  .pb-hot-items__title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: var(--color-foreground);
+  }
+  .pb-hot-items__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 749px) {
+    .pb-hot-items__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .pb-hot-items__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-background, #fff);
+    border: 1px solid rgb(0 0 0 / 0.08);
+    border-radius: var(--style-border-radius-base, 4px);
+    overflow: hidden;
+  }
+  .pb-hot-items__img { display: block; }
+  .pb-hot-items__img img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+  }
+  .pb-hot-items__content {
+    padding: 14px 14px 44px;
+    flex: 1;
+  }
+  .pb-hot-items__name {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    line-height: 1.3;
+  }
+  .pb-hot-items__name a { color: var(--color-foreground); text-decoration: none; }
+  .pb-hot-items__desc {
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0 0 6px;
+    color: var(--color-foreground);
+  }
+  .pb-hot-items__price { font-weight: 700; font-size: 14px; }
+  .pb-hot-items__link {
+    position: absolute;
+    bottom: 16px;
+    right: 14px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: #ef0180;
+    text-decoration: none;
+  }
+  .pb-hot-items__link::after { content: ' \00bb'; }
+  .pb-hot-items__viewall { text-align: center; margin-top: 16px; }
+  .pb-hot-items__viewall a {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #ef0180;
+    text-decoration: none;
+  }
+
+  /* Sidebar variant: single column, horizontal cards (img 35% / content 65%) — matches live article sidebar */
+  .pb-hot-items--sidebar { padding-inline: 0; }
+  .pb-hot-items--sidebar .pb-hot-items__grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .pb-hot-items--sidebar .pb-hot-items__card { flex-direction: row; }
+  .pb-hot-items--sidebar .pb-hot-items__img {
+    flex: 0 0 35%;
+    width: 35%;
+  }
+  .pb-hot-items--sidebar .pb-hot-items__content {
+    width: 65%;
+    padding: 12px 12px 32px;
+  }
+  .pb-hot-items--sidebar .pb-hot-items__link { bottom: 10px; right: 12px; }
+</style>

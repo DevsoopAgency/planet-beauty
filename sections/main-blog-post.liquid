@@ -29,29 +29,49 @@
       ></div>
     {%- endif -%}
 
-    <header>
-      {%- content_for 'block', id: 'blog-post-title', type: 'text' %}
-      {%- comment -%} Planet Beauty: article subtitle from article.metafields.custom.subtitle (parity with live). {%- endcomment -%}
-      {%- if article.metafields.custom.subtitle != blank -%}
-        <h2 class="pb-article-subtitle">{{ article.metafields.custom.subtitle }}</h2>
-      {%- endif -%}
-      {%- content_for 'block', id: 'blog-post-details', type: '_blog-post-info-text' %}
-    </header>
-
-    {%- if article.image -%}
-      {%- content_for 'block', id: 'blog-post-image', type: '_blog-post-featured-image' %}
-    {%- endif -%}
-    {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
-
     {%- comment -%}
-      Planet Beauty: social share row (parity with live theme). Accessible links,
-      no external SDK. Commented migration add — safe to remove if not approved.
+      Planet Beauty: 2-column article layout — content on the left, "Hot Deals For You"
+      as the right sidebar (parity with live). Banner stays full-width above. The
+      "People Also Looked At" carousel remains a separate full-width section below.
     {%- endcomment -%}
-    <div class="pb-article-share">
-      <span class="pb-article-share__label">Share This</span>
-      <a class="pb-article-share__link" href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">Facebook</a>
-      <a class="pb-article-share__link" href="https://www.pinterest.com/pin/create/button/?url={{ shop.url }}{{ article.url }}&media={{ article.image | image_url: width: 800 }}&description={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Pinterest">Pinterest</a>
-      <a class="pb-article-share__link" href="https://twitter.com/share?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on X (Twitter)">X</a>
+    <div class="pb-article-layout">
+      <div class="pb-article-main">
+        <header>
+          {%- content_for 'block', id: 'blog-post-title', type: 'text' %}
+          {%- comment -%} Planet Beauty: article subtitle from article.metafields.custom.subtitle (parity with live). {%- endcomment -%}
+          {%- if article.metafields.custom.subtitle != blank -%}
+            <h2 class="pb-article-subtitle">{{ article.metafields.custom.subtitle }}</h2>
+          {%- endif -%}
+          {%- content_for 'block', id: 'blog-post-details', type: '_blog-post-info-text' %}
+        </header>
+
+        {%- if article.image -%}
+          {%- content_for 'block', id: 'blog-post-image', type: '_blog-post-featured-image' %}
+        {%- endif -%}
+        {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
+
+        {%- comment -%}
+          Planet Beauty: social share row (parity with live theme). Accessible links,
+          no external SDK. Commented migration add — safe to remove if not approved.
+        {%- endcomment -%}
+        <div class="pb-article-share">
+          <span class="pb-article-share__label">Share This</span>
+          <a class="pb-article-share__link" href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">Facebook</a>
+          <a class="pb-article-share__link" href="https://www.pinterest.com/pin/create/button/?url={{ shop.url }}{{ article.url }}&media={{ article.image | image_url: width: 800 }}&description={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Pinterest">Pinterest</a>
+          <a class="pb-article-share__link" href="https://twitter.com/share?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on X (Twitter)">X</a>
+        </div>
+      </div>
+
+      <aside class="pb-article-aside">
+        {% render 'pb-hot-items',
+          heading: 'Hot Deals For You',
+          collection: 'all',
+          limit: 6,
+          layout: 'sidebar',
+          view_all_url: '/collections/sale',
+          view_all_label: 'View All Deals'
+        %}
+      </aside>
     </div>
 
     {% comment %} Dynamic area for @app blocks only, at the bottom {% endcomment %}
@@ -127,6 +147,26 @@
   .pb-article-share__link {
     color: var(--color-foreground);
     text-decoration: underline;
+  }
+
+  /* 2-column article layout: content + right "Hot Deals" sidebar (parity with live) */
+  .pb-article-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-xl, 32px);
+    width: 100%;
+  }
+  .pb-article-main { min-width: 0; }
+  @media screen and (min-width: 990px) {
+    .pb-article-layout {
+      grid-template-columns: minmax(0, 1fr) 320px;
+      align-items: start;
+    }
+  }
+  .pb-article-aside .pb-hot-items__title {
+    font-size: 16px;
+    border-bottom: 2px solid #ef0180;
+    padding-bottom: 8px;
   }
 
   .blog-post-comments-container {

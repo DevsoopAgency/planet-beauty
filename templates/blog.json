@@ -107,9 +107,22 @@
         "padding-block-start": 0,
         "padding-block-end": 48
       }
+    },
+    "pb_blog_hot_deals": {
+      "type": "custom-liquid",
+      "custom_css": [],
+      "name": "Hot Deals For You",
+      "settings": {
+        "custom_liquid": "{% render 'pb-hot-items', heading: 'Hot Deals For You', collection: 'all', limit: 4 %}",
+        "color_scheme": "",
+        "section_width": "page-width",
+        "padding-block-start": 24,
+        "padding-block-end": 24
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "pb_blog_hot_deals"
   ]
 }
