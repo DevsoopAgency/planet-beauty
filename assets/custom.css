@@ -322,6 +322,6 @@
 @media only screen and (min-width: 768px) {
   .permission-error {
       width: 100%;
-      text-align: left;
+      text-align: left!important;
   }
 }
