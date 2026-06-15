@@ -313,3 +313,15 @@
 .mega-menu.section.section--full-width-margin.section--page-width{
   padding-top: 30px;
 }
+#scapl-geocode-btn{
+  display: none;
+}
+#bh-sl-address {
+  width: 100% !important;
+}
+@media only screen and (min-width: 768px) {
+  .permission-error {
+      width: 100%;
+      text-align: left;
+  }
+}
