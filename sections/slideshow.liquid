@@ -205,6 +205,12 @@
     content-visibility: visible;
     max-height: none;
   }
+
+  /* Planet Beauty: allow touch drag/swipe on hero slideshows while keeping vertical page scroll.
+     Scoped away from resource-list carousels (e.g. Shop by Category) which need pan-x. */
+  slideshow-component:not(.resource-list__carousel) slideshow-slides {
+    touch-action: pan-y;
+  }
 {% endstylesheet %}
 
 {%- liquid

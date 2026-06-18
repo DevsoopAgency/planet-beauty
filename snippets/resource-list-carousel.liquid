@@ -89,6 +89,10 @@
   }
 
   .resource-list__carousel slideshow-slides {
+    /* Planet Beauty: restore horizontal touch scroll on mobile carousels (client: Shop by Category). */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
     gap: var(--resource-list-column-gap);
 
     /* Add padding to prevent hover animations from being clipped in slideshow
@@ -110,6 +114,22 @@
     flex: 0 0 auto;
     scroll-snap-align: start;
     min-width: 0;
+  }
+
+  /* Planet Beauty: full-card link overlay steals touch drags — keep buttons/titles tappable. */
+  @media screen and (max-width: 749px) {
+    .resource-list__carousel .collection-card__link,
+    .resource-list__carousel .product-card__link,
+    .resource-list__carousel .featured-blog-posts-card__link {
+      pointer-events: none;
+    }
+
+    .resource-list__carousel .collection-card__content a,
+    .resource-list__carousel .collection-card__content button,
+    .resource-list__carousel .product-card__content a,
+    .resource-list__carousel .product-card__content button {
+      pointer-events: auto;
+    }
   }
 
   /*

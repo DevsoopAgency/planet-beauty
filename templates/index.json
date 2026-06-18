@@ -684,8 +684,8 @@
         "section_width": "page-width",
         "gap": 12,
         "color_scheme": "scheme-6",
-        "padding-block-start": 30,
-        "padding-block-end": 64
+        "padding-block-start": 24,
+        "padding-block-end": 32
       }
     },
     "product_list_fa6P9H": {
@@ -868,7 +868,7 @@
         "collection": "bestseller",
         "layout_type": "grid",
         "carousel_on_mobile": false,
-        "max_products": 4,
+        "max_products": 6,
         "columns": 4,
         "mobile_columns": "2",
         "mobile_card_size": "60cqw",
@@ -1078,7 +1078,7 @@
         "collection": "bestseller",
         "layout_type": "grid",
         "carousel_on_mobile": false,
-        "max_products": 4,
+        "max_products": 6,
         "columns": 4,
         "mobile_columns": "2",
         "mobile_card_size": "60cqw",
@@ -1156,10 +1156,10 @@
             "padding-block-end": 48,
             "padding-inline-start": 48,
             "padding-inline-end": 48,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 0,
-            "padding-inline-end-mobile": 0
+            "padding-block-start-mobile": 40,
+            "padding-block-end-mobile": 24,
+            "padding-inline-start-mobile": 16,
+            "padding-inline-end-mobile": 16
           },
           "blocks": {
             "text_mHtDTM": {
@@ -1206,7 +1206,7 @@
                 "background_color": "#00000026",
                 "corner_radius": 0,
                 "padding-block-start": 0,
-                "padding-block-end": 50,
+                "padding-block-end": 16,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
@@ -1267,8 +1267,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 100,
-        "padding-block-end": 100
+        "padding-block-start": 32,
+        "padding-block-end": 16
       }
     },
     "custom_liquid_4PUtGP": {
@@ -1347,8 +1347,8 @@
             "padding-block-end": 48,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0,
+            "padding-block-start-mobile": 24,
+            "padding-block-end-mobile": 24,
             "padding-inline-start-mobile": 0,
             "padding-inline-end-mobile": 0
           },
@@ -1389,12 +1389,12 @@
                 "placeholder": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
-                "padding-inline-start": 100,
-                "padding-inline-end": 100,
+                "padding-inline-start": 48,
+                "padding-inline-end": 48,
                 "padding-block-start-mobile": 0,
                 "padding-block-end-mobile": 0,
-                "padding-inline-start-mobile": 50,
-                "padding-inline-end-mobile": 50
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {
                 "text_PPA4P3": {
@@ -1629,7 +1629,7 @@
                         "thickness": 1,
                         "corner_radius": "square",
                         "width_percent": 100,
-                        "padding-block-start": 50,
+                        "padding-block-start": 24,
                         "padding-block-end": 0
                       },
                       "blocks": {}
@@ -1668,11 +1668,11 @@
                         "link": "",
                         "open_in_new_tab": false,
                         "placeholder": "",
-                        "padding-block-start": 33,
+                        "padding-block-start": 24,
                         "padding-block-end": 0,
                         "padding-inline-start": 0,
                         "padding-inline-end": 0,
-                        "padding-block-start-mobile": 0,
+                        "padding-block-start-mobile": 20,
                         "padding-block-end-mobile": 0,
                         "padding-inline-start-mobile": 0,
                         "padding-inline-end-mobile": 0
@@ -2084,12 +2084,12 @@
             "placeholder": "",
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 100,
-            "padding-inline-end": 100,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 50,
-            "padding-inline-end-mobile": 50
+            "padding-inline-start": 48,
+            "padding-inline-end": 48,
+            "padding-block-start-mobile": 24,
+            "padding-block-end-mobile": 24,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {
             "text_about_label": {
@@ -2353,10 +2353,10 @@
                 "padding-block-end": 32,
                 "padding-inline-start": 24,
                 "padding-inline-end": 24,
-                "padding-block-start-mobile": 30,
-                "padding-block-end-mobile": 30,
-                "padding-inline-start-mobile": 30,
-                "padding-inline-end-mobile": 30
+                "padding-block-start-mobile": 16,
+                "padding-block-end-mobile": 16,
+                "padding-inline-start-mobile": 16,
+                "padding-inline-end-mobile": 16
               },
               "blocks": {
                 "icon_pkcecX": {
@@ -2662,10 +2662,10 @@
                 "padding-block-end": 32,
                 "padding-inline-start": 24,
                 "padding-inline-end": 24,
-                "padding-block-start-mobile": 30,
-                "padding-block-end-mobile": 30,
-                "padding-inline-start-mobile": 30,
-                "padding-inline-end-mobile": 30
+                "padding-block-start-mobile": 16,
+                "padding-block-end-mobile": 16,
+                "padding-inline-start-mobile": 16,
+                "padding-inline-end-mobile": 16
               },
               "blocks": {
                 "icon_VdPXiz": {
@@ -3132,10 +3132,10 @@
                 "padding-block-end": 32,
                 "padding-inline-start": 24,
                 "padding-inline-end": 24,
-                "padding-block-start-mobile": 30,
-                "padding-block-end-mobile": 30,
-                "padding-inline-start-mobile": 30,
-                "padding-inline-end-mobile": 30
+                "padding-block-start-mobile": 16,
+                "padding-block-end-mobile": 16,
+                "padding-inline-start-mobile": 16,
+                "padding-inline-end-mobile": 16
               },
               "blocks": {
                 "icon_mtzVhA": {
@@ -3604,8 +3604,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 64,
-        "padding-block-end": 64
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     },
     "section_B6fmwm": {
@@ -3650,7 +3650,7 @@
             "padding-inline-end": 0,
             "padding-block-start-mobile": 0,
             "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 0,
+            "padding-inline-start-mobile": 16,
             "padding-inline-end-mobile": 0
           },
           "blocks": {
@@ -3674,8 +3674,8 @@
                 "corner_radius": 0,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
-                "padding-inline-start": 16,
-                "padding-inline-end": 16
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
               },
               "blocks": {}
             },
@@ -3748,8 +3748,8 @@
             "padding-block-end": 0,
             "padding-inline-start": 40,
             "padding-inline-end": 0,
-            "padding-block-start-mobile": 30,
-            "padding-block-end-mobile": 30,
+            "padding-block-start-mobile": 16,
+            "padding-block-end-mobile": 16,
             "padding-inline-start-mobile": 16,
             "padding-inline-end-mobile": 16
           },
@@ -3903,8 +3903,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 32,
+        "padding-block-end": 32
       }
     },
     "slideshow_dVrkTb": {

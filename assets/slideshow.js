@@ -73,14 +73,20 @@ export class Slideshow extends Component {
 
     const slideCount = this.slides?.length || 0;
     slideCount <= 1 ? this.#setupSlideshowWithoutControls() : this.#setupSlideshow();
+
+    this.#setupViewportObserver();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
 
+    this.#viewportObserver?.disconnect();
+    this.#viewportObserver = undefined;
+
     if (this.#scroll) {
       const { scroller } = this.refs;
-      scroller.removeEventListener('mousedown', this.#handleMouseDown);
+      // Planet Beauty: pointer events (not mouse-only) so touch swipe works on mobile.
+      scroller.removeEventListener('pointerdown', this.#handleMouseDown);
       this.#scroll.destroy();
     }
 
@@ -606,7 +612,8 @@ export class Slideshow extends Component {
       onScrollEnd: this.#onTransitionEnd,
     });
 
-    scroller.addEventListener('mousedown', this.#handleMouseDown);
+    // Planet Beauty: pointer events (not mouse-only) so touch swipe / drag works on mobile too.
+    scroller.addEventListener('pointerdown', this.#handleMouseDown);
 
     this.addEventListener('mouseenter', this.suspend);
     this.addEventListener('mouseleave', this.resume);
@@ -727,6 +734,40 @@ export class Slideshow extends Component {
   };
 
   #dragging = false;
+
+  /** @type {IntersectionObserver | undefined} */
+  #viewportObserver;
+
+  /**
+   * Enables slideshow-slides scrolling once the carousel is in view.
+   * slideshow-styles.liquid keeps overflow hidden until [in-viewport] is set.
+   */
+  #setupViewportObserver() {
+    const setInViewport = (inView) => {
+      if (inView) {
+        this.setAttribute('in-viewport', '');
+      } else {
+        this.removeAttribute('in-viewport');
+      }
+    };
+
+    // Collection/product carousels (e.g. Shop by Category) must scroll immediately on mobile.
+    if (this.classList.contains('resource-list__carousel')) {
+      setInViewport(true);
+      return;
+    }
+
+    this.#viewportObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          setInViewport(entry.isIntersecting);
+        }
+      },
+      { rootMargin: '100px' }
+    );
+
+    this.#viewportObserver.observe(this);
+  }
 
   /**
    * Handles the 'mousedown' event to start dragging slides.
