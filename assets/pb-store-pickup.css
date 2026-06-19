@@ -1,0 +1,77 @@
+/*
+ * Planet Beauty — in-store pickup availability (live parity).
+ * Ported from live theme.css pickup-availability rules.
+ */
+
+.product-single__store-availability-container {
+  padding-bottom: 15px;
+}
+
+.pickup-availability__title {
+  text-transform: none;
+  background: transparent;
+  font-weight: 400;
+  color: var(--color-text, #323a45);
+  line-height: 28px;
+  padding: 0 0 10px;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.pickup-availability__title:disabled {
+  cursor: default;
+}
+
+.pickup-availability__title.active .icon-chevron {
+  transform: rotate(180deg);
+}
+
+.pickup-availability__title:focus .icon {
+  fill: var(--color-text, #323a45);
+}
+
+.pickup-availability__information {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.pickup-availability__list {
+  padding-left: 0;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease-out;
+  margin: 0;
+}
+
+.pickup-availability__list li {
+  margin: 0;
+  list-style: none;
+}
+
+.pickup-availability .icon-store {
+  margin-right: 10px;
+  overflow: visible;
+}
+
+.pickup-availability .icon-store path {
+  stroke-width: 1px;
+  stroke: var(--color-text, #323a45);
+}
+
+.pickup-availability .icon-chevron {
+  vertical-align: text-bottom;
+  width: 22px;
+  height: 22px;
+  margin-left: 3px;
+  position: relative;
+  top: 2px;
+  transition: transform 0.35s ease-out;
+}
+
+.pickup-availability .icon,
+.pickup-availability:hover .icon {
+  fill: var(--color-text, #323a45);
+}

@@ -1,0 +1,125 @@
+/*
+ * Planet Beauty — internal page heading underlines (live parity).
+ *
+ * Live theme uses two gradient underline styles from inline.css.liquid:
+ *   .highlight          — mint  #a8ecd5 (page titles, carousel/section headings)
+ *   .highlight-internal  — pink  #e3b2d2 (Rebuy widgets, brands, collections, auth)
+ *
+ * Scoped to #MainContent only — footer/header also use .text-block headings
+ * (e.g. "Don't miss out!") and must not inherit this effect.
+ *
+ * Safe to remove when Horizon native heading styles replace these.
+ */
+
+.highlight,
+.highlight-internal,
+.static-page__heading :is(h1, h2, h3),
+.template-page #MainContent .text-block > :is(h1, h2, h3),
+.template-page #MainContent rte-formatter.text-block > :is(h1, h2, h3),
+.template-page #MainContent .text-block:is(.h1, .h2, .h3) > :is(h1, h2, h3),
+.rebuy-widget :is(.primary-title, .super-title) {
+  width: auto !important;
+  max-width: none !important;
+  max-inline-size: max-content !important;
+  display: inline !important;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.highlight,
+.static-page__heading :is(h1, h2, h3),
+.static-page__heading .highlight,
+.template-page #MainContent .text-block > h1:only-child,
+.template-page #MainContent rte-formatter.text-block > h1:only-child,
+.template-page #MainContent .text-block--align-center > :is(h2, h3),
+.template-page #MainContent rte-formatter.text-block--align-center > :is(h2, h3):only-child,
+.template-page #MainContent rte-formatter.text-block > :is(h2, h3):only-child,
+.template-page #MainContent .text-block:is(.h1, .h2, .h3) > :is(h1, h2, h3) {
+  background: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 70%, #a8ecd5 0);
+}
+
+.highlight-internal,
+.rebuy-widget :is(.primary-title, .super-title) {
+  background: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 70%, #e3b2d2 0);
+  background-size: 90%;
+  background-position: 50%;
+  background-repeat: no-repeat;
+}
+
+.static-page__heading {
+  margin: 40px 0;
+  text-align: center;
+}
+
+@media screen and (min-width: 600px) {
+  .static-page__heading {
+    margin: 60px auto 50px;
+  }
+}
+
+.template-page #MainContent .static-page h2:not(.highlight):not(.highlight-internal),
+.template-page #MainContent .static-page h3:not(.highlight):not(.highlight-internal),
+.template-page #MainContent .static-page h4:not(.highlight):not(.highlight-internal) {
+  margin: 30px 0 24px;
+}
+
+.rebuy-widget .rebuy-widget-content {
+  text-align: center;
+}
+
+.rebuy-widget :is(.primary-title, .super-title) {
+  margin-block: 0 24px;
+}
+
+/* Page title blocks — centered wrapper, underline on text only */
+.template-page #MainContent .text-block:has(> h1:only-child),
+.template-page #MainContent rte-formatter.text-block:has(> h1:only-child) {
+  --text-align-default: center;
+  width: 100%;
+  margin-block: 40px;
+  text-align: center;
+  align-items: center;
+}
+
+@media screen and (min-width: 600px) {
+  .template-page #MainContent .text-block:has(> h1:only-child),
+  .template-page #MainContent rte-formatter.text-block:has(> h1:only-child) {
+    margin-block: 60px 50px;
+  }
+}
+
+.template-page #MainContent .text-block--align-center > :is(h1, h2, h3),
+.template-page #MainContent rte-formatter.text-block--align-center > :is(h1, h2, h3):only-child {
+  align-self: center;
+  margin-inline: auto;
+}
+
+/* Body subheadings inside multi-paragraph content — no underline, live margins only */
+.template-page #MainContent rte-formatter.rte > h4,
+.template-page #MainContent .text-block.rte > h4,
+.template-page #MainContent rte-formatter.rte > h2:not(:only-child),
+.template-page #MainContent rte-formatter.rte > h3:not(:only-child),
+.template-page #MainContent .text-block.rte > h2:not(:only-child),
+.template-page #MainContent .text-block.rte > h3:not(:only-child) {
+  background: none;
+  display: block !important;
+  width: auto;
+  max-inline-size: none;
+}
+
+/* Hair-oils page title override (live page-hair-oils.css) */
+.template-page.page-hair-oils #MainContent .text-block > h1:only-child,
+.template-page.page-hair-oils #MainContent rte-formatter.text-block > h1:only-child,
+.template-page.page-hair-oils .static-page__heading :is(h1, h2, h3) {
+  background: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 70%, #faeaea 0);
+}
+
+/* Footer/header text blocks — never inherit page heading underline */
+.template-page footer .text-block > :is(h1, h2, h3),
+.template-page footer rte-formatter.text-block > :is(h1, h2, h3),
+.template-page #header-group .text-block > :is(h1, h2, h3) {
+  background: none !important;
+  display: block !important;
+  width: auto;
+  max-inline-size: none;
+}

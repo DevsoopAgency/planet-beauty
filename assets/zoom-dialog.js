@@ -145,7 +145,6 @@ export class ZoomDialog extends Component {
     const mostVisibleElement = await getMostVisibleElement(media);
 
     // Get the index and set up transition
-    const activeIndex = media.indexOf(mostVisibleElement);
     const itemTransitionName = `gallery-item-close`;
 
     const mediaGallery = /** @type {import('./media-gallery').MediaGallery | undefined} */ (
@@ -153,8 +152,13 @@ export class ZoomDialog extends Component {
     );
 
     const slideshowActive = mediaGallery?.presentation === 'carousel';
+    const mediaId =
+      mostVisibleElement instanceof HTMLElement
+        ? mostVisibleElement.dataset.mediaId ||
+          mostVisibleElement.querySelector('[data-media-id]')?.dataset.mediaId
+        : undefined;
 
-    const slide = slideshowActive ? mediaGallery.slideshow?.slides?.[activeIndex] : mediaGallery?.media?.[activeIndex];
+    const slide = mediaId ? findGalleryItemByMediaId(mediaGallery, slideshowActive, mediaId) : undefined;
 
     if (!slide) return this.closeDialog();
     const focalPoint = slide.dataset.focalPoint;
@@ -263,6 +267,25 @@ if (!customElements.get('zoom-dialog')) {
 }
 
 /**
+ * Finds a main-gallery slide/grid item by media id.
+ * @param {import('./media-gallery').MediaGallery | undefined} mediaGallery
+ * @param {boolean} slideshowActive
+ * @param {string} mediaId
+ * @returns {HTMLElement | undefined}
+ */
+function findGalleryItemByMediaId(mediaGallery, slideshowActive, mediaId) {
+  if (!mediaGallery) return undefined;
+
+  const candidates = slideshowActive ? (mediaGallery.slideshow?.slides ?? []) : (mediaGallery.media ?? []);
+
+  return candidates.find(
+    (item) =>
+      item instanceof HTMLElement &&
+      (item.dataset.mediaId === mediaId || item.querySelector(`[data-media-id="${mediaId}"]`))
+  );
+}
+
+/**
  * Get the most visible element from a list of elements.
  * @param {HTMLElement[]} elements - The elements to get the most visible element from.
  * @returns {Promise<HTMLElement>} A promise that resolves to the most visible element.
@@ -287,3 +310,4 @@ function getMostVisibleElement(elements) {
     }
   });
 }
+

@@ -36,6 +36,10 @@
     assign sticky = 'scroll-up'
   endif
 
+  if template.name == 'article'
+    assign sticky = false
+  endif
+
   if transparent and sticky
     assign transparent = 'not-sticky'
   endif
@@ -169,6 +173,10 @@
     assign class = class | append: ' ' | append: collapse_header_paddings_class
   endif
 
+  if template.name == 'article'
+    assign class = class | append: ' header--article'
+  endif
+
   # Determine transparent background value
   assign top_transparent = false
   assign bottom_transparent = false
@@ -299,6 +307,9 @@
 <header-component
   id="header-component"
   class="{{ class }}"
+  {% if template.name == 'article' %}
+    data-article-header
+  {% endif %}
   data-theme-color="rgb({{ section.settings.color_scheme_top.settings.background.rgb }})"
   {% if transparent %}
     transparent="{{ transparent }}"

@@ -1,0 +1,130 @@
+{%- doc -%}
+  Planet Beauty — product card badges (parity with live theme).
+
+  Live theme shows labels from product tags:
+    - label:new  → "new" badge (pink)
+    - label:sale → "sale" badge (mint)
+  Plus sold out when the product is unavailable.
+
+  Horizon also shows a sale badge when compare_at_price > price (kept when no label:sale tag).
+
+  @param {object} product - Product resource
+  @param {object} [variant] - Optional variant (variant cards)
+  @param {object} [settings] - Theme settings (badge position/colors)
+{%- enddoc -%}
+
+{%- liquid
+  assign badge_settings = settings | default: settings
+  assign badge_product = product
+
+  assign pb_has_label_new = false
+  assign pb_has_label_sale = false
+  for tag in badge_product.tags
+    if tag == 'label:new'
+      assign pb_has_label_new = true
+    elsif tag == 'label:sale'
+      assign pb_has_label_sale = true
+    endif
+  endfor
+
+  assign pb_show_sold_out = false
+  if badge_product.available == false
+    assign pb_show_sold_out = true
+  endif
+
+  assign pb_show_price_sale = false
+  if badge_product.compare_at_price > badge_product.price and pb_has_label_sale == false
+    assign pb_show_price_sale = true
+  endif
+  if variant != blank and variant.compare_at_price > variant.price and pb_has_label_sale == false
+    assign pb_show_price_sale = true
+  endif
+
+  assign pb_has_tag_labels = false
+  if pb_has_label_new or pb_has_label_sale or pb_show_sold_out
+    assign pb_has_tag_labels = true
+  endif
+
+  assign pb_show_horizon_badges = false
+  if pb_show_price_sale
+    assign pb_show_horizon_badges = true
+  elsif pb_show_sold_out and pb_has_tag_labels == false
+    assign pb_show_horizon_badges = true
+  endif
+-%}
+
+{%- if pb_has_tag_labels -%}
+  <div class="pb-product-card-labels">
+    {%- if pb_show_sold_out -%}
+      <span class="pb-product-card-label pb-product-card-label--sold-out">{{ 'content.product_badge_sold_out' | t | default: 'sold out' }}</span>
+    {%- endif -%}
+    {%- if pb_has_label_new -%}
+      <span class="pb-product-card-label pb-product-card-label--new">new</span>
+    {%- endif -%}
+    {%- if pb_has_label_sale -%}
+      <span class="pb-product-card-label pb-product-card-label--sale">sale</span>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{%- if pb_show_horizon_badges -%}
+  <div
+    class="product-badges product-badges--{{ badge_settings.badge_position }}"
+    style="
+      --badge-border-radius: {{ badge_settings.badge_corner_radius }}px;
+      --badge-font-family: var(--font-{{ badge_settings.badge_font_family }}--family);
+      --badge-font-weight: var(--font-{{ badge_settings.badge_font_family }}--weight);
+      --badge-text-transform: {{ badge_settings.badge_text_transform }};
+    "
+  >
+    <div
+      class="
+        product-badges__badge product-badges__badge--rectangle
+        {% if pb_show_sold_out %} color-{{ badge_settings.badge_sold_out_color_scheme }}{% else %} color-{{ badge_settings.badge_sale_color_scheme }}{% endif %}
+      "
+    >
+      {%- if pb_show_sold_out -%}
+        {{ 'content.product_badge_sold_out' | t }}
+      {%- else -%}
+        {{ 'content.product_badge_sale' | t }}
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Planet Beauty: tag-based product card labels (ported from live .product-card__label). */
+  .pb-product-card-labels {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: var(--layer-flat);
+    pointer-events: none;
+  }
+
+  .pb-product-card-label {
+    font-size: 12px;
+    line-height: 19px;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    color: #fff;
+    margin-right: 4px;
+    padding: 0 10px;
+  }
+
+  .pb-product-card-label--sale {
+    background: #73e4be;
+  }
+
+  .pb-product-card-label--new {
+    background: #e3b2d2;
+  }
+
+  .pb-product-card-label--sold-out {
+    background: #323a45;
+  }
+{% endstylesheet %}

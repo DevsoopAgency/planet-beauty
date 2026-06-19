@@ -351,6 +351,12 @@
     "blog_post_date": "Date",
     "blog_post_description": "An excerpt of your blog post's content"
   },
+  "pickup_availability": {
+    "general": {
+      "pick_up_available_at_html": "In-Store Pickup Availability",
+      "pick_up_unavailable_at_html": "In-Store Pickup unavailable"
+    }
+  },
   "products": {
     "product": {
       "add_to_cart": "Add to cart",

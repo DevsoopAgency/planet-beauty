@@ -115,7 +115,7 @@
           "settings": {
             "text": "<p>The most important step in caring for your skin comes in understanding your specific skin typeand how it adapts. Using cleansers and treatments that are too harsh, even if they are recommended for excessive oiliness, may send the signal to your skin that more oil is needed. Conversely, applying moisturizers that are too thick or heavy can result in decreased natural oil production, resulting in even drier skin. Taking the time to learn your skin’s specific needs will help you to choose the right options that will balance skin resulting in a healthier, more radiant complexion.</p><p>Every person’s skin is unique, but there are a few common skin types that may help you to identify where you skin fits in the most. The three main skin types are commonly referred to as Oily, Normal/Combination and Dry. Here are two easy ways to determine your skin type at home:</p>",
             "width": "100%",
-            "max_width": "normal",
+            "max_width": "none",
             "alignment": "left",
             "type_preset": "rte",
             "font": "var(--font-body--family)",
@@ -143,7 +143,7 @@
             "link": "",
             "image_ratio": "adapt",
             "width": "custom",
-            "custom_width": 75,
+            "custom_width": 100,
             "width_mobile": "custom",
             "custom_width_mobile": 75,
             "height": "fit",
@@ -164,7 +164,7 @@
           "settings": {
             "text": "<h5>THE BARE-FACED METHOD</h5><p>Cleanse your face thoroughly with a mild cleanser and gently pat dry. Leave skin bare (and do not apply any additional moisturizers, serums or treatments). After 30 minutes, examine your cheeks, chin, nose and forehead for any shine. After another 30 minutes, evaluate whether your skin feels parched, especially if you smile or make any other facial expressions. If your skin feels tight, your skin is likely dry. If there is noticeable shine on your nose and forehead, your skin is mostly likely normal/combination. If there is shine on your cheeks in addition to your forehead and nose, you most likely have oily skin.</p><h5>THE BLOTTING SHEET METHOD</h5><p>Gently pat a blotting paper on different areas of your face. Hold the sheet up to the light to determine how much oil is visible. If the sheet picked up little to no oil, you most likely have dry skin. If the blotting paper reveals oil from the forehead and nose areas, your skin is normal/combination. Finally, if the blotting paper is saturated with oil, it is likely that you have oily skin.</p>",
             "width": "100%",
-            "max_width": "normal",
+            "max_width": "none",
             "alignment": "left",
             "type_preset": "rte",
             "font": "var(--font-body--family)",
@@ -191,7 +191,7 @@
             "image": "shopify://shop_images/desktop_skin-type_img_3_1300x_936147d6-07bb-45bc-bd8a-95ff2bdb04ba.webp",
             "link": "",
             "image_ratio": "adapt",
-            "width": "custom",
+            "width": "fill",
             "custom_width": 75,
             "width_mobile": "custom",
             "custom_width_mobile": 75,
@@ -286,7 +286,9 @@
             "padding-inline-start": 0,
             "padding-inline-end": 0,
             "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {
             "text_iYR8qF": {
@@ -364,7 +366,9 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
                 "padding-block-start-mobile": 0,
-                "padding-block-end-mobile": 0
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {
                 "text_P4JRBX": {
@@ -397,7 +401,7 @@
                   "settings": {
                     "text": "<p>Dry skin can feel tight throughout the day, and may experience noticeable flaking. Dry skin is largely due to genetics, environmental factors such as lifestyle & diet, hormonal changes, andclimate.</p><p>Daily exfoliation with gentle ingredients help promote skin cell turnover without removing skin’s natural oils. The best moisturizers for dry skin are those containing hyaluronic acid, glycerin, and marine actives like algae, because of their ability to attract water and deliver it directly to skin cells.</p>",
                     "width": "100%",
-                    "max_width": "normal",
+                    "max_width": "none",
                     "alignment": "center",
                     "type_preset": "rte",
                     "font": "var(--font-body--family)",
@@ -468,7 +472,9 @@
             "padding-inline-start": 0,
             "padding-inline-end": 0,
             "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {
             "icon_z6tEwD": {
@@ -520,7 +526,9 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
                 "padding-block-start-mobile": 0,
-                "padding-block-end-mobile": 0
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {
                 "text_HwegCR": {
@@ -553,7 +561,7 @@
                   "settings": {
                     "text": "<p>People with normal/combination skin often experience dryness on the cheeks, making it important to find a moisturizer that is not too heavy but one substantial enough to retain moisture where needed most. Those with normal skin are not prone to breakouts on their cheeks, and tend to have a well-moisturized t-zone. Gentle, daily exfoliation is also important to keep the t-zone and cheek areas balances.</p>",
                     "width": "100%",
-                    "max_width": "normal",
+                    "max_width": "none",
                     "alignment": "center",
                     "type_preset": "rte",
                     "font": "var(--font-body--family)",
@@ -623,7 +631,9 @@
             "padding-inline-start": 0,
             "padding-inline-end": 0,
             "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {
             "icon_HxQNzc": {
@@ -675,7 +685,9 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
                 "padding-block-start-mobile": 0,
-                "padding-block-end-mobile": 0
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {
                 "text_knXpXU": {
@@ -708,7 +720,7 @@
                   "settings": {
                     "text": "<p>Excess oil can oftentimes leave pores congested and clogged. The happy news however is that oily skin looks younger and more supple because it has more natural moisture and is lessprone to wrinkle. Daily enzymatic exfoliation is essential to promote cell turnover and prevent sebum buildup in pores.</p>",
                     "width": "100%",
-                    "max_width": "normal",
+                    "max_width": "none",
                     "alignment": "center",
                     "type_preset": "rte",
                     "font": "var(--font-body--family)",

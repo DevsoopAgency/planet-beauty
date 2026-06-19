@@ -1,0 +1,25 @@
+{%- comment -%}
+  Planet Beauty — SCA Store Locator app hooks (ported from live snippets/sca.storelocator.liquid).
+  Loaded on product pages for WTB; store locator page section loads its own copy of the script.
+{%- endcomment -%}
+<script>
+  var appEnvironment = 'storelocator-prod';
+  var shopHash = '9efaac24b0e3e7a6bc0fc22ec609321c';
+</script>
+{%- if template.name == 'product' -%}
+  <script>
+    {%- capture product_output -%}
+    {
+      id: {{ product.id }},
+      handle: {{ product.handle | json }},
+      title: {{ product.title | json }},
+      variants: {{ product.variants | json }},
+      tags: {{ product.tags | json }},
+      collections: {{ product.collections | json }},
+      vendor: {{ product.vendor | json }}
+    }
+    {%- endcapture -%}
+    {%- assign output_lines = product_output | newline_to_br | split: '<br />' -%}
+    SCASLShopifyProduct = {%- for line in output_lines -%}{{ line | strip }}{%- endfor -%};
+  </script>
+{%- endif -%}

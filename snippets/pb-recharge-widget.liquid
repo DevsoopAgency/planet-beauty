@@ -108,4 +108,15 @@
   .rc-widget .px-3{
     margin-bottom: 5px!important;
   }
+
+  {%- comment -%} Live parity: products tagged "subscriptiononly" hide one-time purchase {%- endcomment -%}
+  {%- assign pb_product_tags = product.tags | remove: ' ' | downcase -%}
+  {%- if pb_product_tags contains 'subscriptiononly' -%}
+  .rc-widget .onetime-radio,
+  [id^="RechargeWidget_"] .onetime-radio,
+  .rc-widget input[name="purchaseOption"][value="onetime"],
+  [id^="RechargeWidget_"] input[name="purchaseOption"][value="onetime"] {
+    display: none !important;
+  }
+  {%- endif -%}
 </style>

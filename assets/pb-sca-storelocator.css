@@ -1,0 +1,148 @@
+/*
+ * Planet Beauty — SCA store locator overrides (ported from live snippets/sca.storelocator.liquid
+ * + snippets/css-variables.liquid). Scoped to the store locator page/widget only.
+ */
+
+.pb-store-locator {
+  --color-text: #323a45;
+  --color-primary: #dc0075;
+  --btn-color: #fff;
+  --btn-padding: 15px 40px;
+  --input-focused: #faeaea;
+}
+
+.pb-store-locator #scasl-tabs li {
+  float: left;
+  width: 50px;
+  cursor: pointer;
+}
+
+.pb-store-locator #scasl-tabs {
+  float: left;
+  width: 100%;
+}
+
+.pb-store-locator .form-input {
+  width: 300px !important;
+}
+
+.pb-store-locator .scasl-see-more {
+  position: relative;
+  left: 20px;
+  top: 57px;
+  display: none;
+  cursor: pointer;
+}
+
+.pb-store-locator .scasl-see-less {
+  position: relative;
+  left: 20px;
+  top: 57px;
+  cursor: pointer;
+}
+
+.pb-store-locator .scasl-search-btn {
+  float: left;
+  width: 19%;
+  margin-top: 3.1em !important;
+}
+
+.pb-store-locator #bh-sl-map {
+  float: left;
+  margin-left: 20px !important;
+  width: 70%;
+}
+
+.pb-store-locator .bh-sl-loc-list.scasl-location-list {
+  width: 25%;
+  float: left;
+}
+
+.pb-store-locator .bh-sl-container button#bh-sl-submit {
+  background-color: #ef0180 !important;
+  color: #fff !important;
+}
+
+.pb-store-locator #bh-sl-map {
+  border: 1px solid #ccc;
+}
+
+.pb-store-locator .bh-sl-title {
+  margin-top: 36px !important;
+  margin-bottom: 0 !important;
+  text-align: center;
+}
+
+.pb-store-locator #page-header {
+  text-align: center;
+}
+
+.pb-store-locator #scapl-geocode-btn img {
+  display: none;
+}
+
+.pb-store-locator #scasl-tabs li {
+  background: rgb(230, 0, 121) !important;
+  list-style-type: none;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  margin-right: 10px;
+  width: 65px;
+  padding: 5px;
+}
+
+@media screen and (max-width: 1000px) {
+  .pb-store-locator .bh-sl-container .form-input {
+    width: 40% !important;
+  }
+
+  .pb-store-locator .scasl-search-btn {
+    margin-top: 2.5em !important;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .pb-store-locator .scasl-search-btn {
+    margin-top: 2.5em !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .pb-store-locator .bh-sl-container .form-input {
+    width: 100% !important;
+  }
+
+  .pb-store-locator .scasl-search-btn {
+    margin-top: 0 !important;
+    width: 30%;
+    padding-left: 10px;
+  }
+
+  .pb-store-locator .scasl-see-more,
+  .pb-store-locator .scasl-see-less {
+    top: 18px;
+  }
+
+  .pb-store-locator #scasl-tabs {
+    margin-top: 20px !important;
+    margin-bottom: 0;
+    padding-left: 10px;
+  }
+
+  .pb-store-locator .bh-sl-loc-list.scasl-location-list {
+    width: 100%;
+  }
+
+  .pb-store-locator #bh-sl-map {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .pb-store-locator .scasl-search-btn {
+    width: 40%;
+    padding-left: 10px;
+  }
+}

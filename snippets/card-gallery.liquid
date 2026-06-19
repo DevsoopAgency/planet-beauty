@@ -21,6 +21,13 @@
       assign has_badges = true
       assign badge_position = settings.badge_position
     endif
+    for tag in product.tags
+      if tag == 'label:new' or tag == 'label:sale'
+        assign has_badges = true
+        assign badge_position = settings.badge_position
+        break
+      endif
+    endfor
   endif
 
   # if the card-gallery has a section.settings.product_card_size:
@@ -372,7 +379,7 @@
 
   [product-grid-view='zoom-out']
     .card-gallery
-    > :is(quick-add-component, .product-badges, slideshow-component > slideshow-controls) {
+    > :is(quick-add-component, .product-badges, .pb-product-card-labels, slideshow-component > slideshow-controls) {
     display: none;
   }
 

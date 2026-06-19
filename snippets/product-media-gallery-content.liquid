@@ -137,6 +137,24 @@
   if sorted_media.size == 0
     assign sorted_media = selected_product.media
   endif
+
+  # Planet Beauty: main gallery uses variant-filtered sorted_media; zoom lightbox shows
+  # ALL product media (starts on the clicked image, user can swipe through everything).
+  assign zoom_media = '' | split: ','
+  for media in selected_product.media
+    assign alt_downcase = media.alt | downcase
+    if alt_downcase contains 'swatch'
+      continue
+    endif
+
+    assign found_media = selected_product.media | where: 'id', media.id
+    assign zoom_media = zoom_media | concat: found_media
+  endfor
+
+  if zoom_media.size == 0
+    assign zoom_media = selected_product.media
+  endif
+
   assign has_image_drop = sorted_media | has: 'media_type', 'image'
 
   # Determine if we're in single column mode (carousel or grid with one column)
@@ -375,6 +393,14 @@
   >
     {% capture slides %}
       {% for media in sorted_media %}
+        {%- liquid
+          assign zoom_media_index = 0
+          for zm in zoom_media
+            if zm.id == media.id
+              assign zoom_media_index = forloop.index0
+            endif
+          endfor
+        -%}
         {% capture children %}
           {%- liquid
               if needs_both_sizes and forloop.first
@@ -401,9 +427,9 @@
           {% endcapture %}
         {% endif %}
         {% if block_settings.zoom and media.media_type == 'model' %}
-          {%- capture attributes -%}"{% if settings.transition_to_main_product and forloop.first %} data-view-transition-type="product-image-transition"{% endif %}{% endcapture -%}
+          {%- capture attributes -%}data-media-id="{{ media.id }}"{% if settings.transition_to_main_product and forloop.first %} data-view-transition-type="product-image-transition"{% endif %}{% endcapture -%}
         {% elsif block_settings.zoom %}
-          {%- capture attributes -%}on:click="#zoom-dialog-{{ block_id }}/open/{{ forloop.index0 }}"{% if settings.transition_to_main_product and forloop.first %} data-view-transition-type="product-image-transition"{% endif %}{% endcapture -%}
+          {%- capture attributes -%}data-media-id="{{ media.id }}" on:click="#zoom-dialog-{{ block_id }}/open/{{ zoom_media_index }}"{% if settings.transition_to_main_product and forloop.first %} data-view-transition-type="product-image-transition"{% endif %}{% endcapture -%}
         {% endif %}
 
         {% render 'slideshow-slide',
@@ -469,8 +495,17 @@
         data-testid="media-gallery-grid"
       >
         {% for media in sorted_media %}
+          {%- liquid
+            assign zoom_media_index = 0
+            for zm in zoom_media
+              if zm.id == media.id
+                assign zoom_media_index = forloop.index0
+              endif
+            endfor
+          -%}
           <li
             ref="media[]"
+            data-media-id="{{ media.id }}"
             class="{{ product_media_container_class }} product-media-container--{{ media.media_type }} {% unless block_settings.aspect_ratio == 'adapt' %}product-media-container--force-aspect{% endunless %}"
             style="{% if block_settings.aspect_ratio == 'adapt' %} --media-preview-ratio: {{ media.preview_image.aspect_ratio | default: 1.0 }};{% endif %} --media-radius: {{ block_settings.media_radius }}px;"
             {% if settings.transition_to_main_product and forloop.first %}
@@ -485,9 +520,9 @@
                 type="button"
                 class="button button-unstyled product-media-container__zoom-button"
                 aria-label="{{ 'actions.zoom_media' | t: index: forloop.index }}"
-                on:click="/zoom/{{ forloop.index0 }}"
+                on:click="/zoom/{{ zoom_media_index }}"
                 {% if block_settings.zoom %}
-                  on:pointerenter="/preloadImage/{{ forloop.index0 }}"
+                  on:pointerenter="/preloadImage/{{ zoom_media_index }}"
                 {% endif %}
               >
               </button>
@@ -536,8 +571,8 @@
               class="dialog-thumbnails-list list-unstyled"
               ref="thumbnails"
             >
-              {% if sorted_media.size > 1 %}
-                {%- for media in sorted_media -%}
+              {% if zoom_media.size > 1 %}
+                {%- for media in zoom_media -%}
                   {% liquid
                     assign aspect_ratio = block_settings.aspect_ratio
                     if block_settings.aspect_ratio == 'adapt'
@@ -580,9 +615,10 @@
           <ul
             class="dialog-zoomed-gallery list-unstyled"
           >
-            {%- for media in sorted_media -%}
+            {%- for media in zoom_media -%}
               <li
                 id="product-{{ media.id}}-{{ forloop.index }}"
+                data-media-id="{{ media.id }}"
                 class="{{ product_media_container_class | remove: 'media-fit-cover' }} product-media-container--{{ media.media_type }}{% if media.media_type == 'image' %} product-media-container--zoomable{% endif %}"
                 style="{% if block_settings.aspect_ratio == 'adapt' %} --media-preview-ratio: {{ media.preview_image.aspect_ratio | default: 1.0 }};{% endif %}"
                 ref="media[]"
@@ -795,6 +831,32 @@
 
   .dialog-zoomed-gallery {
     cursor: zoom-out;
+    /* Planet Beauty: cap main zoom image height to visible viewport (minus thumbnail strip). */
+    --zoom-media-max-height: calc(100dvh - var(--padding-lg) * 2 - 72px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .dialog-zoomed-gallery {
+      --zoom-media-max-height: calc(100dvh - var(--padding-lg) * 2);
+    }
+  }
+
+  .dialog-zoomed-gallery .product-media-container--image .product-media__image {
+    max-height: var(--zoom-media-max-height);
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .dialog-zoomed-gallery .product-media-container--image .product-media,
+  .dialog-zoomed-gallery .product-media-container--image .product-media__drag-zoom-wrapper {
+    max-height: var(--zoom-media-max-height);
+    height: auto;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
   }
 
   .dialog--preloading {
@@ -825,7 +887,8 @@
 
     .dialog-zoomed-gallery .product-media-container--image .product-media {
       aspect-ratio: auto;
-      height: 100%;
+      max-height: var(--zoom-media-max-height);
+      height: auto;
       width: 100%;
       overflow: hidden;
     }
@@ -850,11 +913,13 @@
     .product-media__drag-zoom-wrapper {
       display: flex;
       aspect-ratio: auto;
-      height: 100%;
+      max-height: var(--zoom-media-max-height);
+      height: auto;
       width: 100%;
       overflow: scroll;
       scrollbar-width: none;
       justify-content: center;
+      align-items: center;
 
       &::-webkit-scrollbar {
         display: none;
@@ -865,6 +930,9 @@
       --product-media-fit: contain;
 
       object-fit: var(--product-media-fit);
+      max-height: var(--zoom-media-max-height);
+      width: auto;
+      height: auto;
       overflow: hidden;
       transform: scale(var(--drag-zoom-scale))
         translate(var(--drag-zoom-translate-x, 0), var(--drag-zoom-translate-y, 0));

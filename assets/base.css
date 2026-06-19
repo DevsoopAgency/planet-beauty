@@ -4221,12 +4221,15 @@ product-recommendations:has([data-has-recommendations='false']) {
   }
 }
 
-.static-page__heading .highlight{
-  text-align: center;
-  margin-top: 60px;
-}
 .menu-list__list-item.brands .mega-menu__column--span-1{
   grid-column-start: 1!Important;
   grid-column-end: 8!Important;;
   columns: 7!Important;;
+}
+.rebuy-widget .rebuy-product-block .rebuy-product-media img{
+  aspect-ratio: 3/4!important;
+}
+.shopify-policy__container h3{
+  font-size: 20px;
+  margin-top: 20px!important;
 }

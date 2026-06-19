@@ -1,0 +1,14 @@
+{%- comment -%}
+  Planet Beauty — article back link (parity with live article.liquid).
+  @param {string} position - 'top' or 'bottom'
+  @param {object} blog - blog object for return URL
+{%- endcomment -%}
+<a
+  class="back-to-results{% if position == 'top' %} top pb-article-back--top{% else %} bottom{% endif %}"
+  href="{{ blog.url }}"
+>
+  <svg style="width:22px;" viewBox="0 0 22 20" aria-hidden="true" focusable="false">
+    <path fill="#EF0180" d="M14.3,4.45H3.75L6.28,1.9h0c0.28-0.28,0.39-0.69,0.29-1.08c-0.1-0.38-0.4-0.69-0.78-0.79 C5.4-0.07,5,0.04,4.72,0.33l-4.4,4.44C0.22,4.88,0.14,5,0.09,5.14c-0.11,0.27-0.11,0.57,0,0.84c0.05,0.14,0.13,0.26,0.23,0.37 l4.4,4.44v0C4.93,11,5.21,11.12,5.5,11.12c0.29,0,0.57-0.12,0.78-0.33C6.49,10.58,6.61,10.3,6.61,10c0-0.3-0.12-0.58-0.33-0.79 L3.75,6.67H14.3c1.97,0,3.78,1.06,4.76,2.78s0.98,3.84,0,5.55c-0.98,1.72-2.8,2.78-4.76,2.78H1.1c-0.39,0-0.76,0.21-0.95,0.56 c-0.2,0.34-0.2,0.77,0,1.11C0.34,19.79,0.71,20,1.1,20h13.2c2.75,0,5.29-1.48,6.67-3.89c1.38-2.41,1.38-5.37,0-7.78 C19.59,5.93,17.05,4.45,14.3,4.45L14.3,4.45z"/>
+  </svg>
+  <span class="text">Back To Results</span>
+</a>

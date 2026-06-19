@@ -1,0 +1,58 @@
+{%- comment -%}
+  Shopify store pickup availability (live parity).
+  Rendered via /variants/{id}/?section_id=pickup-availability on PDP.
+{%- endcomment -%}
+
+<div class="pickup-availability">
+  {%- assign pick_up_availabilities = product_variant.store_availabilities | where: 'pick_up_enabled', true -%}
+
+  <div class="pickup-availability__information">
+    {%- assign location_availability = false -%}
+
+    <ul
+      id="content-pickup"
+      aria-labelledby="btn-pickup"
+      data-pickup-availability-list
+      class="pickup-availability__list"
+    >
+      {%- for availability in pick_up_availabilities -%}
+        {%- if availability.available -%}
+          <li>{{ availability.location.name }}</li>
+          {%- assign location_availability = true -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    {%- if location_availability -%}
+      <button
+        aria-expanded="false"
+        id="btn-pickup"
+        aria-controls="content-pickup"
+        type="button"
+        data-view-more
+        class="pickup-availability__title"
+      >
+        {% render 'icon-store' %}{{ 'pickup_availability.general.pick_up_available_at_html' | t }}{% render 'icon-chevron' %}
+      </button>
+    {%- else -%}
+      <button
+        aria-expanded="false"
+        id="btn-pickup"
+        aria-controls="content-pickup"
+        type="button"
+        data-view-more
+        class="pickup-availability__title"
+        disabled
+      >
+        {% render 'icon-store' %}{{ 'pickup_availability.general.pick_up_unavailable_at_html' | t }}
+      </button>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Pickup availability",
+  "settings": []
+}
+{% endschema %}

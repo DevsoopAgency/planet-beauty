@@ -1,0 +1,227 @@
+{%- comment -%}
+  Planet Beauty — article page (parity with live templates/article.liquid).
+  Custom section + scoped CSS — safe to remove if not approved.
+  Stylesheet loaded from layout/theme.liquid on article template.
+{%- endcomment -%}
+
+{%- liquid
+  assign pb_hot_collection = section.settings.hot_deals_collection | default: 'all'
+  assign pb_sidebar_limit = section.settings.sidebar_products_limit | default: 6
+  assign pb_bottom_limit = section.settings.bottom_products_limit | default: 4
+  assign pb_hot_products = collections[pb_hot_collection].products
+  assign pb_default_banner = section.settings.default_banner_url | default: 'https://cdn.shopify.com/s/files/1/0568/4484/5206/files/default-article-banner.jpg'
+  if article.metafields.article.banner != blank
+    assign pb_banner_url = article.metafields.article.banner | image_url: width: 2000
+  else
+    assign pb_banner_url = pb_default_banner
+  endif
+-%}
+
+<div class="pb-article-page page-2">
+  {% render 'pb-article-back-link', position: 'top', blog: blog %}
+  <section
+    class="banner-sec inner-banner"
+    role="img"
+    aria-label="{{ article.title | escape }}"
+    style="background-image:url('{{ pb_banner_url }}');"
+  ></section>
+
+  <section class="product-details halfsec content-wrapper">
+    <div class="c-container">
+      <div class="c-row">
+        <div class="c-col-8">
+          <div class="c-row">
+            <div class="title">
+              {%- if blog.title != blank -%}
+                <div class="blog-title">{{ blog.title }}</div>
+              {%- endif -%}
+              <h1>{{ article.title }}</h1>
+              {%- if article.metafields.custom.subtitle != blank -%}
+                <h3>{{ article.metafields.custom.subtitle }}</h3>
+              {%- endif -%}
+            </div>
+            <div class="content-wrap">
+              {{ article.content }}
+            </div>
+            <div class="below-content c-row">
+              <div class="c-col-6 left">
+                {% render 'pb-article-back-link', position: 'bottom', blog: blog %}
+              </div>
+              <div class="c-col-6 right">
+                <ul class="social-icons">
+                  <li><p>Share This</p></li>
+                  <li>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url }}{{ article.url }}" class="fb-share" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
+                      <svg style="width:7px;" viewBox="0 0 7 16" aria-hidden="true" focusable="false"><path fill="#323a45" d="M4.61,5.18V3.52c0-0.63,0.39-0.76,0.66-0.76h1.68V0.01L4.64,0C2.07,0,1.49,2.04,1.49,3.35v1.83H0v2.83h1.49V16h3.13V8.01h2.11L7,5.18H4.61z"/></svg>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="pin" target="_blank" rel="noopener noreferrer" aria-label="Share on Pinterest" href="https://www.pinterest.com/pin/create/button/?url={{ shop.url }}{{ article.url }}&media={{ article.image | image_url: width: 800 }}&description={{ article.title | url_encode }}">
+                      <svg style="width:12px;" viewBox="0 0 12 16" aria-hidden="true" focusable="false"><path fill="#323a45" d="M2.74,16c-0.04-0.15-0.09-0.31-0.11-0.46c-0.11-0.87-0.19-1.75-0.09-2.63c0.06-0.51,0.19-1.02,0.3-1.52 c0.28-1.24,0.57-2.47,0.84-3.71C3.7,7.6,3.69,7.51,3.67,7.43C3.37,6.56,3.32,5.68,3.71,4.83C3.95,4.29,4.32,3.9,4.89,3.78 c0.76-0.17,1.39,0.36,1.43,1.2c0.02,0.44-0.08,0.87-0.19,1.29C5.95,6.91,5.76,7.56,5.58,8.2c-0.33,1.17,0.54,1.96,1.47,1.89 c1.02-0.08,1.71-0.68,2.2-1.59c0.41-0.76,0.58-1.59,0.62-2.46C9.9,5.41,9.85,4.8,9.65,4.21c-0.33-0.96-0.94-1.66-1.8-2.07 C6.5,1.51,5.14,1.54,3.83,2.25C2.65,2.9,1.95,3.97,1.76,5.39c-0.13,1,0.08,1.91,0.65,2.72c0.08,0.11,0.1,0.22,0.07,0.35 C2.39,8.79,2.32,9.12,2.23,9.45C2.18,9.68,2.09,9.73,1.88,9.62C1.4,9.38,1.04,8.99,0.75,8.52C0.1,7.43-0.14,6.25,0.07,4.97 c0.4-2.39,1.74-3.89,3.84-4.61c1.31-0.44,2.64-0.49,3.97-0.12c1.44,0.4,2.62,1.24,3.41,2.63c0.52,0.91,0.74,1.91,0.7,2.98 c-0.04,1.07-0.26,2.09-0.74,3.03c-0.69,1.35-1.7,2.27-3.1,2.63c-0.76,0.19-1.51,0.2-2.24-0.16c-0.35-0.17-0.66-0.4-0.88-0.75 c-0.01-0.02-0.02-0.04-0.05-0.04c-0.13,0.5-0.27,1-0.38,1.51C4.3,13.49,3.65,14.72,2.9,15.9c-0.02,0.03-0.05,0.07-0.07,0.1 C2.8,16,2.77,16,2.74,16z"/></svg>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://twitter.com/share?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on X (Twitter)">
+                      <svg style="width:16px;" viewBox="0 0 16 13" aria-hidden="true" focusable="false"><path fill="#323a45" d="M0,11.54c1.78,0.16,3.37-0.27,4.82-1.36c-0.98-0.06-1.77-0.43-2.4-1.13C2.11,8.71,1.84,8.22,1.78,7.9 c0.47,0.06,0.93,0.07,1.42-0.07C1.4,7.39,0.56,5.83,0.61,4.6c0.23,0.09,0.46,0.19,0.69,0.26c0.23,0.06,0.47,0.09,0.72,0.11 C1.25,4.37,0.77,3.61,0.65,2.65C0.56,1.89,0.73,1.18,1.08,0.61C2.86,2.7,5.1,3.85,7.86,4.03C7.78,3.6,7.77,3.18,7.83,2.77 c0.16-1.21,1.16-2.34,2.35-2.64c1.22-0.31,2.29-0.03,3.21,0.82c0.05,0.04,0.14,0.07,0.2,0.05c0.64-0.13,1.24-0.36,1.81-0.67 c0.04-0.02,0.08-0.04,0.15-0.08c-0.25,0.77-0.72,1.33-1.35,1.77c0.61-0.06,1.19-0.23,1.76-0.46C15.98,1.57,15.99,1.58,16,1.6 c-0.26,0.31-0.52,0.63-0.8,0.92c-0.22,0.23-0.49,0.42-0.73,0.64c-0.05,0.05-0.1,0.13-0.1,0.2c0,3.38-1.34,6.1-4.1,8.08 c-1.16,0.84-2.49,1.29-3.92,1.47C5.01,13.09,3.69,13,2.39,12.63c-0.82-0.24-1.6-0.58-2.32-1.04C0.05,11.58,0.04,11.57,0,11.54z"/></svg>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="c-col-4 sidebar-sec">
+          <div class="c-row">
+            <div class="metas">
+              <div class="date-posted">
+                <svg style="width:13px;" viewBox="0 0 13 12" aria-hidden="true" focusable="false">
+                  <path fill="#323A45" d="M11.34,0.98h-1.14V0.59C10.21,0.27,9.92,0,9.58,0H9.13C8.79,0,8.5,0.27,8.5,0.59v0.39H4.49V0.59 C4.49,0.27,4.2,0,3.86,0H3.41C3.07,0,2.78,0.27,2.78,0.59v0.39H1.66C0.74,0.98,0,1.68,0,2.54v7.9C0,11.3,0.74,12,1.66,12h6.42 c0.78,0,1.52-0.28,2.08-0.81l1.98-1.87C12.7,8.79,13,8.09,13,7.35V2.54C13,1.69,12.26,0.98,11.34,0.98L11.34,0.98z M1.03,10.44V4.13 h10.95v3.15H9.33c-0.74,0-1.34,0.57-1.34,1.26l0,2.49H1.66C1.31,11.03,1.03,10.76,1.03,10.44L1.03,10.44z M9.43,10.5 c-0.12,0.12-0.26,0.21-0.41,0.28V8.54c0-0.17,0.14-0.3,0.31-0.3h2.38c-0.08,0.14-0.18,0.27-0.3,0.39L9.43,10.5z"/>
+                </svg>
+                {{ article.published_at | date: '%b %d, %Y' }}
+              </div>
+              <div class="author">
+                <svg style="width:13px;" viewBox="0 0 13 13" aria-hidden="true" focusable="false">
+                  <path fill="#323A45" d="M6.5,6.5c0.86,0,1.69-0.34,2.3-0.95c0.61-0.61,0.95-1.44,0.95-2.3c0-0.86-0.34-1.69-0.95-2.3 C8.19,0.34,7.36,0,6.5,0S4.81,0.34,4.2,0.95c-0.61,0.61-0.95,1.44-0.95,2.3c0,0.86,0.34,1.69,0.95,2.3C4.81,6.16,5.64,6.5,6.5,6.5z M12.97,12.38l-1.3-3.58c-0.2-0.54-0.55-1-1.02-1.33c-0.47-0.33-1.03-0.5-1.6-0.5H3.95c-0.57,0-1.13,0.18-1.6,0.5 C1.88,7.8,1.52,8.26,1.33,8.8l-1.3,3.58c-0.05,0.14-0.03,0.3,0.06,0.42C0.17,12.93,0.31,13,0.46,13h12.07c0.15,0,0.29-0.07,0.38-0.2 C13,12.68,13.02,12.52,12.97,12.38z"/>
+                </svg>
+                {{ article.author }}
+              </div>
+            </div>
+
+            <div class="hot-deals-wrap">
+              <h2>Hot Deals For You</h2>
+              <ul>
+                {%- for product in pb_hot_products limit: pb_sidebar_limit -%}
+                  <li>
+                    <div class="img-wrap">
+                      {%- if product.featured_image -%}
+                        <img
+                          src="{{ product.featured_image | image_url: width: 300 }}"
+                          alt="{{ product.title | escape }}"
+                          width="300"
+                          height="300"
+                          loading="lazy"
+                        >
+                      {%- endif -%}
+                    </div>
+                    <div class="content">
+                      <h3>{{ product.title | strip_html | truncate: 25 }}</h3>
+                      <p class="pera">{{ product.description | strip_html | truncate: 90 }}</p>
+                      <h6 class="pr">{{ product.price | money | remove: ' ' | remove: '.00' }}</h6>
+                      <a href="{{ product.url }}">View Item</a>
+                    </div>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+
+            <div class="deals-wrap">
+              <a href="{{ section.settings.view_all_deals_url | default: '/collections/sale' }}" class="down">
+                View All Deals
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hot-deals halfsec">
+    <div class="c-container">
+      <div class="c-row">
+        <h2>{{ section.settings.also_viewed_heading }}</h2>
+        {%- for product in pb_hot_products limit: pb_bottom_limit -%}
+          <div class="c-col-3">
+            <ul>
+              <li>
+                <div class="img-wrap">
+                  {%- if product.featured_image -%}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 376 }}"
+                      alt="{{ product.title | escape }}"
+                      width="376"
+                      height="376"
+                      loading="lazy"
+                    >
+                  {%- endif -%}
+                </div>
+                <div class="content">
+                  <h3>{{ product.title | strip_html | truncate: 28 }}</h3>
+                  <p class="pera">{{ product.description | strip_html | truncate: 30 }}</p>
+                  <h6>{{ product.price | money | remove: ' ' | remove: '.00' }}</h6>
+                  <a href="{{ product.url }}">View Item</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer class="article-footer">{{ section.settings.footer_text }}</footer>
+
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "Planet Beauty Article",
+  "class": "pb-main-article-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "default_banner_url",
+      "label": "Default banner image URL",
+      "default": "https://cdn.shopify.com/s/files/1/0568/4484/5206/files/default-article-banner.jpg"
+    },
+    {
+      "type": "collection",
+      "id": "hot_deals_collection",
+      "label": "Hot deals collection"
+    },
+    {
+      "type": "range",
+      "id": "sidebar_products_limit",
+      "label": "Sidebar products",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "url",
+      "id": "view_all_deals_url",
+      "label": "View all deals URL"
+    },
+    {
+      "type": "text",
+      "id": "also_viewed_heading",
+      "label": "Bottom products heading",
+      "default": "People Have Also Been Looking at These Products"
+    },
+    {
+      "type": "range",
+      "id": "bottom_products_limit",
+      "label": "Bottom products count",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Article footer text",
+      "default": "Copyright © 2022, Planet Beauty. All rights reserved."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Planet Beauty Article"
+    }
+  ]
+}
+{% endschema %}

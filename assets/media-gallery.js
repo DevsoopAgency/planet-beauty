@@ -53,8 +53,53 @@ export class MediaGallery extends Component {
    * @param {ZoomMediaSelectedEvent} event - The zoom-media:selected event.
    */
   #handleZoomMediaSelected = async (event) => {
-    this.slideshow?.select(event.detail.index, undefined, { animate: false });
+    const galleryIndex = this.#findGalleryIndexByMediaId(
+      this.#getMediaIdFromZoomIndex(event.detail.index)
+    );
+
+    if (galleryIndex === -1) return;
+
+    this.slideshow?.select(galleryIndex, undefined, { animate: false });
   };
+
+  /**
+   * Resolves a zoom-dialog media id from a zoom lightbox index.
+   * @param {number} zoomIndex
+   * @returns {string | undefined}
+   */
+  #getMediaIdFromZoomIndex(zoomIndex) {
+    const zoomItem = this.refs.zoomDialogComponent?.refs.media[zoomIndex];
+    if (!(zoomItem instanceof HTMLElement)) return undefined;
+
+    return zoomItem.dataset.mediaId || zoomItem.querySelector('[data-media-id]')?.dataset.mediaId;
+  }
+
+  /**
+   * Finds the main gallery index for a media id (variant-filtered gallery may omit some images).
+   * @param {string | undefined} mediaId
+   * @returns {number}
+   */
+  #findGalleryIndexByMediaId(mediaId) {
+    if (!mediaId) return -1;
+
+    if (this.presentation === 'carousel') {
+      const slides = this.slideshow?.slides ?? [];
+
+      return slides.findIndex(
+        (slide) =>
+          slide instanceof HTMLElement &&
+          (slide.dataset.mediaId === mediaId || slide.querySelector(`[data-media-id="${mediaId}"]`))
+      );
+    }
+
+    const items = this.refs.media ?? [];
+
+    return items.findIndex(
+      (item) =>
+        item instanceof HTMLElement &&
+        (item.dataset.mediaId === mediaId || item.querySelector(`[data-media-id="${mediaId}"]`))
+    );
+  }
 
   /**
    * Zooms the media gallery.

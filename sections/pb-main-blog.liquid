@@ -1,0 +1,259 @@
+{%- comment -%}
+  Planet Beauty — blog listing page (parity with live templates/blog.liquid).
+  Custom section + scoped CSS — safe to remove if not approved.
+{%- endcomment -%}
+
+{{ 'pb-blog.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign pb_eyebrow = section.settings.banner_eyebrow
+  assign pb_categories = section.settings.category_list
+  assign pb_hot_collection = section.settings.hot_deals_collection | default: 'all'
+  assign pb_hot_limit = section.settings.hot_deals_limit | default: 4
+  assign pb_facebook = section.settings.facebook_url
+  assign pb_twitter = section.settings.twitter_url
+  assign pb_instagram = section.settings.instagram_url
+-%}
+
+<div class="pb-blog pb-blog-page">
+  <section class="pb-blog-banner pb-halfsec">
+    <div class="pb-blog__container">
+      <div class="c-row pb-blog-banner__row">
+        <div class="c-col-1 pb-blog-banner__sidebar">
+          <div class="wrap-sidebar">
+            <span class="social-icon">
+              <a
+                href="{{ pb_facebook | default: '#' }}"
+                {% if pb_facebook != blank %}target="_blank" rel="noopener noreferrer"{% endif %}
+                aria-label="Facebook"
+              >
+                <svg style="width:14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+              </a>
+              <a
+                href="{{ pb_twitter | default: '#' }}"
+                {% if pb_twitter != blank %}target="_blank" rel="noopener noreferrer"{% endif %}
+                aria-label="X (Twitter)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+              </a>
+              <a
+                href="{{ pb_instagram | default: '#' }}"
+                {% if pb_instagram != blank %}target="_blank" rel="noopener noreferrer"{% endif %}
+                aria-label="Instagram"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+              </a>
+            </span>
+            <div class="content">
+              <p>{{ section.settings.sidebar_text | newline_to_br }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="c-col-6 m-auto">
+          {%- if pb_eyebrow != blank -%}
+            <h4>{{ pb_eyebrow }}</h4>
+          {%- endif -%}
+          <h1>{{ blog.title | escape }} & <span>Updates</span></h1>
+          {%- if pb_categories != blank -%}
+            <p>{{ pb_categories | newline_to_br }}</p>
+          {%- endif -%}
+        </div>
+
+        <div class="c-col-5">
+          <ul class="blog-wrap">
+            {%- for article in blog.articles limit: 3 -%}
+              <li>
+                <div class="img-wrap">
+                  {%- if article.image -%}
+                    {{
+                      article.image
+                      | image_url: width: 300
+                      | image_tag: loading: 'lazy', widths: '150, 300', alt: article.title
+                    }}
+                  {%- endif -%}
+                </div>
+                <div class="content">
+                  <a href="{{ article.url }}"><h3>{{ article.title }}</h3></a>
+                  <p class="meta">
+                    <svg style="width:12px;margin-right:10px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="#000" d="M421.7 220.3L188.5 453.4L154.6 419.5L158.1 416H112C103.2 416 96 408.8 96 400V353.9L92.51 357.4C87.78 362.2 84.31 368 82.42 374.4L59.44 452.6L137.6 429.6C143.1 427.7 149.8 424.2 154.6 419.5L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L291.7 90.34L421.7 220.3zM492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75z"/></svg>
+                    <span>
+                      {{ article.published_at | date: format: 'short' }}
+                      By {{ article.author }}
+                    </span>
+                  </p>
+                  <p class="pera">
+                    {%- if article.excerpt.size > 0 -%}
+                      {{ article.excerpt }}
+                    {%- else -%}
+                      {{ article.content | strip_html | truncate: 150 }}
+                    {%- endif -%}
+                  </p>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-blog-recent pb-halfsec">
+    <div class="pb-blog__container">
+      <h2 class="pb-blog-recent__heading">{{ section.settings.recent_heading }}</h2>
+      <div class="pb-blog-recent__grid">
+        {%- for article in blog.articles -%}
+          <article class="pb-blog-recent__item">
+            <h4 class="pb-blog-recent__item-title">
+              <a href="{{ article.url }}">{{ article.title | truncate: 70 }}</a>
+            </h4>
+            <p class="pb-blog-banner__meta">
+              <svg class="pb-blog-banner__meta-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="#000" d="M421.7 220.3L188.5 453.4L154.6 419.5L158.1 416H112C103.2 416 96 408.8 96 400V353.9L92.51 357.4C87.78 362.2 84.31 368 82.42 374.4L59.44 452.6L137.6 429.6C143.1 427.7 149.8 424.2 154.6 419.5L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L291.7 90.34L421.7 220.3zM492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75z"/></svg>
+              <span>
+                {{ article.published_at | date: format: 'short' }}
+                By {{ article.author }}
+              </span>
+            </p>
+            <p class="pb-blog-recent__item-text">
+              {%- if article.excerpt.size > 0 -%}
+                {{ article.excerpt }}
+              {%- else -%}
+                {{ article.content | strip_html | truncate: 150 }}
+              {%- endif -%}
+            </p>
+            <a class="pb-blog-recent__read-more" href="{{ article.url }}">
+              Full Articale
+              <svg style="width:12px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path fill="#EF0180" d="M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"/></svg>
+            </a>
+            {%- if article.image -%}
+              <div class="pb-blog-recent__thumb">
+                {{
+                  article.image
+                  | image_url: width: 772
+                  | image_tag: loading: 'lazy', widths: '386, 772', alt: article.title
+                }}
+              </div>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+
+  {%- assign pb_hot_products = collections[pb_hot_collection].products -%}
+  {%- if pb_hot_products.size > 0 -%}
+    <section class="pb-blog-deals pb-halfsec">
+      <div class="pb-blog__container">
+        <h2 class="pb-blog-deals__title">{{ section.settings.hot_deals_heading }}</h2>
+        <ul class="pb-blog-deals__grid">
+          {%- for product in pb_hot_products limit: pb_hot_limit -%}
+            <li class="pb-blog-deals__card">
+              <a class="pb-blog-deals__img" href="{{ product.url }}">
+                {%- if product.featured_image -%}
+                  {{
+                    product.featured_image
+                    | image_url: width: 376
+                    | image_tag: loading: 'lazy', widths: '188, 376', alt: product.title
+                  }}
+                {%- endif -%}
+              </a>
+              <div class="pb-blog-deals__content">
+                <h3 class="pb-blog-deals__name">
+                  <a href="{{ product.url }}">{{ product.title | strip_html | truncate: 28 }}</a>
+                </h3>
+                <p class="pb-blog-deals__desc">{{ product.description | strip_html | truncate: 30 }}</p>
+                <span class="pb-blog-deals__price">{{ product.price | money | remove: ' ' | remove: '.00' }}</span>
+                <a class="pb-blog-deals__link" href="{{ product.url }}">View Item &rsaquo;</a>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </section>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Planet Beauty Blog",
+  "class": "pb-main-blog-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "text",
+      "id": "banner_eyebrow",
+      "label": "Banner eyebrow",
+      "default": "Planet Beauty Blog & Updates"
+    },
+    {
+      "type": "textarea",
+      "id": "category_list",
+      "label": "Category list",
+      "default": "Brands\nMakeups\nBody Care\nBeauty Products\nGifts"
+    },
+    {
+      "type": "textarea",
+      "id": "sidebar_text",
+      "label": "Sidebar text",
+      "default": " Follow us in our social media account \n for the latest update and activities"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "twitter_url",
+      "label": "X (Twitter) URL"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Recently published"
+    },
+    {
+      "type": "text",
+      "id": "recent_heading",
+      "label": "Section heading",
+      "default": "Recently Published"
+    },
+    {
+      "type": "header",
+      "content": "Hot deals"
+    },
+    {
+      "type": "text",
+      "id": "hot_deals_heading",
+      "label": "Hot deals heading",
+      "default": "Hot Deals For You"
+    },
+    {
+      "type": "collection",
+      "id": "hot_deals_collection",
+      "label": "Hot deals collection"
+    },
+    {
+      "type": "range",
+      "id": "hot_deals_limit",
+      "label": "Products to show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Planet Beauty Blog"
+    }
+  ]
+}
+{% endschema %}
