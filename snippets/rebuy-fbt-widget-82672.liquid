@@ -53,9 +53,22 @@
     display: flex;
   }
   @media (max-width: 749px) {
+    #rebuy-widget-82672 .rebuy-bundle__items {
+      gap: 20px;
+    }
+
+    /* Full-width cards on mobile — 2-up grid was squeezing titles/selects */
     #rebuy-widget-82672 .rebuy-product-block {
-      flex-basis: calc((100% - var(--gap-md, 16px)) / 2) !important;
-      max-width: calc((100% - var(--gap-md, 16px)) / 2);
+      flex: 0 0 100% !important;
+      max-width: 100%;
+    }
+
+    #rebuy-widget-82672 .rebuy-product-title {
+      min-height: 0;
+    }
+
+    #rebuy-widget-82672 .rebuy-select {
+      font-size: 16px; /* prevents iOS zoom on focus */
     }
   }
   /* Titles wrap normally; only break genuinely long words.
