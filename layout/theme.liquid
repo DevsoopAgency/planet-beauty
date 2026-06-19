@@ -160,5 +160,12 @@
 
     {%- comment -%} SCA Store Locator — product WTB hooks (live snippets/sca.storelocator.liquid) {%- endcomment -%}
     {% render 'pb-sca-storelocator' %}
+
+    {%- comment -%} Rebuy Smart Cart — live parity (.mini-cart__toggle → Rebuy.SmartCart.show) {%- endcomment -%}
+    {% render 'pb-rebuy-smart-cart' %}
+
+    {% comment %} {% if template.name == 'product' %}
+      {% render 'rebuy-fbt-widget-82672' %}
+    {% endif %} {% endcomment %}
   </body>
 </html>

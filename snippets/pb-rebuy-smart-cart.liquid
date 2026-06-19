@@ -1,0 +1,97 @@
+{%- comment -%}
+  Rebuy Smart Cart parity with live theme.
+  Live opens Rebuy.SmartCart on .mini-cart__toggle / [data-minicart-toggle] instead of the native mini-cart.
+  Hidden mini-cart shell keeps Rebuy admin selectors working if they target [data-mini-cart] etc.
+{%- endcomment -%}
+
+<div class="mini-cart-container visually-hidden" aria-hidden="true" hidden>
+  <div class="mini-cart" data-mini-cart>
+    <div class="mini-cart__header">
+      <div class="mini-cart__item-count">
+        <span data-minicart-count>{{ cart.item_count }}</span>
+      </div>
+      <button type="button" data-minicart-close-button></button>
+    </div>
+    <div class="mini-cart__items" data-mini-cart-items></div>
+    <div class="mini-cart__footer" data-minicart-footer></div>
+  </div>
+  <div class="minicart-overlay global-overlay" data-minicart-close></div>
+</div>
+
+<script>
+  (function () {
+    localStorage.setItem('stores', 'yes_store');
+
+    function smartCartAvailable() {
+      return typeof window.Rebuy !== 'undefined' && typeof window.Rebuy.SmartCart?.show === 'function';
+    }
+
+    function showSmartCart() {
+      if (!smartCartAvailable()) return false;
+      window.Rebuy.SmartCart.show();
+      return true;
+    }
+
+    function bindCartToggle() {
+      document.querySelectorAll('[data-minicart-toggle]').forEach(function (toggle) {
+        if (toggle.dataset.rebuySmartCartBound === 'true') return;
+        toggle.dataset.rebuySmartCartBound = 'true';
+
+        toggle.addEventListener(
+          'click',
+          function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (showSmartCart()) return;
+
+            window.location.href = toggle.getAttribute('href') || '/cart';
+          },
+          { capture: true }
+        );
+      });
+    }
+
+    function syncMinicartCount(event) {
+      const count =
+        event?.detail?.resource?.item_count ??
+        event?.detail?.data?.itemCount ??
+        null;
+      if (count === null) return;
+
+      document.querySelectorAll('[data-minicart-count]').forEach(function (el) {
+        el.textContent = String(count);
+        el.setAttribute('data-minicart-count', String(count));
+      });
+    }
+
+    function bindAddToCartOpen() {
+      document.addEventListener('cart:update', function (event) {
+        syncMinicartCount(event);
+        if (!smartCartAvailable()) return;
+        if (event.detail?.data?.didError) return;
+
+        const data = event.detail?.data ?? {};
+        const isAdd =
+          data.source === 'product-form-component' ||
+          typeof data.variantId !== 'undefined';
+
+        if (isAdd) showSmartCart();
+      });
+    }
+
+    function init() {
+      bindCartToggle();
+      bindAddToCartOpen();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    document.addEventListener('rebuy:ready', init);
+    document.addEventListener('shopify:section:load', init);
+  })();
+</script>

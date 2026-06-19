@@ -24,6 +24,7 @@
       ref="cartBubbleCount"
       aria-hidden="true"
       data-testid="cart-bubble"
+      data-minicart-count="{{ cart.item_count }}"
     >
       {%- if limit == blank or cart.item_count < limit %}
         {{- cart.item_count -}}

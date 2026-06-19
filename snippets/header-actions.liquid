@@ -123,132 +123,19 @@
   {% endif %}
 
   {% if settings.cart_type == 'drawer' and template.name != 'cart' %}
-    <script
-      src="{{ 'cart-drawer.js' | asset_url }}"
-      type="module"
-      fetchpriority="low"
-    ></script>
-
-    {% capture empty_cart_drawer_content %}
-      <div class="cart-drawer__header">
-        <button
-          ref="closeButton"
-          on:click="cart-drawer-component/close"
-          class="button close-button cart-drawer__close-button button-unstyled"
-          aria-label="{{ 'actions.close_dialog' | t }}"
-        >
-          <span class="svg-wrapper">
-            {{- 'icon-close.svg' | inline_asset_content -}}
-          </span>
-        </button>
-      </div>
-
-      <div
-        class="cart-drawer__content"
-        aria-label="{{ 'accessibility.cart' | t }}"
-      >
-        <h2
-          class="cart-drawer__heading h4 cart-drawer__heading--empty"
-          id="cart-drawer-heading-empty"
-        >
-          {{ 'content.your_cart_is_empty' | t }}
-        </h2>
-
-        <div class="cart-drawer__items">
-          {% render 'cart-products', force_empty: true %}
-        </div>
-      </div>
-    {% endcapture %}
-
-    <cart-drawer-component
-      class="cart-drawer{% if display_style == 'text' %} cart-drawer--text{% endif %}"
-      {{ block.shopify_attributes }}
-      {% if settings.auto_open_cart_drawer %}
-        auto-open
-      {% endif %}
+    {%- comment -%}
+      Rebuy Smart Cart only — live parity. No Horizon cart-drawer-component.
+    {%- endcomment -%}
+    <a
+      href="{{ routes.cart_url }}"
+      class="header-actions__action action__cart mini-cart__toggle btn-link btn-link--text{% if display_style == 'text' %} header-actions__text-style{% endif %}"
+      aria-label="{{ 'accessibility.cart' | t }}"
+      aria-describedby="cart-bubble-text"
+      data-testid="cart-drawer-trigger"
+      data-minicart-toggle
     >
-      <template id="empty-cart-template">
-        {{ empty_cart_drawer_content }}
-      </template>
-      <button
-        class="header-actions__action button-unstyled{% if display_style == 'text' %} header-actions__text-style{% endif %}"
-        on:click="/open"
-        aria-haspopup="dialog"
-        aria-label="{{ 'accessibility.cart' | t }}"
-        aria-describedby="cart-bubble-text"
-        data-testid="cart-drawer-trigger"
-      >
-        {{ cart_icon }}
-      </button>
-
-      <dialog
-        ref="dialog"
-        class="cart-drawer__dialog dialog-modal dialog-drawer color-{{ settings.drawer_color_scheme }}{% if cart.empty? %} cart-drawer--empty{%endif%}"
-        data-testid="cart-drawer-dialog"
-        aria-labelledby="{% if cart.empty? %}cart-drawer-heading-empty{% else %}cart-drawer-heading{% endif %}"
-        scroll-lock
-        cart-summary-sticky="true"
-      >
-        <span
-          ref="liveRegion"
-          class="visually-hidden"
-          role="status"
-        ></span>
-        <div
-          class="cart-drawer__inner"
-          data-hydration-key="cart-drawer-inner"
-        >
-          {% capture cart_items_children %}
-            {%- if cart.empty? -%}
-              {{ empty_cart_drawer_content }}
-            {%- else -%}
-              <div
-                class="cart-drawer__header"
-                id="cart-drawer-header"
-              >
-                <h2
-                  class="cart-drawer__heading h4"
-                  id="cart-drawer-heading"
-                >
-                  {{ 'content.cart_title' | t }}
-                  {% render 'cart-bubble' %}
-                </h2>
-
-                <button
-                  ref="closeButton"
-                  on:click="cart-drawer-component/close"
-                  class="button close-button cart-drawer__close-button button-unstyled"
-                  aria-label="{{ 'actions.close_dialog' | t }}"
-                >
-                  <span class="svg-wrapper">
-                    {{- 'icon-close.svg' | inline_asset_content -}}
-                  </span>
-                </button>
-              </div>
-
-              <scroll-hint
-                class="cart-drawer__content"
-                aria-label="{{ 'accessibility.cart' | t }}"
-                style="--header-height: 60px;"
-              >
-                <scroll-hint
-                  class="cart-drawer__items"
-                >
-                  {% render 'cart-products' %}
-                </scroll-hint>
-
-                <div
-                  class="cart-drawer__summary"
-                >
-                  {% render 'cart-summary', section_id: section.id %}
-                </div>
-              </scroll-hint>
-            {%- endif -%}
-          {% endcapture %}
-          {% render 'cart-items-component', children: cart_items_children, is_drawer: true, section_id: section.id %}
-        </div>
-      </dialog>
-    </cart-drawer-component>
+      {{ cart_icon }}
+    </a>
   {% else %}
     <a
       href="{{ routes.cart_url }}"
@@ -329,10 +216,13 @@
     }
   }
 
-  cart-drawer-component.cart-drawer {
+  .header-actions__action.action__cart,
+  .header-actions__action[data-minicart-toggle] {
     display: flex;
     align-items: center;
     line-height: 0;
+    text-decoration: none;
+    color: inherit;
   }
 
   .account-button__fallback {
