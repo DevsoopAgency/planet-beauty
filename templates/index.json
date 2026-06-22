@@ -1285,6 +1285,20 @@
         "padding-block-end": 0
       }
     },
+    "custom_liquid_giftsU50": {
+      "type": "custom-liquid",
+      "custom_css": [
+        ".rebuy-widget {max-width: 100%;}"
+      ],
+      "name": "t:names.custom_liquid",
+      "settings": {
+        "custom_liquid": "<!-- Gifts Under $50 -->\n<div class=\"homepage-rebuy-giftsunder50\">\n  <div data-rebuy-id=\"181855\"></div>\n</div>\n<script src=\"{{ 'rebuy-home.js' | asset_url }}\" defer></script>",
+        "color_scheme": "",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "section_eCYAbX": {
       "type": "section",
       "blocks": {
@@ -4549,20 +4563,6 @@
         "padding-block-end": 48
       }
     },
-    "custom_liquid_giftsU50": {
-      "type": "custom-liquid",
-      "custom_css": [
-        ".rebuy-widget {max-width: 100%;}"
-      ],
-      "name": "t:names.custom_liquid",
-      "settings": {
-        "custom_liquid": "<!-- Gifts Under $50 -->\n<div class=\"homepage-rebuy-giftsunder50\">\n  <div data-rebuy-id=\"181855\"></div>\n</div>\n<script src=\"{{ 'rebuy-home.js' | asset_url }}\" defer></script>",
-        "color_scheme": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
-    },
     "section_pBBFWT": {
       "type": "section",
       "blocks": {
@@ -5576,6 +5576,7 @@
     "product_list_BAGebU",
     "section_UxEDxx",
     "custom_liquid_4PUtGP",
+    "custom_liquid_giftsU50",
     "section_eCYAbX",
     "section_wBqfa4",
     "section_8Hx78w",
@@ -5583,7 +5584,6 @@
     "slideshow_dVrkTb",
     "collection_list_YmgTjL",
     "product_list_JQKAGQ",
-    "custom_liquid_giftsU50",
     "section_pBBFWT",
     "hero_jVaWmY",
     "section_XNyjjr",
