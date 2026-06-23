@@ -137,6 +137,8 @@
       data-product-transition="{{ settings.transition_to_main_product }}"
       data-template="{{ template }}"
     >
+      {%- comment -%} pb: live-parity breadcrumbs (excludes index/cart/list-collections/404) {%- endcomment -%}
+      {% render 'pb-breadcrumbs' %}
       {{ content_for_layout }}
     </main>
 

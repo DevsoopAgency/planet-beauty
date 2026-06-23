@@ -86,10 +86,30 @@
     height: 18px!important;
   }
 
-  /* Tidy spacing to match live: comfortable padding, consistent gaps */
+  /* Tidy spacing to match live: comfortable padding, consistent gaps.
+     The product-details group already adds a gap between blocks, so the
+     widget's own top margin doubled up and created a visible empty gap
+     above the purchase options — keep only a small bottom margin. */
   .rc-widget,
   [id^="RechargeWidget_"] {
-    margin-block: var(--margin-md, 16px);
+    margin-block: 0 var(--margin-sm, 8px);
+  }
+
+  {%- comment -%}
+    pb- migration fix: remove the "weird gap" between the price and the
+    purchase-options card. Two empty blocks sit between them as flex items
+    in the product-details column and each picks up the group's row gap:
+      1. The Power Reviews snippet placeholder is an empty <div> until the
+         PowerReviews script renders into it (products with no reviews stay
+         empty forever) — collapse its custom-liquid wrapper while empty.
+      2. This Recharge "style" block only emits a <style> tag but its
+         custom-liquid wrapper still counts as a flex item — collapse it.
+    Both collapse rules are scoped to .product-details and self-undo once
+    real content appears. Safe to remove if the layout is reworked.
+  {%- endcomment -%}
+  .product-details div:has(> .pb-pr-snippet:empty),
+  .product-details div:has(> style) {
+    display: none;
   }
   .rc-widget .rc-radio__label,
   [id^="RechargeWidget_"] .rc-radio__label {

@@ -1,0 +1,128 @@
+{%- comment -%}
+  pb: Breadcrumbs — ported from the LIVE theme (snippets/breadcrumbs.liquid) for
+  migration parity. Live shows breadcrumbs on every template EXCEPT index / cart /
+  list-collections / 404, hidden below 900px. Markup + schema.org data mirror live;
+  classes are renamed `pb-breadcrumbs*` and colors/fonts use Horizon tokens so it
+  matches the new theme's palette. Rendered globally from layout/theme.liquid.
+  Safe to remove (delete the render call in theme.liquid) to drop breadcrumbs.
+{%- endcomment -%}
+{%- unless template == 'index' or template == 'cart' or template == 'list-collections' or template == '404' or template == 'password' or template == 'gift_card' -%}
+{%- assign t = template | split: '.' | first -%}
+
+<nav class="pb-breadcrumbs" role="navigation" aria-label="breadcrumbs" data-type="{{ product.type }}">
+  <ol class="pb-breadcrumbs__list" itemscope itemtype="https://schema.org/BreadcrumbList">
+    <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a class="pb-breadcrumbs__link" href="/" itemprop="item">
+        <span itemprop="name">Home</span>
+      </a>
+      <meta itemprop="position" content="1" />
+    </li>
+    {%- case t -%}
+      {%- when 'page' -%}
+        <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <span class="pb-breadcrumbs__link" aria-current="page" itemprop="name">{{ page.title }}</span>
+          <meta itemprop="position" content="2" />
+        </li>
+      {%- when 'product' -%}
+        {%- if collection.url -%}
+          <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="name">{{ collection.title | link_to: collection.url }}</span>
+            <meta itemprop="position" content="2" />
+          </li>
+        {%- endif -%}
+        <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <span class="pb-breadcrumbs__link" aria-current="page" itemprop="name">{{ product.title }}</span>
+          <meta itemprop="position" content="3" />
+        </li>
+      {%- when 'collection' -%}
+        {%- if current_tags -%}
+          <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="name">{{ collection.title | link_to: collection.url }}</span>
+            <meta itemprop="position" content="2" />
+          </li>
+          <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span class="pb-breadcrumbs__link" aria-current="page" itemprop="name">{{ current_tags | join: " + " }}</span>
+            <meta itemprop="position" content="3" />
+          </li>
+        {%- else -%}
+          <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span class="pb-breadcrumbs__link" aria-current="page" itemprop="name">{{ collection.title }}</span>
+            <meta itemprop="position" content="2" />
+          </li>
+        {%- endif -%}
+      {%- when 'blog' -%}
+        {%- if current_tags -%}
+          <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="name">{{ blog.title | link_to: blog.url }}</span>
+            <meta itemprop="position" content="2" />
+          </li>
+          <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span class="pb-breadcrumbs__link" aria-current="page" itemprop="name">{{ current_tags | join: " + " }}</span>
+            <meta itemprop="position" content="3" />
+          </li>
+        {%- else -%}
+          <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span class="pb-breadcrumbs__link" aria-current="page" itemprop="name">{{ blog.title }}</span>
+            <meta itemprop="position" content="2" />
+          </li>
+        {%- endif -%}
+      {%- when 'article' -%}
+        <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <span itemprop="name">{{ blog.title | link_to: blog.url }}</span>
+          <meta itemprop="position" content="2" />
+        </li>
+        <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <span class="pb-breadcrumbs__link" aria-current="page" itemprop="name">{{ article.title }}</span>
+          <meta itemprop="position" content="3" />
+        </li>
+      {%- else -%}
+        <li class="pb-breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <span class="pb-breadcrumbs__link" aria-current="page" itemprop="name">{{ page_title }}</span>
+          <meta itemprop="position" content="2" />
+        </li>
+    {%- endcase -%}
+  </ol>
+</nav>
+
+{%- style -%}
+  .pb-breadcrumbs {
+    display: none;
+    width: 100%;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+    padding-block: 16px 0;
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground));
+  }
+  /* Live shows breadcrumbs only at >=900px */
+  @media (min-width: 900px) {
+    .pb-breadcrumbs { display: block; }
+  }
+  .pb-breadcrumbs__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pb-breadcrumbs__item { display: inline-block; }
+  .pb-breadcrumbs__item:not(:last-child)::after {
+    content: "|";
+    display: inline-block;
+    margin: 0 8px 0 6px;
+  }
+  .pb-breadcrumbs__item:last-child { font-weight: 800; }
+  .pb-breadcrumbs__item:last-child .pb-breadcrumbs__link { text-decoration: none; }
+  .pb-breadcrumbs__link,
+  .pb-breadcrumbs__link:focus,
+  .pb-breadcrumbs__link:hover,
+  .pb-breadcrumbs a,
+  .pb-breadcrumbs a:focus,
+  .pb-breadcrumbs a:hover {
+    color: rgb(var(--color-foreground));
+  }
+{%- endstyle -%}
+{%- endunless -%}

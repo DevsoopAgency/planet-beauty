@@ -118,3 +118,352 @@
   margin-block-end: 16px;
 }
 
+/* ==========================================================================
+   Figma homepage sections — desktop + mobile (node 3:8 / 24:1413)
+   Targeted via stable section keys in index.json.
+   ========================================================================== */
+
+/* --- 1. Your beauty routine made simple --- */
+#MainContent[data-template='index'] [id$='__section_UxEDxx'] .section-background {
+  background: linear-gradient(115.11deg, #404040 2.66%, #000000 98.74%);
+}
+
+#MainContent[data-template='index'] [id$='__section_UxEDxx'] .section-content-wrapper {
+  align-items: center;
+  min-height: 700px;
+}
+
+#MainContent[data-template='index'] [id$='__section_UxEDxx'] .text-block :is(h1, h2) {
+  font-family: var(--font-heading--family);
+  font-size: 42px !important;
+  line-height: 55px !important;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+}
+
+#MainContent[data-template='index'] [id$='__section_UxEDxx'] .text-block.paragraph :is(p, li),
+#MainContent[data-template='index'] [id$='__section_UxEDxx'] .text-block.rte :is(p, li) {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  max-width: 504px;
+  margin-inline: auto;
+}
+
+#MainContent[data-template='index'] [id$='__section_UxEDxx'] .group-block-content {
+  gap: 20px;
+}
+
+#MainContent[data-template='index'] [id$='__section_UxEDxx'] .button {
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 40px;
+  padding: 15px 40px;
+  min-width: 271px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+
+#MainContent[data-template='index'] [id$='__section_UxEDxx'] .button:hover {
+  background: #f0f0f0;
+  color: #000;
+}
+
+@media screen and (min-width: 900px) {
+  #MainContent[data-template='index'] [id$='__section_UxEDxx'] .text-block :is(h1, h2) {
+    font-size: 62px !important;
+    line-height: 72px !important;
+  }
+}
+
+@media screen and (max-width: 899px) {
+  #MainContent[data-template='index'] [id$='__section_UxEDxx'] .section-content-wrapper {
+    min-height: 0;
+    padding-block: 32px 40px;
+  }
+
+  #MainContent[data-template='index'] [id$='__section_UxEDxx'] .image-block {
+    padding-inline: 16px;
+  }
+}
+
+/* --- 2. Dermalogica Skin Health --- */
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .section-background {
+  background: #fff;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .section-content-wrapper > .group-block:last-child {
+  background: #f5f3ef;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .section-content-wrapper > .image-block {
+  min-height: 500px;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .section-content-wrapper > .image-block img {
+  object-fit: cover;
+  height: 100%;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .text-block.h6 :is(p, h6) {
+  color: #ef0180;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .text-block.h2 :is(h2, p) {
+  font-family: var(--font-heading--family);
+  font-size: 36px !important;
+  line-height: 55px !important;
+  font-weight: 700;
+  color: #0a0a0a;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .group-block-content > .text-block.rte:nth-of-type(1) :is(p, li) {
+  color: #525252;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22.75px;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .group-block-content > .text-block.rte:nth-of-type(2) :is(p, li) {
+  color: #737373;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22.75px;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .group-block-content > .group-block:has(.link) {
+  gap: 50px;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .link {
+  color: #0a0a0a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  line-height: 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-bottom: 1px solid #0a0a0a;
+  padding-block: 17px 0;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .group-block-content > .group-block:has([data-testid='group-block'] .text-block.h3) {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-block-start: 10px;
+  width: 100%;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] .group-block-content > .group-block:last-child [data-testid='group-block'] > [data-testid='group-block'] {
+  align-items: center;
+  flex: 1 1 0;
+  gap: 19px;
+  padding-block: 20px 23px;
+  text-align: center;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] [data-testid='group-block'] .text-block.h3 :is(h3, p) {
+  font-family: var(--font-heading--family);
+  font-size: 24px !important;
+  line-height: 36px !important;
+  font-weight: 700;
+  text-align: center;
+  color: #0a0a0a;
+}
+
+#MainContent[data-template='index'] [id$='__section_eCYAbX'] [data-testid='group-block'] .text-block.rte :is(p, li) {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  text-align: center;
+  color: #737373;
+  text-transform: uppercase;
+}
+
+@media screen and (min-width: 900px) {
+  #MainContent[data-template='index'] [id$='__section_eCYAbX'] .text-block.h6 :is(p, h6) {
+    font-size: 16px;
+  }
+
+  #MainContent[data-template='index'] [id$='__section_eCYAbX'] .text-block.h2 :is(h2, p) {
+    font-size: 48px !important;
+  }
+
+  #MainContent[data-template='index'] [id$='__section_eCYAbX'] .section-content-wrapper > .image-block {
+    min-height: 802px;
+  }
+
+  #MainContent[data-template='index'] [id$='__section_eCYAbX'] [data-testid='group-block'] .text-block.h3 :is(h3, p) {
+    font-size: 30px !important;
+  }
+
+  #MainContent[data-template='index'] [id$='__section_eCYAbX'] [data-testid='group-block'] .text-block.rte :is(p, li) {
+    font-size: 10px;
+  }
+}
+
+/* --- 3. Why Shop Planet Beauty? --- */
+#MainContent[data-template='index'] [id$='__section_wBqfa4'] .text-block.h6 :is(p, h6) {
+  color: #ef0180;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+#MainContent[data-template='index'] [id$='__section_wBqfa4'] .text-block.h2 :is(h2, p) {
+  font-family: var(--font-heading--family);
+  font-size: 36px !important;
+  line-height: 55px !important;
+  font-weight: 700;
+  color: #0a0a0a;
+}
+
+#MainContent[data-template='index'] [id$='__section_wBqfa4'] .text-block.rte :is(p, li) {
+  color: #525252;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22.75px;
+  max-width: 456px;
+}
+
+#MainContent[data-template='index'] [id$='__section_wBqfa4'] .link {
+  color: #0a0a0a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  line-height: 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-bottom: 1px solid #0a0a0a;
+  padding-block: 17px 0;
+}
+
+#MainContent[data-template='index'] [id$='__section_wBqfa4'] .section-content-wrapper > .image-block {
+  min-height: 475px;
+}
+
+#MainContent[data-template='index'] [id$='__section_wBqfa4'] .section-content-wrapper > .image-block img {
+  object-fit: cover;
+  height: 100%;
+}
+
+@media screen and (min-width: 900px) {
+  #MainContent[data-template='index'] [id$='__section_wBqfa4'] .text-block.h6 :is(p, h6) {
+    font-size: 16px;
+  }
+
+  #MainContent[data-template='index'] [id$='__section_wBqfa4'] .text-block.h2 :is(h2, p) {
+    font-size: 48px !important;
+  }
+
+  #MainContent[data-template='index'] [id$='__section_wBqfa4'] .section-content-wrapper > .image-block {
+    min-height: 794px;
+  }
+}
+
+/* --- 4. Real reviews from our customers --- */
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] > .section > .text-block--align-center:has(> :is(h1, h2):only-child),
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] .text-block--align-center > :is(h1, h2):only-child,
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] .text-block.h2 > :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-heading--family);
+  font-size: 28px !important;
+  line-height: 1.2 !important;
+  font-weight: 600;
+  color: #0a0a0a;
+  padding-block: 0 32px;
+  text-align: center;
+}
+
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='section-content'] > [data-testid='group-block'] {
+  gap: 40px;
+  flex-wrap: nowrap;
+}
+
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='group-block'] > [data-testid='group-block'] {
+  background: rgba(239, 1, 128, 0.1);
+  border-radius: 10px;
+  gap: 29px;
+  padding: 32px 30px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='group-block'] .text-block.rte :is(p, li) {
+  color: #525252;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22.75px;
+}
+
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='group-block'] .text-block.h5 :is(h5, p) {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #0a0a0a;
+}
+
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='group-block'] .group-block-content > .group-block:has(.image-block) {
+  padding-block-start: 20px;
+  width: 100%;
+}
+
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='group-block'] .image-block {
+  width: 40px !important;
+  flex: 0 0 40px;
+}
+
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='group-block'] .image-block img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='group-block'] .group-block:has(.image-block) .text-block.rte :is(p, li) {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  color: #737373;
+}
+
+@media screen and (min-width: 900px) {
+  #MainContent[data-template='index'] [id$='__section_8Hx78w'] .text-block.h2 > :is(h1, h2, h3, h4, h5, h6),
+  #MainContent[data-template='index'] [id$='__section_8Hx78w'] .text-block--align-center > :is(h1, h2):only-child {
+    font-size: 36px !important;
+  }
+}
+
+@media screen and (max-width: 899px) {
+  #MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='section-content'] > [data-testid='group-block'] {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 20px;
+    padding-inline: 16px;
+    margin-inline: -16px;
+    scrollbar-width: none;
+  }
+
+  #MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='section-content'] > [data-testid='group-block']::-webkit-scrollbar {
+    display: none;
+  }
+
+  #MainContent[data-template='index'] [id$='__section_8Hx78w'] [data-testid='group-block'] > [data-testid='group-block'] {
+    flex: 0 0 356px;
+    scroll-snap-align: start;
+  }
+}
+

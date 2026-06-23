@@ -19,6 +19,8 @@
   cursor: pointer;
   font-size: inherit;
   font-family: inherit;
+  display: flex;
+  align-items: center;
 }
 
 .pickup-availability__title:disabled {

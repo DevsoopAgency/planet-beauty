@@ -532,7 +532,7 @@
           "type": "text",
           "name": "t:names.header",
           "settings": {
-            "text": "<h3>You may also like </h3>",
+            "text": "<h3>Your Kinda Vibe</h3>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
@@ -650,9 +650,9 @@
       "settings": {
         "product": "{{ closest.product }}",
         "recommendation_type": "related",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 4,
+        "layout_type": "carousel",
+        "carousel_on_mobile": true,
+        "max_products": 8,
         "columns": 4,
         "mobile_columns": "2",
         "columns_gap": 12,
