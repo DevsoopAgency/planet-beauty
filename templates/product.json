@@ -172,6 +172,30 @@
                   },
                   "blocks": {}
                 },
+                "pb_tag_sale": {
+                  "type": "pb-tag-message",
+                  "settings": {
+                    "tag": "SALE",
+                    "message": "no coupons can be applied to this item"
+                  },
+                  "blocks": {}
+                },
+                "pb_tag_no_return": {
+                  "type": "pb-tag-message",
+                  "settings": {
+                    "tag": "No Returnable item",
+                    "message": "Final sale: Refunds are only available for sealed, unopened items returned within 30 days. Manufacturer registration and warranty may apply."
+                  },
+                  "blocks": {}
+                },
+                "pb_tag_limited_ship": {
+                  "type": "pb-tag-message",
+                  "settings": {
+                    "tag": "Limited Shipping",
+                    "message": "Maximum order allowed of 6 per customer per month"
+                  },
+                  "blocks": {}
+                },
                 "price_tVjtKg": {
                   "type": "price",
                   "settings": {
@@ -194,33 +218,13 @@
                   },
                   "blocks": {}
                 },
-                "pb_tag_sale": {
-                  "type": "pb-tag-message",
-                  "settings": {
-                    "tag": "SALE",
-                    "message": "no coupons can be applied to this item"
-                  }
-                },
-                "pb_tag_no_return": {
-                  "type": "pb-tag-message",
-                  "settings": {
-                    "tag": "No Returnable item",
-                    "message": "Final sale: Refunds are only available for sealed, unopened items returned within 30 days. Manufacturer registration and warranty may apply."
-                  }
-                },
-                "pb_tag_limited_ship": {
-                  "type": "pb-tag-message",
-                  "settings": {
-                    "tag": "Limited Shipping",
-                    "message": "Maximum order allowed of 6 per customer per month"
-                  }
-                },
                 "pb_pr_snippet": {
                   "type": "custom-liquid",
                   "name": "Power Reviews rating",
                   "settings": {
                     "custom_liquid": "{% render 'pb-power-reviews', part: 'snippet' %}"
-                  }
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -233,6 +237,14 @@
                 "price_tVjtKg",
                 "pb_pr_snippet"
               ]
+            },
+            "pb_recharge_style": {
+              "type": "custom-liquid",
+              "name": "Recharge widget style",
+              "settings": {
+                "custom_liquid": "{% render 'pb-recharge-widget' %}"
+              },
+              "blocks": {}
             },
             "recharge_subscriptions_subscription_widget_HW3xkm": {
               "type": "shopify://apps/recharge-subscriptions/blocks/subscription-widget/371eed76-0b44-4869-9813-730372ea378e",
@@ -438,13 +450,6 @@
                 "accordion_row_F8fYCR",
                 "accordion_row_7yPzEK"
               ]
-            },
-            "pb_recharge_style": {
-              "type": "custom-liquid",
-              "name": "Recharge widget style",
-              "settings": {
-                "custom_liquid": "{% render 'pb-recharge-widget' %}"
-              }
             }
           },
           "block_order": [
@@ -468,7 +473,7 @@
         "gap": 48,
         "enable_sticky_add_to_cart": true,
         "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
-        "padding-block-start": 0,
+        "padding-block-start": 30,
         "padding-block-end": 0
       }
     },
@@ -523,6 +528,18 @@
         "gradient_direction": "to top",
         "padding-block-start": 0,
         "padding-block-end": 0
+      }
+    },
+    "pb_power_reviews_display": {
+      "type": "custom-liquid",
+      "custom_css": [],
+      "name": "Power Reviews",
+      "settings": {
+        "custom_liquid": "{% render 'pb-power-reviews', part: 'display' %}",
+        "color_scheme": "",
+        "section_width": "page-width",
+        "padding-block-start": 24,
+        "padding-block-end": 24
       }
     },
     "product_recommendations_qggXJq": {
@@ -664,18 +681,6 @@
         "color_scheme": "scheme-1",
         "padding-block-start": 48,
         "padding-block-end": 48
-      }
-    },
-    "pb_power_reviews_display": {
-      "type": "custom-liquid",
-      "custom_css": [],
-      "name": "Power Reviews",
-      "settings": {
-        "custom_liquid": "{% render 'pb-power-reviews', part: 'display' %}",
-        "color_scheme": "",
-        "section_width": "page-width",
-        "padding-block-start": 24,
-        "padding-block-end": 24
       }
     }
   },
