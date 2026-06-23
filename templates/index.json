@@ -3892,6 +3892,7 @@
         "group_insta_header",
         "group_insta_images"
       ],
+      "disabled": true,
       "name": "Instagram Feed",
       "settings": {
         "content_direction": "column",
