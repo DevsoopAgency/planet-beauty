@@ -164,6 +164,9 @@
     {%- comment -%} Rebuy Smart Cart — live parity (.mini-cart__toggle → Rebuy.SmartCart.show) {%- endcomment -%}
     {% render 'pb-rebuy-smart-cart' %}
 
+    {%- comment -%} Deferred data-src scripts (Elfsight, etc.) — live loadJSscripts parity {%- endcomment -%}
+    {% render 'pb-deferred-scripts' %}
+
     {% comment %} {% if template.name == 'product' %}
       {% render 'rebuy-fbt-widget-82672' %}
     {% endif %} {% endcomment %}

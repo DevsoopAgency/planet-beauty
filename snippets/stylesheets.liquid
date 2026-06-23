@@ -1,4 +1,7 @@
 {{ 'overflow-list.css' | asset_url | preload_tag: as: 'style' }}
 {{ 'base.css' | asset_url | stylesheet_tag: preload: true }}
 {{ 'pb-page-headings.css' | asset_url | stylesheet_tag: preload: true }}
-{{  'custom.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'custom.css' | asset_url | stylesheet_tag: preload: true }}
+{%- if template.name == 'index' -%}
+  {{ 'pb-home.css' | asset_url | stylesheet_tag }}
+{%- endif -%}

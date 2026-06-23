@@ -1,0 +1,44 @@
+{%- comment -%}
+  Activates deferred third-party scripts (data-src) — live theme loadJSscripts parity.
+  Elfsight platform.js must not use a static src tag; OneTrust OtAutoBlock blocks it.
+{%- endcomment -%}
+<script>
+  (function () {
+    var loaded = false;
+
+    function loadDeferredScripts() {
+      if (loaded) return;
+      loaded = true;
+
+      document.querySelectorAll('script[data-src]').forEach(function (el) {
+        var src = el.getAttribute('data-src');
+        if (!src || el.getAttribute('data-pb-loaded') === 'true') return;
+
+        var script = document.createElement('script');
+        script.src = src;
+        if (el.defer) script.defer = true;
+        if (el.async) script.async = true;
+        script.setAttribute('data-pb-loaded', 'true');
+        document.body.appendChild(script);
+        el.setAttribute('data-pb-loaded', 'true');
+      });
+    }
+
+    ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click', 'keypress', 'touchmove'].forEach(
+      function (eventName) {
+        window.addEventListener(eventName, loadDeferredScripts, { passive: true });
+      }
+    );
+
+    document.addEventListener('OneTrustGroupsUpdated', loadDeferredScripts);
+    document.addEventListener('shopify:section:load', loadDeferredScripts);
+
+    if (typeof window.planetBeautyLoadConsentTags === 'function') {
+      var original = window.planetBeautyLoadConsentTags;
+      window.planetBeautyLoadConsentTags = function () {
+        original();
+        loadDeferredScripts();
+      };
+    }
+  })();
+</script>

@@ -1,0 +1,120 @@
+/*
+ * Planet Beauty — homepage typography + internal spacing (live parity).
+ *
+ * Live reference: planetbeauty.com + planet-beauty-live/snippets/inline.css.liquid
+ * Scoped to index only. Does NOT change group-block padding — those stay in index.json.
+ * Adjusts heading/body font sizes and header-to-content gaps inside sections.
+ */
+
+#MainContent[data-template='index'] {
+  overflow-x: clip;
+}
+
+/* Live h1/h2: 30px mobile, 40px desktop — same on both breakpoints per client */
+#MainContent[data-template='index'] .text-block :is(h1, h2),
+#MainContent[data-template='index'] .text-block.h1 > :is(h1, h2, h3, h4, h5, h6),
+#MainContent[data-template='index'] .text-block.h2 > :is(h1, h2, h3, h4, h5, h6),
+#MainContent[data-template='index'] rte-formatter.text-block > :is(h1, h2):only-child {
+  font-size: 30px !important;
+  line-height: 38px !important;
+  font-weight: 900;
+  margin-block: 0;
+}
+
+@media screen and (min-width: 900px) {
+  #MainContent[data-template='index'] .text-block :is(h1, h2),
+  #MainContent[data-template='index'] .text-block.h1 > :is(h1, h2, h3, h4, h5, h6),
+  #MainContent[data-template='index'] .text-block.h2 > :is(h1, h2, h3, h4, h5, h6),
+  #MainContent[data-template='index'] rte-formatter.text-block > :is(h1, h2):only-child {
+    font-size: 40px !important;
+    line-height: 50px !important;
+  }
+}
+
+/* Live h3–h6: 20px / 25px */
+#MainContent[data-template='index'] .text-block :is(h3, h4, h5, h6),
+#MainContent[data-template='index'] .text-block.h3 > :is(h1, h2, h3, h4, h5, h6),
+#MainContent[data-template='index'] .text-block.h4 > :is(h1, h2, h3, h4, h5, h6),
+#MainContent[data-template='index'] rte-formatter.text-block > :is(h3, h4, h5, h6):only-child {
+  font-size: 20px !important;
+  line-height: 25px !important;
+  font-weight: 900;
+  margin-block: 0;
+}
+
+/* Live body copy: 14px / 25px */
+#MainContent[data-template='index'] .text-block.paragraph :is(p, li, span),
+#MainContent[data-template='index'] rte-formatter.text-block.rte :is(p, li),
+#MainContent[data-template='index'] .text-block.rte :is(p, li) {
+  font-size: 14px;
+  line-height: 25px;
+}
+
+/* Subtitle / description directly under a section heading */
+#MainContent[data-template='index'] .text-block--align-center > p,
+#MainContent[data-template='index'] rte-formatter.text-block--align-center > p:only-child,
+#MainContent[data-template='index'] .group-block-content > .text-block.paragraph > p:only-child {
+  margin-block-start: 6px;
+  color: #5a5a5a;
+}
+
+/* Rebuy widget headings — live .highlight-internal sizes */
+#MainContent[data-template='index'] .rebuy-widget :is(.primary-title, .super-title) {
+  font-size: 30px !important;
+  line-height: 38px !important;
+  font-weight: 900;
+}
+
+@media screen and (min-width: 900px) {
+  #MainContent[data-template='index'] .rebuy-widget :is(.primary-title, .super-title) {
+    font-size: 40px !important;
+    line-height: 50px !important;
+  }
+}
+
+#MainContent[data-template='index'] .rebuy-widget .description {
+  font-size: 14px;
+  line-height: 25px;
+  color: #5a5a5a;
+  margin-block-start: 6px;
+}
+
+#MainContent[data-template='index'] .rebuy-product-title,
+#MainContent[data-template='index'] .rebuy-product-title-link {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+#MainContent[data-template='index'] .rebuy-money {
+  font-size: 14px;
+}
+
+/* Collection / product card titles on homepage */
+#MainContent[data-template='index'] .product-card :is(h4, h5, h6),
+#MainContent[data-template='index'] .collection-card :is(h4, h5, h6),
+#MainContent[data-template='index'] .product-card__content .text-block :is(h4, h5, h6) {
+  font-size: 20px !important;
+  line-height: 25px !important;
+}
+
+/* Centered section title blocks — live heading__wrapper spacing (not group padding) */
+#MainContent[data-template='index'] .text-block--align-center:has(> :is(h1, h2, h3):only-child),
+#MainContent[data-template='index'] rte-formatter.text-block--align-center:has(> :is(h1, h2, h3):only-child) {
+  width: 100%;
+  text-align: center;
+  padding-block: 25px 35px;
+}
+
+@media screen and (min-width: 900px) {
+  #MainContent[data-template='index'] .text-block--align-center:has(> :is(h1, h2, h3):only-child),
+  #MainContent[data-template='index'] rte-formatter.text-block--align-center:has(> :is(h1, h2, h3):only-child) {
+    padding-block: 50px 45px;
+  }
+}
+
+/* Product-list / collection-list row headers: space below title, not extra group padding */
+#MainContent[data-template='index'] [data-testid='product-list'] .text-block > :is(h1, h2, h3):only-child,
+#MainContent[data-template='index'] .collection-list .text-block > :is(h1, h2, h3):only-child {
+  margin-block-end: 16px;
+}
+

@@ -5605,7 +5605,13 @@
       "settings": {
         "title": "@planetbeautyofficial",
         "description": "Makeup, skincare, haircare, and more!",
-        "ID_instagram": "elfsight-app-0a5d1da9-e3f2-476c-9fa9-819fa141ee91"
+        "ID_instagram": "elfsight-app-0a5d1da9-e3f2-476c-9fa9-819fa141ee91",
+        "color_scheme": "scheme-1",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0
       }
     }
   },
@@ -5622,6 +5628,7 @@
     "section_eCYAbX",
     "section_wBqfa4",
     "section_8Hx78w",
+    "insta_pGGBU7",
     "section_B6fmwm",
     "slideshow_dVrkTb",
     "collection_list_YmgTjL",
@@ -5632,7 +5639,9 @@
     "featured_blog_posts_GjiCfC",
     "layered_slideshow_jd9gft",
     "featured_blog_posts_Lwr6xd",
-    "section_tzPm9t",
-    "insta_pGGBU7"
+    "section_tzPm9t"
   ]
 }
+
+
+

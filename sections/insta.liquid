@@ -1,46 +1,220 @@
-<div class="section-instagram">
+{%- comment -%}
+  Elfsight Instagram feed — ported from live sections/instagram.liquid.
+  Uses data-src + pb-deferred-scripts (live loadJSscripts parity) so OneTrust does not block the widget.
+{%- endcomment -%}
 
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div
+  class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} pb-section-instagram spacing-style"
+  style="{% render 'spacing-style', settings: section.settings %}"
+  {{ section.shopify_attributes }}
+>
+  <div class="section-instagram">
     <div class="heading__wrapper">
+      {%- if section.settings.title != blank -%}
         <h2 class="heading h1 highlight">{{ section.settings.title }}</h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
         <p class="heading__description">{{ section.settings.description }}</p>
+      {%- endif -%}
     </div>
 
+    {%- comment -%} Match live: data-src (not src) then bare Elfsight mount node {%- endcomment -%}
     <script data-src="https://apps.elfsight.com/p/platform.js" defer></script>
-    <div class="{{ section.settings.ID_instagram }}"></div> 
-
-
+    <div class="{{ section.settings.ID_instagram }}"></div>
+  </div>
 </div>
+
+{% stylesheet %}
+  .pb-section-instagram .section-instagram {
+    width: 100%;
+  }
+
+  .pb-section-instagram .heading__wrapper {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 25px 0 35px;
+  }
+
+  @media screen and (min-width: 900px) {
+    .pb-section-instagram .heading__wrapper {
+      padding: 50px 0 45px;
+    }
+  }
+
+  .pb-section-instagram .heading {
+    margin: 0;
+    font-size: 30px;
+    line-height: 38px;
+    font-weight: 900;
+  }
+
+  @media screen and (min-width: 900px) {
+    .pb-section-instagram .heading {
+      font-size: 40px;
+      line-height: 50px;
+    }
+  }
+
+  .pb-section-instagram .heading__description {
+    margin: 6px 0 0;
+    color: #5a5a5a;
+    font-size: 14px;
+    line-height: 25px;
+  }
+
+  .pb-section-instagram [class*='elfsight-app'] {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  @media screen and (max-width: 749px) {
+    .pb-section-instagram [class*='elfsight-app'] iframe {
+      max-width: 100%;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
   "name": "Instagram",
+  "tag": "section",
+  "class": "section-wrapper",
   "settings": [
     {
-        "type": "text",
-        "id": "title",
-        "default": "@planetbeautyofficial",
-        "label": "Heading"
+      "type": "text",
+      "id": "title",
+      "default": "@planetbeautyofficial",
+      "label": "Heading"
     },
     {
-        "type": "text",
-        "id": "description",
-        "default": "Makeup, skincare, haircare, and more!",
-        "label": "Description"
+      "type": "text",
+      "id": "description",
+      "default": "Makeup, skincare, haircare, and more!",
+      "label": "Description"
     },
     {
-        "type": "text",
-        "id": "ID_instagram",
-        "label": "ID instagram"
+      "type": "text",
+      "id": "ID_instagram",
+      "label": "Elfsight app ID",
+      "default": "elfsight-app-0a5d1da9-e3f2-476c-9fa9-819fa141ee91"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Mobile padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
     }
   ],
   "presets": [
     {
-      "name": {
-        "en": "Instagram"
-      },
-      "category": {
-        "en": "Image"
-      }
+      "name": "Instagram",
+      "category": "Image"
     }
   ]
 }
