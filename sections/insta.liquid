@@ -1,0 +1,47 @@
+<div class="section-instagram">
+
+    <div class="heading__wrapper">
+        <h2 class="heading h1 highlight">{{ section.settings.title }}</h2>
+        <p class="heading__description">{{ section.settings.description }}</p>
+    </div>
+
+    <script data-src="https://apps.elfsight.com/p/platform.js" defer></script>
+    <div class="{{ section.settings.ID_instagram }}"></div> 
+
+
+</div>
+
+{% schema %}
+{
+  "name": "Instagram",
+  "settings": [
+    {
+        "type": "text",
+        "id": "title",
+        "default": "@planetbeautyofficial",
+        "label": "Heading"
+    },
+    {
+        "type": "text",
+        "id": "description",
+        "default": "Makeup, skincare, haircare, and more!",
+        "label": "Description"
+    },
+    {
+        "type": "text",
+        "id": "ID_instagram",
+        "label": "ID instagram"
+    }
+  ],
+  "presets": [
+    {
+      "name": {
+        "en": "Instagram"
+      },
+      "category": {
+        "en": "Image"
+      }
+    }
+  ]
+}
+{% endschema %}
