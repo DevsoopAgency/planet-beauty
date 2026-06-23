@@ -55,7 +55,6 @@
 #MainContent[data-template='index'] rte-formatter.text-block--align-center > p:only-child,
 #MainContent[data-template='index'] .group-block-content > .text-block.paragraph > p:only-child {
   margin-block-start: 6px;
-  color: #5a5a5a;
 }
 
 /* Rebuy widget headings — live .highlight-internal sizes */
@@ -75,7 +74,6 @@
 #MainContent[data-template='index'] .rebuy-widget .description {
   font-size: 14px;
   line-height: 25px;
-  color: #5a5a5a;
   margin-block-start: 6px;
 }
 
