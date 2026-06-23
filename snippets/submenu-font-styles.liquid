@@ -46,3 +46,15 @@ var(--font-
     --menu-child-font-color: var(--color-foreground); --menu-child-active-font-color: rgb(var(--color-foreground-rgb) /
     var(--opacity-subdued-text));
 {% endcase %}
+{%- comment -%}
+  pb: per-level weight/size overrides from block settings. Declared LAST so they win
+  over the derived values above (inline style = last declaration wins). "Theme default"
+  (blank) leaves the inherited value untouched.
+  Mapping: submenu_parent_* = 2nd level (submenu headings, .mega-menu__link--parent /
+  drawer --parent); submenu_child_* = 3rd level (submenu links, .mega-menu__link /
+  drawer --child).
+{%- endcomment -%}
+{%- if settings.submenu_parent_font_weight != blank -%}--menu-parent-font-weight: {{ settings.submenu_parent_font_weight }};{%- endif -%}
+{%- if settings.submenu_parent_font_size != blank -%}--menu-parent-font-size: {{ settings.submenu_parent_font_size }}; --menu-parent-font-line-height: 1.3;{%- endif -%}
+{%- if settings.submenu_child_font_weight != blank -%}--menu-child-font-weight: {{ settings.submenu_child_font_weight }};{%- endif -%}
+{%- if settings.submenu_child_font_size != blank -%}--menu-child-font-size: {{ settings.submenu_child_font_size }}; --menu-child-font-line-height: 1.3;{%- endif -%}

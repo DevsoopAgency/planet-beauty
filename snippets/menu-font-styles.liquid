@@ -21,3 +21,5 @@
   var(--menu-font-sm--line-height);
 {% endif %}
 --menu-top-level-font-color: var(--color-foreground); --menu-top-level-font-color-rgb: var(--color-foreground-rgb);
+{%- comment -%} pb: per-level weight override from block settings (1st level / top nav). Falls back to theme default when 'Theme default' is selected. {%- endcomment -%}
+{%- if settings.top_level_font_weight != blank -%}--menu-top-level-font-weight: {{ settings.top_level_font_weight }};{%- endif -%}

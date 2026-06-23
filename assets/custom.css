@@ -263,9 +263,9 @@
   }
 
   #header-component[data-menu-style='menu'] .menu-list__link {
-    font-weight: 700;
+    /* font-weight now controlled by the "1st level — font weight" block setting */
     color: #404040;
-    letter-spacing: 1.2px;
+    letter-spacing: 0; /* pb: top-nav items, no tracking */
   }
 
   #header-component[data-menu-style='menu'] .menu-list__link-title {
@@ -276,6 +276,11 @@
     margin-inline: 0;
   }
 }
+
+/* pb: per-level menu font weight/size are now controlled from the header menu
+   block settings ("Menu level typography"), wired through CSS variables in
+   snippets/menu-font-styles.liquid + snippets/submenu-font-styles.liquid.
+   No hardcoded weights here so the settings take effect on desktop and mobile. */
 
 .mega-menu.section.section--full-width-margin.section--page-width{
   padding-top: 30px;
