@@ -73,6 +73,13 @@
       max-width: calc((100% - var(--pb-fbt-gap)) / 2);
     }
   }
+  /* Phones: 1 per row so cards never spill past the viewport (the mobile overflow). */
+  @media (max-width: 749px) {
+    #rebuy-widget-82672 .rebuy-product-block {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
   #rebuy-widget-82672 .rebuy-bundle__image-item img,
   #rebuy-widget-82672 .bundle-single-image img {
     max-width: 100%;
@@ -81,6 +88,22 @@
 
   /* Selects can have long variant text; keep them inside the card. */
   #rebuy-widget-82672 .rebuy-select {
+    max-width: 100%;
+  }
+
+  /* The "+ images" preview strip and its thumbnails/dividers must also fit. */
+  #rebuy-widget-82672 .rebuy-bundle__image,
+  #rebuy-widget-82672 .rebuy-bundle__image-item {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Bundle total + add button row wraps instead of forcing horizontal overflow. */
+  #rebuy-widget-82672 .rebuy-bundle__actions {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+  #rebuy-widget-82672 .rebuy-button {
     max-width: 100%;
   }
 </style>

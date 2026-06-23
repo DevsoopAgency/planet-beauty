@@ -1717,7 +1717,7 @@
             "text_about_label": {
               "type": "text",
               "settings": {
-                "text": "<h6>ABOUT US</h6>",
+                "text": "<h6>OUR PROMISE</h6>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -1767,7 +1767,7 @@
             "text_about_body": {
               "type": "text",
               "settings": {
-                "text": "<p>For over 25 years, Planet Beauty has been the destination for prestige beauty. Shop 1000+ authentic products from the brands you love, with expert advice every step of the way.</p>",
+                "text": "<p>Since 1990, Planet Beauty has been Southern California's go-to destination for premium beauty. We've grown from a single store to a trusted online destination — but our mission has never changed: to connect you with the world's finest beauty brands with unmatched service and expertise.</p>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
@@ -1792,7 +1792,7 @@
             "button_about": {
               "type": "button",
               "settings": {
-                "label": "Read More",
+                "label": "LEARN MORE",
                 "link": "shopify://pages/about-us",
                 "open_in_new_tab": false,
                 "style_class": "link",
