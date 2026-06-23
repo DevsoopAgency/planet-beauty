@@ -764,7 +764,7 @@
             "padding-block-end": 48,
             "padding-inline-start": 48,
             "padding-inline-end": 48,
-            "padding-block-start-mobile": 40,
+            "padding-block-start-mobile": 0,
             "padding-block-end-mobile": 24,
             "padding-inline-start-mobile": 16,
             "padding-inline-end-mobile": 16
