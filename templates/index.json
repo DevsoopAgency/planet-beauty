@@ -5565,6 +5565,15 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "insta_pGGBU7": {
+      "type": "insta",
+      "name": "Instagram",
+      "settings": {
+        "title": "@planetbeautyofficial",
+        "description": "Makeup, skincare, haircare, and more!",
+        "ID_instagram": "elfsight-app-0a5d1da9-e3f2-476c-9fa9-819fa141ee91"
+      }
     }
   },
   "order": [
@@ -5589,6 +5598,7 @@
     "section_XNyjjr",
     "featured_blog_posts_GjiCfC",
     "layered_slideshow_jd9gft",
-    "featured_blog_posts_Lwr6xd"
+    "featured_blog_posts_Lwr6xd",
+    "insta_pGGBU7"
   ]
 }
