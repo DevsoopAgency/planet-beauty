@@ -440,7 +440,7 @@
         "card_3tqQPX"
       ],
       "custom_css": [
-        "@media screen and (max-width: 749px){.grid-slider__arrows--visible {justify-content: center;}}"
+        "@media screen and (max-width: 749px) {.grid-slider__arrows--visible {justify-content: center; }}"
       ],
       "name": "Grid Slider",
       "settings": {
@@ -851,7 +851,8 @@
       ],
       "custom_css": [
         ".section-background {background: linear-gradient(102.85deg, #404040 2.66%, #000000 98.74%);}",
-        ".button {border-radius: 35px;}"
+        ".button {border-radius: 35px;}",
+        ".text-block {padding-bottom: 0!important;}"
       ],
       "name": "Promo Banner",
       "settings": {
