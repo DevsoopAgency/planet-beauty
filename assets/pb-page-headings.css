@@ -75,6 +75,30 @@
   margin-block: 0 24px;
 }
 
+/* Rebuy item titles + widget headings — centered on mobile (homepage + PDP FBT) */
+@media screen and (max-width: 749px) {
+  #MainContent[data-template='index'] .rebuy-widget :is(.primary-title, .super-title),
+  #MainContent[data-template='product'] .rebuy-widget :is(.primary-title, .super-title),
+  #rebuy-widget-82672 :is(.primary-title, .super-title) {
+    display: block !important;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  #MainContent[data-template='index'] .rebuy-widget :is(.rebuy-product-title, .rebuy-product-title-link),
+  #MainContent[data-template='product'] .rebuy-widget :is(.rebuy-product-title, .rebuy-product-title-link),
+  #rebuy-widget-82672 :is(.rebuy-product-title, .rebuy-product-title-link) {
+    display: block;
+    text-align: center;
+  }
+
+  #MainContent[data-template='index'] .rebuy-widget .rebuy-product-block .rebuy-product-info,
+  #MainContent[data-template='product'] .rebuy-widget .rebuy-product-block .rebuy-product-info,
+  #rebuy-widget-82672 .rebuy-product-block .rebuy-product-info {
+    text-align: center;
+  }
+}
+
 /* Page title blocks — centered wrapper, underline on text only */
 .template-page #MainContent .text-block:has(> h1:only-child),
 .template-page #MainContent rte-formatter.text-block:has(> h1:only-child) {
