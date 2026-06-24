@@ -439,6 +439,9 @@
         "card_pPazmC",
         "card_3tqQPX"
       ],
+      "custom_css": [
+        "@media screen and (max-width: 749px){.grid-slider__arrows--visible {justify-content: center;}}"
+      ],
       "name": "Grid Slider",
       "settings": {
         "section_width": "page-width",
