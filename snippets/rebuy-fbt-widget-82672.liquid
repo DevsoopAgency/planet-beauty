@@ -18,35 +18,17 @@
 
 {%- comment -%}
   Planet Beauty: the template markup below is identical to live
-  (snippets/rebuy-extensions.liquid) and Rebuy's hosted CSS controls the LOOK —
-  do NOT re-add layout overrides (grid columns, centered text, square/cropped
-  images). That is what made the new theme diverge from live previously.
+  (snippets/rebuy-extensions.liquid) and Rebuy's hosted CSS controls the LOOK.
 
-  The only CSS below is an OVERFLOW FIX: Rebuy's default bundle is a single
-  non-wrapping horizontal flex row, which spills past the Horizon page container
-  at tablet widths. These rules just keep the widget inside its container and let
-  the row wrap — they don't change the visual style. Safe to remove if Rebuy ever
-  ships responsive CSS for this widget. Scoped to #rebuy-widget-82672.
+  This snippet's only CSS is the DESKTOP/TABLET column grid (4-up / 2-up) so the
+  bundle rows are always even instead of Rebuy's single horizontal row.
+  Everything else — heading centering, mobile stacking, and the page-overflow
+  guards — lives in assets/custom.css next to the other Rebuy rules (single
+  source of truth). Scoped to #rebuy-widget-82672.
 {%- endcomment -%}
 <style>
-  /* Never let the widget exceed its Horizon container (the tablet overflow). */
-  #rebuy-widget-82672 .rebuy-widget,
-  #rebuy-widget-82672 .rebuy-widget-container,
-  #rebuy-widget-82672 .rebuy-widget-content,
-  #rebuy-widget-82672 .rebuy-bundle {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* The "+ images" preview strip just wraps naturally (small thumbnails). */
-  #rebuy-widget-82672 .rebuy-bundle__images {
-    flex-wrap: wrap;
-    max-width: 100%;
-  }
-
-  /* Fixed-column grid for the product cards so rows are always even
-     (no 3-then-1 wrap). Desktop = 4 per row, tablet = 2 per row; phones
-     use Rebuy's separate mobile view. --pb-fbt-gap is the inter-card gap. */
+  /* Fixed-column grid for the product cards: desktop = 4 per row, tablet = 2.
+     Phones stack to 1 per row via assets/custom.css. --pb-fbt-gap = card gap. */
   #rebuy-widget-82672 .rebuy-bundle__items {
     --pb-fbt-gap: 16px;
     display: flex;
@@ -54,7 +36,6 @@
     gap: var(--pb-fbt-gap);
     max-width: 100%;
   }
-  /* Cards shrink to fit rather than forcing the row wider. */
   #rebuy-widget-82672 .rebuy-product-block {
     min-width: 0;
     box-sizing: border-box;
@@ -73,38 +54,11 @@
       max-width: calc((100% - var(--pb-fbt-gap)) / 2);
     }
   }
-  /* Phones: 1 per row so cards never spill past the viewport (the mobile overflow). */
-  @media (max-width: 749px) {
-    #rebuy-widget-82672 .rebuy-product-block {
-      flex: 0 0 100%;
-      max-width: 100%;
-    }
-  }
+  /* Images always fit their card. */
   #rebuy-widget-82672 .rebuy-bundle__image-item img,
   #rebuy-widget-82672 .bundle-single-image img {
     max-width: 100%;
     height: auto;
-  }
-
-  /* Selects can have long variant text; keep them inside the card. */
-  #rebuy-widget-82672 .rebuy-select {
-    max-width: 100%;
-  }
-
-  /* The "+ images" preview strip and its thumbnails/dividers must also fit. */
-  #rebuy-widget-82672 .rebuy-bundle__image,
-  #rebuy-widget-82672 .rebuy-bundle__image-item {
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  /* Bundle total + add button row wraps instead of forcing horizontal overflow. */
-  #rebuy-widget-82672 .rebuy-bundle__actions {
-    flex-wrap: wrap;
-    max-width: 100%;
-  }
-  #rebuy-widget-82672 .rebuy-button {
-    max-width: 100%;
   }
 </style>
 

@@ -57,6 +57,64 @@
   font-weight: 500;
 }
 
+/* pb: FBT (widget 82672) — heading + mobile overflow (parity with live).
+   Heading: Horizon's h3/h4 styles bleed into Rebuy's .primary-title/.super-title
+   (left-aligned, oversized); live shows a centered heading, so center + size it.
+   Adjust the font-size below if the live heading differs. */
+#rebuy-widget-82672 .super-title,
+#rebuy-widget-82672 .primary-title,
+#rebuy-widget-82672 .description {
+  text-align: center;
+}
+#rebuy-widget-82672 .primary-title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  margin: 0 0 12px;
+}
+#rebuy-widget-82672 .super-title {
+  font-size: 1rem;
+  margin: 0 0 4px;
+}
+
+/* Mobile: the FBT bundle was pushing past the viewport and forcing a horizontal
+   page scroll. The existing guard only clipped `.rebuy-widget`; the overflow
+   escapes from the OUTER `[data-rebuy-id]` container, so clip that too and stack
+   the cards / shrink the "+images" strip so nothing exceeds the screen width. */
+@media screen and (max-width: 749px) {
+  [data-rebuy-id="82672"],
+  #rebuy-widget-82672,
+  #rebuy-widget-82672 .rebuy-widget-container,
+  #rebuy-widget-82672 .rebuy-widget-content,
+  #rebuy-widget-82672 .rebuy-bundle {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+  #rebuy-widget-82672 .rebuy-bundle__images,
+  #rebuy-widget-82672 .rebuy-bundle__items {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+  #rebuy-widget-82672 .rebuy-product-block {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: 100%;
+  }
+  #rebuy-widget-82672 .rebuy-bundle__image img,
+  #rebuy-widget-82672 .rebuy-bundle__image-item img,
+  #rebuy-widget-82672 .bundle-single-image img {
+    max-width: 100%;
+    height: auto;
+  }
+  #rebuy-widget-82672 .rebuy-bundle__actions {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+  #rebuy-widget-82672 .rebuy-button {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 .menu-list__list-item.sale-link a span {
     color: #EF0180;
     text-decoration: underline;
