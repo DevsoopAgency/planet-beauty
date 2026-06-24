@@ -1,0 +1,80 @@
+/*
+ * Planet Beauty — PDP mobile overflow fixes (CLIENT-REVISIONS: horizontal scroll).
+ * Scoped to product template only. Mirrors pb-home.css clip guard + targeted
+ * containment for subgrid/media carousel/third-party widgets.
+ */
+
+#MainContent[data-template='product'] {
+  overflow-x: clip;
+}
+
+@media screen and (max-width: 749px) {
+  /* Subgrid children default to min-width:auto and can push past the viewport */
+  .product-information,
+  .product-information__grid,
+  .product-information__media,
+  .product-details,
+  .product-details > .group-block,
+  .product-details .group-block-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /*
+   * Horizon uses width:0 + min-width:100% for subgrid stretch; on mobile full-bleed
+   * media this can widen the page when the grid chain lacks a definite width.
+   */
+  .product-information__media {
+    width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+  }
+
+  media-gallery,
+  slideshow-component,
+  slideshow-container {
+    max-width: 100%;
+  }
+
+  /* Quantity + add-to-cart row: fit-content flex basis overflows narrow screens */
+  .product-details .product-form-buttons
+    > *:not(
+      .quantity-selector-wrapper,
+      .quantity-rules,
+      .quantity-label,
+      .volume-pricing,
+      .product-form-text__error
+    ) {
+    min-width: 0;
+  }
+
+  .product-details .variant-picker,
+  .product-details .variant-picker__form {
+    max-width: 100%;
+  }
+
+  /* Related products carousel gutters/peek slides */
+  .product-recommendations,
+  .product-recommendations .resource-list__carousel,
+  .product-recommendations .block-resource-list {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  /* Third-party PDP widgets */
+  .product-details .rc-widget,
+  .product-details [id^='RechargeWidget_'],
+  .pb-pr-snippet,
+  .pb-pr-display,
+  .product-single__store-availability-container,
+  .pickup-availability {
+    max-width: 100%;
+  }
+
+  /* FBT section (_blocks) — backup to custom.css when Rebuy escapes its container */
+  #MainContent[data-template='product'] [data-rebuy-id='82672'],
+  #MainContent[data-template='product'] #rebuy-widget-82672 {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+}

@@ -5,3 +5,6 @@
 {%- if template.name == 'index' -%}
   {{ 'pb-home.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
+{%- if template.name == 'product' -%}
+  {{ 'pb-pdp.css' | asset_url | stylesheet_tag }}
+{%- endif -%}

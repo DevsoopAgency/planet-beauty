@@ -142,12 +142,22 @@
 
   /* Mobile styles */
   @media screen and (max-width: 749px) {
+    .product-information__grid {
+      min-width: 0;
+    }
+
     .product-information__media {
       grid-column: 1 / -1;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: clip;
     }
 
     .product-details {
       grid-column: 2 / 3;
+      min-width: 0;
+      max-width: 100%;
     }
   }
 
