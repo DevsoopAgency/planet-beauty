@@ -852,7 +852,7 @@
       "custom_css": [
         ".section-background {background: linear-gradient(102.85deg, #404040 2.66%, #000000 98.74%);}",
         ".button {border-radius: 35px;}",
-        ".text-block {padding-bottom: 0!important;}"
+        ".text-block {padding-bottom: 0 !important;}"
       ],
       "name": "Promo Banner",
       "settings": {
@@ -879,8 +879,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 32,
-        "padding-block-end": 16
+        "padding-block-start": 63,
+        "padding-block-end": 58
       }
     },
     "custom_liquid_4PUtGP": {
