@@ -26,8 +26,10 @@
     var label = 'Your Privacy Choices';
     function applyFooterCookieLinkLabel() {
       var el = document.getElementById('footer-cookie-preferences');
-      if (!el || el.textContent === label) return;
-      el.textContent = label;
+      if (!el) return;
+      var labelEl = el.querySelector('.pb-privacy-choices-link__label') || el;
+      if (labelEl.textContent === label) return;
+      labelEl.textContent = label;
     }
     applyFooterCookieLinkLabel();
     setTimeout(applyFooterCookieLinkLabel, 0);

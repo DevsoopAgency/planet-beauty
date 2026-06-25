@@ -20,8 +20,8 @@
         {%- endif -%}
       {%- endfor -%}
       {%- comment -%} Planet Beauty: OneTrust "Your Privacy Choices" as the last policy link (parity with live) {%- endcomment -%}
-      <li>
-        <a href="javascript:void(0)" id="footer-cookie-preferences" class="ot-sdk-show-settings footer-utilities__text">Your Privacy Choices</a>
+      <li class="pb-privacy-choices-item">
+        {% render 'pb-privacy-choices-link' %}
       </li>
     </ul>
   {% else %}
@@ -64,8 +64,8 @@
             {%- endif -%}
           {%- endfor -%}
           {%- comment -%} Planet Beauty: OneTrust "Your Privacy Choices" as the last policy link (parity with live) {%- endcomment -%}
-          <li>
-            <a href="javascript:void(0)" id="footer-cookie-preferences" class="ot-sdk-show-settings footer-utilities__text">Your Privacy Choices</a>
+          <li class="pb-privacy-choices-item">
+            {% render 'pb-privacy-choices-link' %}
           </li>
         </ul>
       </div>
@@ -74,9 +74,33 @@
 {% endif %}
 
 {% stylesheet %}
+  /* Planet Beauty: CCPA privacy toggle icon (ported from live theme.css) */
+  #footer-cookie-preferences.ot-sdk-show-settings.pb-privacy-choices-link {
+    display: inline-flex;
+    align-items: center;
+    border: 0 !important;
+    padding: 0 !important;
+    padding-left: 32px !important;
+    line-height: 25px !important;
+    letter-spacing: 0 !important;
+    font-weight: 400 !important;
+    background-color: transparent !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M22.5999 0H7.3999C3.4999 0 0.399902 3.1 0.399902 7C0.399902 10.9 3.4999 14 7.3999 14H22.5999C26.4999 14 29.5999 10.9 29.5999 7C29.5999 3.1 26.3999 0 22.5999 0ZM1.5999 7C1.5999 3.8 4.1999 1.2 7.3999 1.2H17.2999L14.1999 12.8H7.3999C4.1999 12.8 1.5999 10.2 1.5999 7Z' fill='%23f5f1e8'/%3E%3Cpath d='M24.6 3.99961C24.8 4.19961 24.8 4.59961 24.6 4.79961L22.5 6.99961L24.7 9.19961C24.9 9.39961 24.9 9.79961 24.7 9.99961C24.5 10.1996 24.1 10.1996 23.9 9.99961L21.7 7.79961L19.5 9.99961C19.3 10.1996 18.9 10.1996 18.7 9.99961C18.5 9.79961 18.5 9.39961 18.7 9.19961L20.8 6.99961L18.6 4.79961C18.4 4.59961 18.4 4.19961 18.6 3.99961C18.8 3.79961 19.2 3.79961 19.4 3.99961L21.6 6.19961L23.8 3.99961C24 3.79961 24.4 3.79961 24.6 3.99961Z' fill='white'/%3E%3Cpath d='M12.7 4.09922C12.9 4.29922 13 4.69922 12.8 4.89922L8.6 9.79922C8.5 9.89922 8.4 9.99922 8.3 9.99922C8.1 10.0992 7.8 10.0992 7.6 9.89922L5.4 7.69922C5.2 7.49922 5.2 7.09922 5.4 6.89922C5.6 6.69922 6 6.69922 6.2 6.89922L8 8.59922L11.8 4.09922C12 3.89922 12.4 3.89922 12.7 4.09922Z' fill='%23f5f1e8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 25px;
+  }
+
+  #footer-cookie-preferences.ot-sdk-show-settings.pb-privacy-choices-link:hover {
+    background-color: transparent !important;
+    border: 0 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M22.5999 0H7.3999C3.4999 0 0.399902 3.1 0.399902 7C0.399902 10.9 3.4999 14 7.3999 14H22.5999C26.4999 14 29.5999 10.9 29.5999 7C29.5999 3.1 26.3999 0 22.5999 0ZM1.5999 7C1.5999 3.8 4.1999 1.2 7.3999 1.2H17.2999L14.1999 12.8H7.3999C4.1999 12.8 1.5999 10.2 1.5999 7Z' fill='%23f5f1e8'/%3E%3Cpath d='M24.6 3.99961C24.8 4.19961 24.8 4.59961 24.6 4.79961L22.5 6.99961L24.7 9.19961C24.9 9.39961 24.9 9.79961 24.7 9.99961C24.5 10.1996 24.1 10.1996 23.9 9.99961L21.7 7.79961L19.5 9.99961C19.3 10.1996 18.9 10.1996 18.7 9.99961C18.5 9.79961 18.5 9.39961 18.7 9.19961L20.8 6.99961L18.6 4.79961C18.4 4.59961 18.4 4.19961 18.6 3.99961C18.8 3.79961 19.2 3.79961 19.4 3.99961L21.6 6.19961L23.8 3.99961C24 3.79961 24.4 3.79961 24.6 3.99961Z' fill='white'/%3E%3Cpath d='M12.7 4.09922C12.9 4.29922 13 4.69922 12.8 4.89922L8.6 9.79922C8.5 9.89922 8.4 9.99922 8.3 9.99922C8.1 10.0992 7.8 10.0992 7.6 9.89922L5.4 7.69922C5.2 7.49922 5.2 7.09922 5.4 6.89922C5.6 6.69922 6 6.69922 6.2 6.89922L8 8.59922L11.8 4.09922C12 3.89922 12.4 3.89922 12.7 4.09922Z' fill='%23f5f1e8'/%3E%3C/svg%3E");
+  }
+
   .policy_list--inline {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 24px;
     justify-content: center;
     margin: 0;
@@ -84,6 +108,11 @@
     @media screen and (min-width: 750px) {
       justify-content: flex-end;
     }
+  }
+
+  .policy_list--inline .pb-privacy-choices-item {
+    display: flex;
+    align-items: center;
   }
 
   .policy_list--inline a {
