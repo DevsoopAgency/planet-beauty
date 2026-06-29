@@ -12,6 +12,19 @@
 
 {% case variant %}
   {% when 'mobile' %}
+    {%- comment -%} pb: Stores on mobile left; hamburger stays in .header__drawer at far right (flex order). {%- endcomment -%}
+    <a
+      href="/pages/store-locator"
+      class="pb-mobile-stores desktop:hidden header-actions__action"
+      aria-label="Stores"
+    >
+      <span class="svg-wrapper" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 26 26" class="pb-icon-location" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12.9995 3.99997L13.0005 3.99997C16.8645 4.00429 19.9957 7.14041 20 11.0104C20 12.0074 19.5782 13.1652 18.9972 14.3029C18.4096 15.4538 17.6287 16.6424 16.8476 17.7179C15.2849 19.8697 13.6915 21.6099 13.5574 21.7555C13.414 21.911 13.2119 22 13 22C12.7884 22 12.586 21.9114 12.4423 21.7552C12.3066 21.6079 10.7142 19.8685 9.15234 17.7179C8.37131 16.6424 7.59035 15.4538 7.00273 14.3029C6.42182 13.1652 5.99999 12.0079 5.99999 11.0109C6.0043 7.14094 9.13552 4.00429 12.9995 3.99997ZM13 5.51939C9.97179 5.51939 7.51703 7.97799 7.51703 11.0109C7.51703 11.6371 7.78189 12.463 8.24735 13.4081C8.70675 14.3409 9.33542 15.3387 10.0053 16.2936C11.1139 17.8737 12.3159 19.3089 13 20.0964C13.6841 19.3089 14.886 17.8737 15.9946 16.2936C16.6646 15.3387 17.2932 14.3409 17.7526 13.4081C18.2181 12.463 18.4829 11.6371 18.4829 11.0109C18.4829 7.97799 16.0282 5.51939 13 5.51939Z" fill="currentColor"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M13.1224 7.56665C11.1556 7.56665 9.56122 9.16352 9.56122 11.1334C9.56122 13.1032 11.1556 14.7001 13.1224 14.7001C15.0891 14.7001 16.6835 13.1032 16.6835 11.1334C16.6835 9.16352 15.0891 7.56665 13.1224 7.56665ZM10.9857 11.1334C10.9857 9.95146 11.9423 8.99333 13.1224 8.99333C14.3024 8.99333 15.259 9.95146 15.259 11.1334C15.259 12.3153 14.3024 13.2734 13.1224 13.2734C11.9423 13.2734 10.9857 12.3153 10.9857 11.1334Z" fill="currentColor"/>
+        </svg>
+      </span>
+    </a>
     <div
       class="header__drawer"
       ref="headerDrawerContainer"
@@ -98,6 +111,15 @@
             assign sale_link_class = ' sale-link'
           endif
           assign link_title_class = link.handle
+          # pb: "Bestsellers" only has a single child, so its full-width mega menu
+          # looked mostly empty. Per client, treat it as a plain link (no dropdown).
+          assign has_megamenu = false
+          if link.links != blank
+            assign has_megamenu = true
+            if link.handle == 'bestsellers' or link.handle == 'best-sellers'
+              assign has_megamenu = false
+            endif
+          endif
         -%}
         <li
           role="presentation"
@@ -111,7 +133,7 @@
             href="{{ link.url }}"
             data-skip-node-update="true"
             class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}"
-            {%- if link.links != blank -%}
+            {%- if has_megamenu -%}
               aria-controls="submenu-{{ forloop.index }}"
               aria-haspopup="true"
               aria-expanded="false"
@@ -123,7 +145,7 @@
           >
             <span class="menu-list__link-title">{{- link.title -}}</span>
           </a>
-          {%- if link.links != blank -%}
+          {%- if has_megamenu -%}
             <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
               <div
                 id="submenu-{{ forloop.index }}"
@@ -215,11 +237,21 @@
     line-height: 0;
   }
 
-  #header-component[data-menu-style='drawer'] .header__drawer {
+  #header-component[data-menu-style='drawer']   .header__drawer {
     display: flex;
-    min-height: var(--header-drawer-min-height);
     align-items: center;
+    min-height: var(--header-drawer-min-height);
     line-height: 0;
+  }
+
+  .pb-mobile-stores {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .pb-mobile-stores {
+      display: inline-flex;
+    }
   }
 
   @media screen and (max-width: 749px) {

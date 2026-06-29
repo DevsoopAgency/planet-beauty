@@ -14,8 +14,9 @@
 {%- if settings.type_case_primary_link == 'uppercase' %}uppercase{% else %}none{% endif -%}
 ;
 {% if menu_type == 'drawer' %}
-  --menu-top-level-font-size: var(--menu-font-2xl--size); --menu-top-level-font-line-height:
-  var(--menu-font-2xl--line-height);
+  {%- comment -%} pb: drawer (mobile sandwich) 1st-level was 2xl (28px) — too large per client. Use lg (18px). {%- endcomment -%}
+  --menu-top-level-font-size: var(--menu-font-lg--size); --menu-top-level-font-line-height:
+  var(--menu-font-lg--line-height);
 {% else %}
   --menu-top-level-font-size: var(--menu-font-sm--size); --menu-top-level-font-line-height:
   var(--menu-font-sm--line-height);

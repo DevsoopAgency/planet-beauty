@@ -72,6 +72,18 @@
   {% endif %}
   {{- block.shopify_attributes -}}
 >
+  {%- comment -%} pb: mobile-only search — same modal as desktop; icon matches cart/account (button-unstyled). {%- endcomment -%}
+  {% if section.settings.show_search %}
+    <button
+      type="button"
+      on:click="#search-modal/showDialog"
+      class="button-unstyled header-actions__action pb-mobile-search desktop:hidden"
+      aria-label="{{ 'content.search_input_label' | t }}"
+      aria-haspopup="dialog"
+    >
+      <span class="svg-wrapper" aria-hidden="true">{{ 'icon-search.svg' | inline_asset_content }}</span>
+    </button>
+  {% endif %}
   {% if shop.customer_accounts_enabled %}
     {% liquid
       assign account_actions_style = ''
