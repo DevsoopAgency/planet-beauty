@@ -27,6 +27,42 @@
   source of truth). Scoped to #rebuy-widget-82672.
 {%- endcomment -%}
 <style>
+  /* pb: FBT preview strip — all bundle images in one row via grid, scaled to fit */
+  #rebuy-widget-82672 .rebuy-bundle__images {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: clamp(4px, 1.5vw, 12px);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    align-items: center;
+    flex-wrap: nowrap !important;
+  }
+
+  #rebuy-widget-82672 .rebuy-bundle__image {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #rebuy-widget-82672 .rebuy-bundle__image:last-child .rebuy-bundle__image-divider {
+    display: none;
+  }
+
+  #rebuy-widget-82672 .rebuy-bundle__image-item {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #rebuy-widget-82672 .rebuy-bundle__image-divider {
+    font-size: clamp(10px, 2.5vw, 14px);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
   /* pb: FBT product cards as a HORIZONTAL CAROUSEL (client: items must not wrap
      to a second line — scroll sideways instead, and stop the page being cut off
      on the sides). Native overflow-x scroller with snap; desktop shows up to 6,
@@ -54,10 +90,21 @@
   @media (min-width: 750px) and (max-width: 989px) {
     #rebuy-widget-82672 .rebuy-bundle__items { --pb-fbt-per-view: 4; }
   }
-  /* Phones: ~2.3 per view so the next card peeks (scroll affordance). */
+  /* Phones: full-width stacked rows — Rebuy hosted CSS fights a side carousel and
+     inline title+price rows overflow the viewport when clipped by theme guards. */
   @media (max-width: 749px) {
+    #rebuy-widget-82672 .rebuy-bundle__items {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      overflow-x: hidden;
+      overflow-y: visible;
+      gap: 0;
+    }
+
     #rebuy-widget-82672 .rebuy-product-block {
-      flex: 0 0 42%;
+      flex: none;
+      width: 100%;
+      max-width: 100%;
     }
   }
   /* Images always fit their card. */
