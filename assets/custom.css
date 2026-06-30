@@ -86,6 +86,8 @@
   padding-inline: 0;
 }
 
+/* pb: FBT layout + heading — see snippets/rebuy-fbt-widget-82672.liquid */
+
 .rebuy-product-title-link.clickable {
   font-weight: 500;
 }
@@ -96,124 +98,6 @@
 
 .rebuy-widget:not(#rebuy-widget-82672) .rebuy-product-block .rebuy-product-info .rebuy-product-price .rebuy-money span {
   font-weight: 500;
-}
-
-/* pb: FBT (widget 82672) — heading + mobile overflow (parity with live).
-   Heading: Horizon's h3/h4 styles bleed into Rebuy's .primary-title/.super-title
-   (left-aligned, oversized); live shows a centered heading, so center + size it.
-   Adjust the font-size below if the live heading differs. */
-#rebuy-widget-82672 .super-title,
-#rebuy-widget-82672 .primary-title,
-#rebuy-widget-82672 .description {
-  text-align: center;
-}
-#rebuy-widget-82672 .primary-title {
-  font-size: 1.4rem;
-  line-height: 1.2;
-  margin: 0 0 12px;
-}
-#rebuy-widget-82672 .super-title {
-  font-size: 1rem;
-  margin: 0 0 4px;
-}
-
-/* Mobile: FBT bundle — contain width; Rebuy hosted CSS lays title+price inline and
-   overflow-x:clip on ancestors was shaving the left edge of product names. */
-@media screen and (max-width: 749px) {
-  [data-rebuy-id="82672"],
-  #rebuy-widget-82672,
-  #rebuy-widget-82672 .rebuy-widget-container,
-  #rebuy-widget-82672 .rebuy-widget-content,
-  #rebuy-widget-82672 .rebuy-bundle,
-  #rebuy-widget-82672 .rebuy-bundle__items,
-  #rebuy-widget-82672 .rebuy-product-block,
-  #rebuy-widget-82672 .rebuy-product-info {
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  [data-rebuy-id="82672"],
-  #rebuy-widget-82672,
-  #rebuy-widget-82672 .rebuy-widget-container,
-  #rebuy-widget-82672 .rebuy-widget-content,
-  #rebuy-widget-82672 .rebuy-bundle {
-    overflow-x: hidden;
-  }
-
-  #rebuy-widget-82672 .rebuy-bundle__images {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) !important;
-    gap: clamp(4px, 1.5vw, 12px);
-    max-width: 100%;
-    min-width: 0;
-    flex-wrap: nowrap !important;
-    align-items: center;
-  }
-
-  #rebuy-widget-82672 .rebuy-bundle__image {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  #rebuy-widget-82672 .rebuy-bundle__image:last-child .rebuy-bundle__image-divider {
-    display: none;
-  }
-
-  #rebuy-widget-82672 .rebuy-bundle__image img,
-  #rebuy-widget-82672 .rebuy-bundle__image-item img,
-  #rebuy-widget-82672 .bundle-single-image img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  /* Override Rebuy inline row — stack so long titles wrap instead of overflowing */
-  #rebuy-widget-82672 .rebuy-product-info {
-    display: flex !important;
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
-    align-items: flex-start !important;
-    gap: 4px;
-    overflow: visible;
-  }
-
-  #rebuy-widget-82672 .rebuy-product-checkbox {
-    position: static;
-    margin: 0;
-    flex-shrink: 0;
-  }
-
-  #rebuy-widget-82672 :is(.rebuy-product-title, .rebuy-product-title.clickable) {
-    display: block !important;
-    width: 100%;
-    max-width: 100%;
-    white-space: normal !important;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    text-align: left !important;
-  }
-
-  #rebuy-widget-82672 .rebuy-product-price {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    white-space: normal;
-    text-align: left !important;
-  }
-
-  #rebuy-widget-82672 .rebuy-bundle__actions {
-    flex-wrap: wrap;
-    max-width: 100%;
-  }
-
-  #rebuy-widget-82672 .rebuy-button {
-    width: 100%;
-    max-width: 100%;
-  }
 }
 
 .menu-list__list-item.sale-link a span {
@@ -489,9 +373,34 @@
   }
 }
 
-/* pb: "Bestsellers" had a near-empty full-width mega menu (single child).
-   Per client we suppress that dropdown in blocks/_header-menu.liquid and let it
-   behave as a plain top-level link, so no empty panel opens. */
+/* pb: narrow mega menu — configured via Header → Menu → "Narrow dropdown items" (handles) */
+@media screen and (min-width: 750px) {
+  #header-component[data-narrow-megamenu-open] .header__underlay-open {
+    height: var(--header-height);
+  }
+
+  .menu-list__list-item--narrow-megamenu:where(:not([slot='overflow'])) > .menu-list__submenu--narrow {
+    top: 100%;
+    left: 50%;
+    width: max-content;
+    min-width: 11rem;
+    max-width: min(20rem, 90vw);
+    padding-inline: 0;
+    translate: -50% 0;
+    clip-path: none;
+    background-color: var(--color-background);
+    box-shadow: var(--shadow-popover);
+    z-index: calc(var(--layer-header-menu) + 1);
+  }
+
+  .menu-list__list-item--narrow-megamenu .menu-list__submenu-inner {
+    transform: none;
+    padding-block: var(--padding-lg);
+    padding-inline: var(--padding-md);
+    max-height: none;
+    overflow: visible;
+  }
+}
 
 .mega-menu.section.section--full-width-margin.section--page-width{
   padding-top: 30px;

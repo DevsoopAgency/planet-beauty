@@ -17,101 +17,194 @@
 {%- endcomment -%}
 
 {%- comment -%}
-  Planet Beauty: the template markup below is identical to live
-  (snippets/rebuy-extensions.liquid) and Rebuy's hosted CSS controls the LOOK.
-
-  This snippet's only CSS is the DESKTOP/TABLET column grid (4-up / 2-up) so the
-  bundle rows are always even instead of Rebuy's single horizontal row.
-  Everything else — heading centering, mobile stacking, and the page-overflow
-  guards — lives in assets/custom.css next to the other Rebuy rules (single
-  source of truth). Scoped to #rebuy-widget-82672.
+  Planet Beauty: Vue template matches live (rebuy-extensions.liquid).
+  All FBT layout CSS lives in this snippet — responsive grid, image swap,
+  heading containment. Scoped to #rebuy-widget-82672.
 {%- endcomment -%}
 <style>
-  /* pb: FBT preview strip — all bundle images in one row via grid, scaled to fit */
-  #rebuy-widget-82672 .rebuy-bundle__images {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    gap: clamp(4px, 1.5vw, 12px);
+  /*
+   * pb: FBT (82672) — mobile-first responsive layout.
+   *
+   * Rebuy defaults: flex nowrap + max-width:300px per card → overflow/clipping.
+   * Replace with a fluid grid; preview strip (+ dividers) on mobile only.
+   */
+
+  /* Wrapper chain — never clip the heading or cards */
+  #rebuy-widget-82672,
+  #rebuy-widget-82672 .rebuy-widget,
+  #rebuy-widget-82672 .rebuy-widget-container,
+  #rebuy-widget-82672 .rebuy-widget-content,
+  #rebuy-widget-82672 .rebuy-bundle {
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    align-items: center;
-    flex-wrap: nowrap !important;
-  }
-
-  #rebuy-widget-82672 .rebuy-bundle__image {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 2px;
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  #rebuy-widget-82672 .rebuy-bundle__image:last-child .rebuy-bundle__image-divider {
-    display: none;
-  }
-
-  #rebuy-widget-82672 .rebuy-bundle__image-item {
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  #rebuy-widget-82672 .rebuy-bundle__image-divider {
-    font-size: clamp(10px, 2.5vw, 14px);
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  /* pb: FBT product cards as a HORIZONTAL CAROUSEL (client: items must not wrap
-     to a second line — scroll sideways instead, and stop the page being cut off
-     on the sides). Native overflow-x scroller with snap; desktop shows up to 6,
-     tablet ~4, phones ~2.3 (peek so it's clear there's more). --pb-fbt-gap = gap. */
-  #rebuy-widget-82672 .rebuy-bundle__items {
-    --pb-fbt-gap: 16px;
-    --pb-fbt-per-view: 6;
-    display: flex;
-    flex-wrap: nowrap;
-    gap: var(--pb-fbt-gap);
-    max-width: 100%;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-    padding-block-end: 8px; /* room for the scrollbar so cards aren't clipped */
-    scrollbar-width: thin;
-  }
-  #rebuy-widget-82672 .rebuy-product-block {
-    min-width: 0;
     box-sizing: border-box;
-    flex: 0 0 calc((100% - (var(--pb-fbt-gap) * (var(--pb-fbt-per-view) - 1))) / var(--pb-fbt-per-view));
-    scroll-snap-align: start;
+    overflow: visible;
   }
-  /* Tablet: ~4 per view. */
-  @media (min-width: 750px) and (max-width: 989px) {
-    #rebuy-widget-82672 .rebuy-bundle__items { --pb-fbt-per-view: 4; }
+
+  #rebuy-widget-82672 .rebuy-widget-content {
+    padding-inline: 16px;
   }
-  /* Phones: full-width stacked rows — Rebuy hosted CSS fights a side carousel and
-     inline title+price rows overflow the viewport when clipped by theme guards. */
-  @media (max-width: 749px) {
+
+  /* Heading — full width, no inline/max-content clipping from theme */
+  #rebuy-widget-82672 :is(.primary-title, .super-title) {
+    display: block !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    max-inline-size: 100% !important;
+    margin-inline: auto;
+    margin-block: 0 16px;
+    padding-inline: 0;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    box-sizing: border-box;
+  }
+
+  #rebuy-widget-82672 .primary-title {
+    font-size: 1.4rem;
+    line-height: 1.2;
+  }
+
+  #rebuy-widget-82672 .super-title {
+    font-size: 1rem;
+    margin-block-end: 4px;
+  }
+
+  #rebuy-widget-82672 .description {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  /* Card row — fluid grid (all breakpoints) */
+  #rebuy-widget-82672 .rebuy-bundle__items {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+    gap: 16px;
+    align-items: start;
+    width: 100%;
+    max-width: 1100px;
+    margin-inline: auto;
+    padding-inline: 0;
+    box-sizing: border-box;
+    overflow: visible;
+    flex-wrap: unset !important;
+  }
+
+  #rebuy-widget-82672 .rebuy-product-block {
+    max-width: 100% !important;
+    min-width: 0;
+    width: 100%;
+    flex: unset !important;
+    box-sizing: border-box;
+  }
+
+  #rebuy-widget-82672 .rebuy-bundle__image-item img,
+  #rebuy-widget-82672 .bundle-single-image img {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Desktop + tablet: per-row images; hide mobile preview strip */
+  @media screen and (min-width: 750px) {
+    #rebuy-widget-82672 .rebuy-bundle__images {
+      display: none !important;
+    }
+  }
+
+  /* Mobile: preview strip with + dividers; stacked product rows */
+  @media screen and (max-width: 749px) {
+    #rebuy-widget-82672 .rebuy-bundle__images {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: clamp(4px, 1.5vw, 12px);
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      align-items: center;
+      margin-block-end: 12px;
+    }
+
+    #rebuy-widget-82672 .rebuy-bundle__image {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    #rebuy-widget-82672 .rebuy-bundle__image:last-child .rebuy-bundle__image-divider {
+      display: none;
+    }
+
+    #rebuy-widget-82672 .rebuy-bundle__image-item {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    #rebuy-widget-82672 .rebuy-bundle__image-divider {
+      font-size: clamp(10px, 2.5vw, 14px);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    #rebuy-widget-82672 .bundle-single-image {
+      display: none !important;
+    }
+
     #rebuy-widget-82672 .rebuy-bundle__items {
-      flex-direction: column;
-      flex-wrap: nowrap;
-      overflow-x: hidden;
-      overflow-y: visible;
+      grid-template-columns: 1fr;
       gap: 0;
     }
 
-    #rebuy-widget-82672 .rebuy-product-block {
-      flex: none;
+    #rebuy-widget-82672 .rebuy-product-info {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    #rebuy-widget-82672 .rebuy-product-checkbox {
+      position: static;
+      margin: 0;
+    }
+
+    #rebuy-widget-82672 :is(.rebuy-product-title, .rebuy-product-title.clickable) {
+      display: block !important;
+      width: 100%;
+      max-width: 100%;
+      white-space: normal !important;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      text-align: left !important;
+    }
+
+    #rebuy-widget-82672 .rebuy-product-price {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      white-space: normal;
+      text-align: left !important;
+    }
+
+    #rebuy-widget-82672 .rebuy-bundle__actions {
+      flex-wrap: wrap;
+      max-width: 100%;
+      padding-inline: 0;
+    }
+
+    #rebuy-widget-82672 .rebuy-button {
       width: 100%;
       max-width: 100%;
     }
   }
-  /* Images always fit their card. */
-  #rebuy-widget-82672 .rebuy-bundle__image-item img,
-  #rebuy-widget-82672 .bundle-single-image img {
-    max-width: 100%;
-    height: auto;
+  #rebuy-widget-82672{
+    padding: 0!important;
   }
 </style>
 

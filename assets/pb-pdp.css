@@ -71,19 +71,19 @@
     max-width: 100%;
   }
 
-  /* FBT section (_blocks) — contain within page width; avoid clip (shaves text) */
+  /* FBT section — contain width without clipping cards/heading */
   #MainContent[data-template='product'] [data-rebuy-id='82672'],
   #MainContent[data-template='product'] #rebuy-widget-82672 {
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    overflow-x: hidden;
+    overflow: visible;
   }
 
   #MainContent[data-template='product'] .section:has([data-rebuy-id='82672']) {
     min-width: 0;
     max-width: 100%;
-    overflow-x: hidden;
+    overflow: visible;
   }
 }

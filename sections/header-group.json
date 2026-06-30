@@ -59,6 +59,7 @@
           "static": true,
           "settings": {
             "menu": "main-menu-copy",
+            "narrow_menu_handles": "Best Sellers, gifts",
             "color_scheme": "",
             "type_font_primary_size": "0.875rem",
             "menu_font_style": "inverse",

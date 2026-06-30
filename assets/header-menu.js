@@ -190,15 +190,18 @@ class HeaderMenu extends Component {
 
     let submenu = findSubmenu(item);
     const hasSubmenu = Boolean(submenu);
+    const listItem = item.closest('.menu-list__list-item');
+    const isNarrowMegamenu = listItem?.classList.contains('menu-list__list-item--narrow-megamenu') ?? false;
 
     if (!hasSubmenu && !isDefaultSlot) {
       submenu = this.overflowMenu;
     }
 
     if (submenu) {
-      // Mark submenu as active for content-visibility optimization
       submenu.dataset.active = '';
+    }
 
+    if (submenu && !isNarrowMegamenu) {
       // Cleanup any existing mutation observer from previous menu activations
       this.#cleanupMutationObserver();
 
@@ -240,6 +243,14 @@ class HeaderMenu extends Component {
     if (!submenu) {
       // If there is no content to open, don't try to open it
       finalHeight = 0;
+    }
+
+    if (isNarrowMegamenu) {
+      // Compact dropdown — panel is positioned on the nav item, not the full-width underlay
+      finalHeight = 0;
+      this.headerComponent.dataset.narrowMegamenuOpen = '';
+    } else {
+      delete this.headerComponent.dataset.narrowMegamenuOpen;
     }
 
     this.headerComponent.style.setProperty('--submenu-height', `${finalHeight}px`);
@@ -295,6 +306,7 @@ class HeaderMenu extends Component {
     this.#state.activeItem = null;
     this.ariaExpanded = 'false';
     item.ariaExpanded = 'false';
+    delete this.headerComponent?.dataset.narrowMegamenuOpen;
 
     // Remove active state from submenu after animation completes
     if (submenu) {

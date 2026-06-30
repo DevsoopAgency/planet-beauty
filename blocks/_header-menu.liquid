@@ -102,6 +102,10 @@
       endif
     %}
 
+    {%- liquid
+      assign narrow_menu_handles = block_settings.narrow_menu_handles | downcase | split: ','
+    -%}
+
     {% capture children %}
       {% for link in block_settings.menu.links %}
         {%- liquid
@@ -111,19 +115,36 @@
             assign sale_link_class = ' sale-link'
           endif
           assign link_title_class = link.handle
-          # pb: "Bestsellers" only has a single child, so its full-width mega menu
-          # looked mostly empty. Per client, treat it as a plain link (no dropdown).
+          assign link_title_handle = link.title | handleize
           assign has_megamenu = false
+          assign narrow_megamenu = false
+          assign menu_grid_columns = 6
+          assign menu_grid_columns_tablet = 4
+          assign menu_content_type_for_link = menu_content_type
           if link.links != blank
             assign has_megamenu = true
-            if link.handle == 'bestsellers' or link.handle == 'best-sellers'
-              assign has_megamenu = false
+            for narrow_handle in narrow_menu_handles
+              assign narrow_handle_stripped = narrow_handle | strip
+              if narrow_handle_stripped != blank
+                assign narrow_key = narrow_handle_stripped | handleize
+                assign narrow_key_compact = narrow_key | replace: '-', ''
+                assign link_handle_compact = link.handle | replace: '-', ''
+                if narrow_key == link.handle or narrow_key == link_title_handle or narrow_key_compact == link_handle_compact or narrow_handle_stripped == link_title_downcase
+                  assign narrow_megamenu = true
+                  break
+                endif
+              endif
+            endfor
+            if narrow_megamenu
+              assign menu_grid_columns = 1
+              assign menu_grid_columns_tablet = 1
+              assign menu_content_type_for_link = 'text'
             endif
           endif
         -%}
         <li
           role="presentation"
-          class="menu-list__list-item {{ link_title_class }}{{ sale_link_class }}"
+          class="menu-list__list-item {{ link_title_class }}{{ sale_link_class }}{% if narrow_megamenu %} menu-list__list-item--narrow-megamenu{% endif %}"
           on:focus="/activate"
           on:blur="/deactivate"
           on:pointerenter="/activate"
@@ -146,14 +167,14 @@
             <span class="menu-list__link-title">{{- link.title -}}</span>
           </a>
           {%- if has_megamenu -%}
-            <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
+            <div class="menu-list__submenu{{ color_scheme_classes }}{% if narrow_megamenu %} menu-list__submenu--narrow{% endif %}" ref="submenu[]">
               <div
                 id="submenu-{{ forloop.index }}"
                 class="menu-list__submenu-inner"
                 style="{% render 'submenu-font-styles', settings: block_settings %}"
               >
                 {% assign list_id = 'MegaMenuList-' | append: forloop.index %}
-                <div class="mega-menu section section--full-width-margin section--{{ section.settings.section_width }}">
+                <div class="mega-menu{% if narrow_megamenu %} mega-menu--narrow{% else %} section section--full-width-margin section--{{ section.settings.section_width }}{% endif %}">
                   <div
                     class="mega-menu__grid"
                     data-menu-grid-id="{{ list_id }}"
@@ -162,10 +183,10 @@
                       parent_link: link,
                       id: list_id,
                       section: section,
-                      grid_columns_count: 6,
-                      grid_columns_count_tablet: 4,
+                      grid_columns_count: menu_grid_columns,
+                      grid_columns_count_tablet: menu_grid_columns_tablet,
                       grid_columns_count_collection_images: 8,
-                      menu_content_type: menu_content_type,
+                      menu_content_type: menu_content_type_for_link,
                       content_aspect_ratio: ratio,
                       image_border_radius: image_border_radius
                     %}
@@ -744,6 +765,55 @@
     /* preserves the inherited grid layout when this submenu wrapper is used */
     display: contents;
   }
+
+  /* pb: single top-level child → compact dropdown instead of full-width mega menu */
+  .menu-list__list-item--narrow-megamenu {
+    position: relative;
+  }
+
+  .menu-list__list-item--narrow-megamenu:where(:not([slot='overflow'])) > .menu-list__submenu--narrow {
+    top: 100%;
+    left: 50%;
+    width: max-content;
+    min-width: 11rem;
+    max-width: min(20rem, 90vw);
+    padding-inline: 0;
+    translate: -50% 0;
+    clip-path: none;
+    background-color: var(--color-background);
+    box-shadow: var(--shadow-popover);
+  }
+
+  .menu-list__list-item--narrow-megamenu .menu-list__submenu-inner {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    padding-block: var(--padding-lg);
+    padding-inline: var(--padding-md);
+    transform: none;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .menu-list__list-item--narrow-megamenu .mega-menu--narrow {
+    width: 100%;
+    padding: 0;
+  }
+
+  .menu-list__list-item--narrow-megamenu .mega-menu__grid,
+  .menu-list__list-item--narrow-megamenu .mega-menu__list,
+  .menu-list__list-item--narrow-megamenu [data-menu-grid-id] {
+    grid-template-columns: minmax(0, 1fr);
+    --menu-columns-desktop: 1;
+    --menu-columns-tablet: 1;
+  }
+
+  .menu-list__list-item--narrow-megamenu .mega-menu__list {
+    grid-column: span 1;
+  }
+
+  .menu-list__list-item--narrow-megamenu .mega-menu__column {
+    min-width: 0;
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -756,6 +826,13 @@
       "id": "menu",
       "label": "t:settings.menu",
       "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "narrow_menu_handles",
+      "label": "Narrow dropdown items",
+      "default": "best-sellers, gifts",
+      "info": "Comma-separated menu link handles or titles (e.g. best-sellers or Best Sellers). These use a compact dropdown instead of the full-width mega menu."
     },
     {
       "type": "color_scheme",
