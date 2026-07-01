@@ -826,7 +826,7 @@
     display: flex;
     align-items: center;
     padding-block: 0;
-    padding-inline: 17px var(--padding-3xs);
+    padding-inline: 0;
     column-gap: 0;
 
     .header-logo {
@@ -1124,6 +1124,9 @@
   .dropdown-localization:not(dropdown-localization-component) .language-selector {
     font-family: var(--menu-localization-font);
     font-size: var(--menu-localization-font-size);
+  }
+  .account-button{
+    min-width: unset!important;
   }
 {% endstylesheet %}
 

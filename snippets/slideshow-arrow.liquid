@@ -14,9 +14,20 @@
   assign icon_name = 'arrow'
   assign style = icon_style | default: 'arrow'
   assign shape = icon_shape | default: 'none'
+  assign flip_class = ''
 
-  if icon_style contains 'chevron'
+  if icon_style == 'flickity'
+    assign icon_name = 'flickity'
+    if action == 'next'
+      assign flip_class = 'flip-x'
+    endif
+  elsif icon_style contains 'chevron'
     assign icon_name = 'caret'
+    if action == 'previous'
+      assign flip_class = 'flip-x'
+    endif
+  elsif action == 'previous'
+    assign flip_class = 'flip-x'
   endif
 
   if icon_style contains 'large'
@@ -31,7 +42,7 @@
     {% if shape != 'none' %} slideshow-control--shape-{{ shape }}{% endif %}
     slideshow-control--style-{{ style }}
     button button-unstyled button-unstyled--transparent
-    {% if action == 'previous' %} flip-x{% endif %}
+    {{ flip_class }}
   "
   {% # theme-check-disable %}
   aria-label="{{ 'accessibility.slideshow_' | append: action | t }}"
@@ -40,7 +51,9 @@
   ref="{{ action }}"
 >
   <span class="svg-wrapper icon-{{ icon_name }}">
-    {%- if icon_name == 'caret' -%}
+    {%- if icon_name == 'flickity' -%}
+      {{- 'icon-flickity-caret.svg' | inline_asset_content -}}
+    {%- elsif icon_name == 'caret' -%}
       {{- 'icon-caret.svg' | inline_asset_content -}}
     {%- else -%}
       {{- 'icon-arrow.svg' | inline_asset_content -}}
@@ -86,5 +99,35 @@
 
   .slideshow-control .icon-caret {
     rotate: -90deg;
+  }
+
+  /* pb: Rebuy/Flickity-style filled caret + white circle — mobile carousels */
+  @media screen and (max-width: 749px) {
+    .slideshow-control.slideshow-control--style-flickity {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+      padding: 0;
+      border-radius: 50%;
+      background-color: #fff;
+      color: #404040;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .slideshow-control.slideshow-control--style-flickity .svg-wrapper,
+    .slideshow-control.slideshow-control--style-flickity svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    slideshow-arrows .slideshow-control.slideshow-control--style-flickity {
+      opacity: 1;
+      mix-blend-mode: normal;
+      color: #404040;
+    }
   }
 {% endstylesheet %}

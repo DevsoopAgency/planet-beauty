@@ -17,10 +17,10 @@
         "announcement_BxgCk9": {
           "type": "_announcement",
           "settings": {
-            "text": "OVER 10,000 BEAUTY PRODUCTS",
+            "text": "<strong>FREE SHIPPING</strong>  ON ORDERS OVER $59*",
             "link": "",
-            "font": "var(--font-subheading--family)",
-            "font_size": "0.75rem",
+            "font": "var(--font-body--family)",
+            "font_size": "0.875rem",
             "weight": "",
             "letter_spacing": "normal",
             "case": "none"
@@ -35,7 +35,7 @@
       "settings": {
         "speed": 5,
         "section_width": "page-width",
-        "color_scheme": "scheme-5",
+        "color_scheme": "scheme-2",
         "divider_width": 1,
         "padding-block-start": 15,
         "padding-block-end": 15

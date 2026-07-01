@@ -115,3 +115,22 @@
 #MainContent[data-template='index'] .collection-list .text-block > :is(h1, h2, h3):only-child {
   margin-block-end: 16px;
 }
+
+/* pb: homepage Rebuy carousels — hide add-to-cart, remove card padding */
+#MainContent[data-template='index'] .rebuy-product-actions {
+  display: none !important;
+}
+
+#MainContent[data-template='index'] .rebuy-product-block {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 3px !important;
+  padding-right: 3px !important;
+}
+
+/* pb: homepage Rebuy carousel arrows — align with product image area */
+#MainContent[data-template='index'] .rebuy-widget :is(.splide__arrow, .flickity-button, .flickity-prev-next-button) {
+  top: 120px !important;
+  bottom: auto !important;
+  transform: none !important;
+}

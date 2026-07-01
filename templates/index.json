@@ -458,7 +458,7 @@
         "columns_mobile": 1,
         "peek_mobile": "0.4",
         "gap_mobile": 16,
-        "icons_style": "arrow",
+        "icons_style": "flickity",
         "icons_shape": "none",
         "padding-block-start": 32,
         "padding-block-end": 32,
@@ -682,27 +682,13 @@
         "bento_gap": 14,
         "rows_gap": 16,
         "max_collections": 5,
-        "icons_style": "arrow",
+        "icons_style": "flickity",
         "icons_shape": "none",
         "section_width": "page-width",
         "gap": 12,
         "color_scheme": "scheme-6",
         "padding-block-start": 24,
         "padding-block-end": 32
-      }
-    },
-    "custom_liquid_qLjjxM": {
-      "type": "custom-liquid",
-      "custom_css": [
-        ".rebuy-widget {max-width: 100%;}"
-      ],
-      "name": "t:names.custom_liquid",
-      "settings": {
-        "custom_liquid": "<!-- Best Sellers -->\n<div class=\"homepage-rebuy-bestsellers\">\n  <div data-rebuy-id=\"181852\"></div>\n</div>\n<script src=\"{{ 'rebuy-home.js' | asset_url }}\" defer></script>",
-        "color_scheme": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
       }
     },
     "section_UxEDxx": {
@@ -713,7 +699,7 @@
           "settings": {
             "image": "shopify://shop_images/image_8.png",
             "link": "shopify://collections/all",
-            "image_ratio": "adapt",
+            "image_ratio": "landscape",
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -879,8 +865,22 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 63,
-        "padding-block-end": 58
+        "padding-block-start": 23,
+        "padding-block-end": 23
+      }
+    },
+    "custom_liquid_qLjjxM": {
+      "type": "custom-liquid",
+      "custom_css": [
+        ".rebuy-widget {max-width: 100%;}"
+      ],
+      "name": "t:names.custom_liquid",
+      "settings": {
+        "custom_liquid": "<!-- Best Sellers -->\n<div class=\"homepage-rebuy-bestsellers\">\n  <div data-rebuy-id=\"181852\"></div>\n</div>\n<script src=\"{{ 'rebuy-home.js' | asset_url }}\" defer></script>",
+        "color_scheme": "",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
       }
     },
     "custom_liquid_4PUtGP": {
@@ -3259,8 +3259,8 @@
     "grid_slider_hTYj9P",
     "collection_list_zAQAKh",
     "section_UxEDxx",
-    "custom_liquid_4PUtGP",
     "custom_liquid_qLjjxM",
+    "custom_liquid_4PUtGP",
     "custom_liquid_giftsU50",
     "section_eCYAbX",
     "section_wBqfa4",

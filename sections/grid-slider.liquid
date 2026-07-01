@@ -56,6 +56,21 @@
     </div>
 
     {%- if slider_any and section.settings.icons_style != 'none' -%}
+      {%- liquid
+        assign gs_icon_name = 'arrow'
+        if section.settings.icons_style == 'flickity'
+          assign gs_icon_name = 'flickity'
+        elsif section.settings.icons_style contains 'chevron'
+          assign gs_icon_name = 'caret'
+        endif
+
+        assign gs_prev_flip = 'flip-x'
+        assign gs_next_flip = ''
+        if section.settings.icons_style == 'flickity'
+          assign gs_prev_flip = ''
+          assign gs_next_flip = 'flip-x'
+        endif
+      -%}
       <div class="grid-slider__arrows" data-gs-ref="arrows">
         <button
           class="
@@ -63,14 +78,17 @@
             slideshow-control slideshow-control--previous
             {% if section.settings.icons_shape != 'none' %}slideshow-control--shape-{{ section.settings.icons_shape }}{% endif %}
             slideshow-control--style-{{ section.settings.icons_style }}
-            button button-unstyled button-unstyled--transparent flip-x
+            button button-unstyled button-unstyled--transparent
+            {{ gs_prev_flip }}
           "
           data-gs-ref="prevBtn"
           aria-label="{{ 'accessibility.slideshow_previous' | t }}"
           disabled
         >
-          <span class="svg-wrapper icon-{% if section.settings.icons_style contains 'chevron' %}caret{% else %}arrow{% endif %}">
-            {%- if section.settings.icons_style contains 'chevron' -%}
+          <span class="svg-wrapper icon-{{ gs_icon_name }}">
+            {%- if gs_icon_name == 'flickity' -%}
+              {{- 'icon-flickity-caret.svg' | inline_asset_content -}}
+            {%- elsif gs_icon_name == 'caret' -%}
               {{- 'icon-caret.svg' | inline_asset_content -}}
             {%- else -%}
               {{- 'icon-arrow.svg' | inline_asset_content -}}
@@ -84,12 +102,15 @@
             {% if section.settings.icons_shape != 'none' %}slideshow-control--shape-{{ section.settings.icons_shape }}{% endif %}
             slideshow-control--style-{{ section.settings.icons_style }}
             button button-unstyled button-unstyled--transparent
+            {{ gs_next_flip }}
           "
           data-gs-ref="nextBtn"
           aria-label="{{ 'accessibility.slideshow_next' | t }}"
         >
-          <span class="svg-wrapper icon-{% if section.settings.icons_style contains 'chevron' %}caret{% else %}arrow{% endif %}">
-            {%- if section.settings.icons_style contains 'chevron' -%}
+          <span class="svg-wrapper icon-{{ gs_icon_name }}">
+            {%- if gs_icon_name == 'flickity' -%}
+              {{- 'icon-flickity-caret.svg' | inline_asset_content -}}
+            {%- elsif gs_icon_name == 'caret' -%}
               {{- 'icon-caret.svg' | inline_asset_content -}}
             {%- else -%}
               {{- 'icon-arrow.svg' | inline_asset_content -}}
@@ -231,6 +252,29 @@
     opacity: 0.35;
     cursor: default;
     pointer-events: none;
+  }
+
+  /* pb: cards inherit section --padding-*-mobile vars via .spacing-style — reset on mobile */
+  @media screen and (max-width: 749px) {
+    .section-grid-slider .card__content.spacing-style,
+    .section-grid-slider .image-block.spacing-style {
+      --padding-block-start-mobile: 0px;
+      --padding-block-end-mobile: 0px;
+      --padding-inline-start-mobile: 0px;
+      --padding-inline-end-mobile: 0px;
+      --section-top-offset: 0px;
+      padding: 0 !important;
+    }
+
+    .section-grid-slider .grid-slider__track--slider > .card {
+      height: auto;
+      align-self: flex-start;
+    }
+
+    .section-grid-slider .card__content {
+      height: auto;
+      aspect-ratio: unset;
+    }
   }
 {% endstylesheet %}
 
@@ -418,6 +462,7 @@
         { "value": "chevron", "label": "t:options.chevrons" },
         { "value": "arrows_large", "label": "t:options.arrows_large" },
         { "value": "chevron_large", "label": "t:options.chevron_large" },
+        { "value": "flickity", "label": "Filled caret (Rebuy)" },
         { "value": "none", "label": "t:options.none" }
       ],
       "default": "arrow"
