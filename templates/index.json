@@ -893,7 +893,7 @@
         "custom_liquid": "<!-- Buy it again --> <div data-rebuy-id=\"85478\" data-rebuy-shopify-product-ids=\"{{ product.id }}\"></div>",
         "color_scheme": "",
         "section_width": "page-width",
-        "padding-block-start": 33,
+        "padding-block-start": 0,
         "padding-block-end": 0
       }
     },
