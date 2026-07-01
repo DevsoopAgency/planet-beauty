@@ -464,3 +464,9 @@
   padding:0;
  }
 }
+
+.rebuy-product-grid,
+.rebuy-widget,
+.rebuy-widget .flickity-enabled.is-draggable {
+    padding-bottom: 0!important;
+}
