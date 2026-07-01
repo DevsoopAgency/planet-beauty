@@ -134,3 +134,7 @@
   bottom: auto !important;
   transform: none !important;
 }
+
+.rebuy-widget .flickity-button {
+  background: transparent!important;
+}
