@@ -4235,5 +4235,5 @@ product-recommendations:has([data-has-recommendations='false']) {
 }
 .rebuy-widget.rebuy-widget,
 .rebuy-widget .flickity-enabled.is-draggable {
-    padding-bottom: 0;
+    padding-bottom: 0!important;
 }
