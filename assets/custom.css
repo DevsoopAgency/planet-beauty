@@ -531,5 +531,5 @@
     padding-bottom: 0!important;
 }
 .pb-header-action--labeled.pb-header-stores .svg-wrapper{
-  justify-content: end;
+  justify-content: end!important;
 }
