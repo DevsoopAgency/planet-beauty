@@ -265,7 +265,7 @@
   }
 
   #header-component[data-menu-style='menu'] header-actions {
-    gap: 0;
+    gap: 12px;
   }
 
   #header-component[data-menu-style='menu'] .header-actions__action,
@@ -279,19 +279,39 @@
     justify-content: center;
   }
 
-  #header-component[data-menu-style='menu'] .account-button shopify-account {
-    width: 34px;
-    height: 38px;
-    min-width: 34px;
+  #header-component[data-menu-style='menu'] .header-actions__action.pb-header-action--labeled,
+  #header-component[data-menu-style='menu'] .account-button.pb-header-action--labeled {
+    width: auto;
+    min-width: 0;
+    flex-shrink: 0;
+    gap: 0;
+    font-size: 12px;
   }
 
-  #header-component[data-menu-style='menu'] .header-actions__action .svg-wrapper,
-  #header-component[data-menu-style='menu'] .account-button .svg-wrapper {
+  #header-component[data-menu-style='menu'] .pb-header-action--labeled .svg-wrapper,
+  #header-component[data-menu-style='menu'] .account-button.pb-header-action--labeled .svg-wrapper {
     width: 34px;
     height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #header-component[data-menu-style='menu'] .header-actions__action:not(.pb-header-action--labeled) .svg-wrapper,
+  #header-component[data-menu-style='menu'] .action__cart .svg-wrapper {
+    width: 34px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #header-component[data-menu-style='menu'] .account-button shopify-account {
+    width: 34px;
+    height: 38px;
+    min-width: 34px;
+    flex-shrink: 0;
   }
 
   #header-component[data-menu-style='menu'] .header-actions__action svg,
@@ -329,6 +349,46 @@
 #header-component .pb-header-stores {
   text-decoration: none;
   color: inherit;
+}
+
+/* pb: icon + label on desktop, icon only on mobile (live header parity). */
+@media screen and (min-width: 750px) {
+  #header-component .pb-header-action--labeled {
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    min-width: 0;
+    flex-shrink: 0;
+    gap: 0;
+    padding-inline: 0;
+    line-height: 1;
+  }
+
+  
+  
+  
+  
+  
+  
+  {
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    font-weight: var(--font-body--weight);
+    line-height: 1;
+    white-space: nowrap;
+    color: inherit;
+    flex-shrink: 0;
+  }
+
+  #header-component .account-button.pb-header-action--labeled {
+    line-height: 1;
+  }
+
+  #header-component .account-button.pb-header-action--labeled shopify-account {
+    width: 34px;
+    min-width: 34px;
+    flex-shrink: 0;
+  }
 }
 
 /* pb: mobile header — logo (left), locator/search/account/cart, hamburger (far right). */
