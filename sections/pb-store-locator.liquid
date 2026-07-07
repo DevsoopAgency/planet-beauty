@@ -9,50 +9,50 @@
 
 <div class="pb-store-locator section section--full-width spacing-style" style="{% render 'spacing-style', settings: section.settings %}">
   <div id="scasl-app-container" class="new-for-mobile" style="display:none">
-    <div class="bh-sl-container scasl-container">
-      <div id="page-header">
-        <h1 class="bh-sl-title">{{ section.settings.title }}</h1>
-      </div>
+    <div id="page-header" class="pb-sl-page-header">
+      <h1 class="bh-sl-title">{{ section.settings.title }}</h1>
+    </div>
 
+    <div class="bh-sl-container scasl-container">
       <div class="bh-sl-form-container">
         <div id="scasl-tab-radius">
           <form id="bh-sl-user-location" class="scasl-distance" method="post" action="#">
-            <div class="form-input">
-              <label for="bh-sl-address">Current Location</label>
-              <div class="scasl-address-wrap">
-                <input type="text" id="bh-sl-address" name="bh-sl-address" autocomplete="off">
-                <a href="#" id="scapl-geocode-btn" title="Find My Location" style="background-color: none !important">
-                  <img src="{{ 'sca.location-find-location.png' | asset_url }}" alt="" width="14" height="22" loading="lazy">
-                </a>
-                <button id="scapl-geocode-btn" type="button">Find My Location</button>
-              </div>
-            </div>
-
-            <div class="scasl-see-more-content">
-              <div class="form-input">
-                <label for="scasl-radius-container">Search Radius</label>
-                <select id="scasl-radius-container" name="bh-sl-maxdistance"></select>
+            <div class="pb-sl-search-grid">
+              <div class="form-input pb-sl-field-location">
+                <label for="bh-sl-address">Current Location</label>
+                <div class="scasl-address-wrap">
+                  <input type="text" id="bh-sl-address" name="bh-sl-address" autocomplete="off">
+                  <button id="scapl-geocode-btn" type="button">Find My Location</button>
+                </div>
               </div>
 
-              <div class="form-input">
-                <label for="scasl-lengthUnit">Search Radius Measurement</label>
-                <select id="scasl-lengthUnit" name="scasl-lengthUnit">
-                  <option value="km">Kilometer</option>
-                  <option value="m">Mile</option>
-                </select>
+              <div class="scasl-see-more-content">
+                <div class="form-input pb-sl-field-radius">
+                  <label for="scasl-radius-container">Search Radius</label>
+                  <select id="scasl-radius-container" name="bh-sl-maxdistance"></select>
+                </div>
+
+                <div class="form-input pb-sl-field-unit">
+                  <label for="scasl-lengthUnit">Search Radius Measurement</label>
+                  <select id="scasl-lengthUnit" name="scasl-lengthUnit">
+                    <option value="km">Kilometer</option>
+                    <option value="m">Mile</option>
+                  </select>
+                </div>
+
+                <div class="bh-sl-filters-container scasl-tag">
+                  <label for="scasl-tag-list-container">Tags</label>
+                  <ul id="scasl-tag-list-container" class="bh-sl-filters scasl-tag-list"></ul>
+                </div>
               </div>
 
-              <div class="bh-sl-filters-container scasl-tag">
-                <label for="scasl-tag-list-container">Tags</label>
-                <ul id="scasl-tag-list-container" class="bh-sl-filters scasl-tag-list"></ul>
+              <div class="pb-sl-search-actions">
+                <a class="scasl-see-more">More &raquo;</a>
+                <a class="scasl-see-less">Less &laquo;</a>
+                <div class="scasl-search-btn">
+                  <button id="bh-sl-submit" type="submit">Search</button>
+                </div>
               </div>
-            </div>
-
-            <a class="scasl-see-more">More &raquo;</a>
-            <a class="scasl-see-less">Less &laquo;</a>
-
-            <div class="scasl-search-btn">
-              <button id="bh-sl-submit" type="submit">Search</button>
             </div>
           </form>
           <div class="spinner">

@@ -1,148 +1,368 @@
 /*
- * Planet Beauty — SCA store locator overrides (ported from live snippets/sca.storelocator.liquid
- * + snippets/css-variables.liquid). Scoped to the store locator page/widget only.
+ * Planet Beauty — SCA store locator overrides.
+ * Scoped to .pb-store-locator only.
  */
 
 .pb-store-locator {
   --color-text: #323a45;
   --color-primary: #dc0075;
-  --btn-color: #fff;
-  --btn-padding: 15px 40px;
   --input-focused: #faeaea;
+  --sl-control-height: 48px;
 }
 
-.pb-store-locator #scasl-tabs li {
-  float: left;
-  width: 50px;
-  cursor: pointer;
+/* Kill legacy floats from SCA base CSS */
+.pb-store-locator #page-header,
+.pb-store-locator .bh-sl-container,
+.pb-store-locator .bh-sl-container .form-input,
+.pb-store-locator .scasl-search-btn,
+.pb-store-locator #scasl-tabs,
+.pb-store-locator #scasl-tabs li,
+.pb-store-locator .bh-sl-loc-list,
+.pb-store-locator #bh-sl-map {
+  float: none !important;
 }
 
-.pb-store-locator #scasl-tabs {
-  float: left;
+/* Enforce page section order */
+.pb-store-locator #scasl-app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   width: 100%;
 }
 
-.pb-store-locator .form-input {
-  width: 300px !important;
-}
-
-.pb-store-locator .scasl-see-more {
-  position: relative;
-  left: 20px;
-  top: 57px;
-  display: none;
-  cursor: pointer;
-}
-
-.pb-store-locator .scasl-see-less {
-  position: relative;
-  left: 20px;
-  top: 57px;
-  cursor: pointer;
-}
-
-.pb-store-locator .scasl-search-btn {
-  float: left;
-  width: 19%;
-  margin-top: 3.1em !important;
-}
-
-.pb-store-locator #bh-sl-map {
-  float: left;
-  margin-left: 20px !important;
-  width: 70%;
-}
-
-.pb-store-locator .bh-sl-loc-list.scasl-location-list {
-  width: 25%;
-  float: left;
-}
-
-.pb-store-locator .bh-sl-container button#bh-sl-submit {
-  background-color: #ef0180 !important;
-  color: #fff !important;
-}
-
-.pb-store-locator #bh-sl-map {
-  border: 1px solid #ccc;
+.pb-store-locator #page-header,
+.pb-store-locator .pb-sl-page-header {
+  order: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
 .pb-store-locator .bh-sl-title {
-  margin-top: 36px !important;
-  margin-bottom: 0 !important;
-  text-align: center;
+  width: 100%;
+  margin: 36px auto 1.5rem !important;
+  padding: 0;
+  text-align: center !important;
 }
 
-.pb-store-locator #page-header {
-  text-align: center;
+.pb-store-locator .bh-sl-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  order: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.pb-store-locator #scapl-geocode-btn img {
+.pb-store-locator .bh-sl-form-container {
+  order: 2;
+  max-width: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  width: 100%;
+}
+
+.pb-store-locator #scasl-tabs {
+  order: 3;
+}
+
+.pb-store-locator #bh-sl-map-container {
+  order: 4;
+}
+
+/* ── Search grid ─────────────────────────────────────────────── */
+
+.pb-store-locator .pb-sl-search-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
+  align-items: end;
+}
+
+.pb-store-locator .pb-sl-field-location {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+}
+
+.pb-store-locator .scasl-see-more-content {
+  display: contents;
+}
+
+.pb-store-locator .scasl-see-more-content[style*='display: block'],
+.pb-store-locator .scasl-see-more-content[style*='display:block'] {
+  display: contents !important;
+}
+
+.pb-store-locator .pb-sl-field-radius {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.pb-store-locator .pb-sl-field-unit {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.pb-store-locator .pb-sl-search-actions {
+  grid-column: 4;
+  grid-row: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+/* Collapsed radius fields — pull search actions next to location */
+.pb-store-locator .scasl-see-more-content[style*='display: none'] ~ .pb-sl-search-actions,
+.pb-store-locator .scasl-see-more-content[style*='display:none'] ~ .pb-sl-search-actions {
+  grid-column: 2;
+}
+
+.pb-store-locator .form-input {
+  width: auto !important;
+  margin: 0 !important;
+  min-width: 0;
+}
+
+.pb-store-locator .bh-sl-container .form-input input,
+.pb-store-locator .bh-sl-container .form-input select {
+  width: 100%;
+  max-width: none;
+  margin: 0 !important;
+  min-height: var(--sl-control-height);
+  box-sizing: border-box;
+}
+
+.pb-store-locator .bh-sl-form-container label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+/* Location error — don't stretch the input row */
+.pb-store-locator .pb-sl-field-location .permission-error {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+@media screen and (min-width: 901px) {
+  .pb-store-locator .pb-sl-search-grid {
+    padding-bottom: 2.75rem;
+  }
+}
+
+/* Geocode text button (pin asset missing from theme — text link instead) */
+.pb-store-locator button#scapl-geocode-btn {
+  display: block !important;
+  position: static;
+  width: auto;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  min-height: 0;
+  height: auto;
+  background: none !important;
+  color: var(--color-primary) !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: none;
+  text-align: left;
+  text-decoration: underline;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.pb-store-locator .scasl-address-wrap {
+  position: relative;
+}
+
+.pb-store-locator .bh-sl-container .form-input input {
+  padding-right: 15px;
+}
+
+/* Search button */
+.pb-store-locator .scasl-search-btn {
+  width: auto;
+  margin: 0 !important;
+  position: static;
+}
+
+.pb-store-locator .scasl-search-btn #bh-sl-submit {
+  background-color: #ef0180 !important;
+  color: #fff !important;
+  min-height: var(--sl-control-height);
+  height: var(--sl-control-height);
+  padding: 0 2rem !important;
+  margin: 0 !important;
+  line-height: var(--sl-control-height);
+  width: auto;
+  white-space: nowrap;
+  box-sizing: border-box;
+  position: static;
+}
+
+.pb-store-locator .scasl-see-more,
+.pb-store-locator .scasl-see-less {
+  position: static;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+  padding-bottom: 0.875rem;
+}
+
+.pb-store-locator .scasl-see-more {
   display: none;
 }
 
+.pb-store-locator .bh-sl-filters-container.scasl-tag:has(ul:empty) {
+  display: none;
+}
+
+/* ── List / Map tabs ─────────────────────────────────────────── */
+
+.pb-store-locator #scasl-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  width: 100%;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  position: relative;
+  clear: both;
+}
+
 .pb-store-locator #scasl-tabs li {
+  width: auto;
+  min-width: 65px;
+  padding: 0.5rem 0.75rem;
   background: rgb(230, 0, 121) !important;
   list-style-type: none;
   color: #fff;
   text-align: center;
   border-radius: 2px;
-  margin-right: 10px;
-  width: 65px;
-  padding: 5px;
+  cursor: pointer;
 }
 
-@media screen and (max-width: 1000px) {
-  .pb-store-locator .bh-sl-container .form-input {
-    width: 40% !important;
-  }
+/* ── Results: list + map ─────────────────────────────────────── */
 
-  .pb-store-locator .scasl-search-btn {
-    margin-top: 2.5em !important;
-  }
+.pb-store-locator #bh-sl-map-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding: 0;
+  max-width: none;
+  margin: 0;
+  width: 100%;
 }
+
+.pb-store-locator .bh-sl-loc-list.scasl-location-list {
+  flex: 1 1 280px;
+  width: auto;
+  min-width: 0;
+}
+
+.pb-store-locator #bh-sl-map {
+  flex: 2 1 400px;
+  width: auto;
+  margin-left: 0 !important;
+  border: 1px solid #ccc;
+  min-height: 360px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
 
 @media screen and (max-width: 900px) {
-  .pb-store-locator .scasl-search-btn {
-    margin-top: 2.5em !important;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .pb-store-locator .bh-sl-container .form-input {
-    width: 100% !important;
+  .pb-store-locator .pb-sl-search-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 0;
   }
 
-  .pb-store-locator .scasl-search-btn {
-    margin-top: 0 !important;
-    width: 30%;
-    padding-left: 10px;
+  .pb-store-locator .scasl-see-more-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .pb-store-locator .scasl-see-more-content[style*='display: block'],
+  .pb-store-locator .scasl-see-more-content[style*='display:block'] {
+    display: flex !important;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .pb-store-locator .scasl-see-more-content[style*='display: none'],
+  .pb-store-locator .scasl-see-more-content[style*='display:none'] {
+    display: none !important;
+  }
+
+  .pb-store-locator .pb-sl-field-location {
+    position: static;
+  }
+
+  .pb-store-locator .pb-sl-field-location .permission-error {
+    position: static;
+    margin: 0.5rem 0 0;
+  }
+
+  .pb-store-locator .pb-sl-search-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.75rem;
+    margin: 0;
   }
 
   .pb-store-locator .scasl-see-more,
   .pb-store-locator .scasl-see-less {
-    top: 18px;
+    padding-bottom: 0;
+    align-self: flex-start;
+  }
+
+  .pb-store-locator .scasl-search-btn,
+  .pb-store-locator .scasl-search-btn #bh-sl-submit {
+    width: 100%;
+    max-width: none;
+  }
+
+  .pb-store-locator .bh-sl-form-container {
+    margin-bottom: 1.25rem;
   }
 
   .pb-store-locator #scasl-tabs {
-    margin-top: 20px !important;
-    margin-bottom: 0;
-    padding-left: 10px;
+    margin-top: 0;
   }
 
-  .pb-store-locator .bh-sl-loc-list.scasl-location-list {
-    width: 100%;
+  .pb-store-locator #scasl-tabs li {
+    flex: 1;
+    text-align: center;
   }
 
+  .pb-store-locator .bh-sl-loc-list.scasl-location-list,
   .pb-store-locator #bh-sl-map {
-    margin-left: 0 !important;
+    flex: 1 1 100%;
     width: 100%;
   }
 }
 
-@media screen and (max-width: 480px) {
-  .pb-store-locator .scasl-search-btn {
-    width: 40%;
-    padding-left: 10px;
+@media screen and (min-width: 901px) {
+  .pb-store-locator #bh-sl-map {
+    height: 577px;
   }
 }
