@@ -1,12 +1,16 @@
 {% comment %}
   Marketing / analytics tags must not load until OneTrust consent is granted.
   C0002 = Performance (analytics), C0004 = Targeting (marketing) — verify IDs in OneTrust admin.
+  Rebuy is gated here too (client request): its app embed is disabled in
+  settings_data.json and loaded manually below so the recommendation/upsell
+  sections only render after a consent choice is made.
 {% endcomment %}
 <script type="text/javascript">
   (function () {
     var GTM_ID = 'GTM-542GFXP';
     var TABOOLA_ID = '1820245';
-    var loaded = { gtm: false, taboola: false };
+    var REBUY_SHOP = {{ shop.permanent_domain | json }};
+    var loaded = { gtm: false, taboola: false, rebuy: false };
 
     window.dataLayer = window.dataLayer || [];
     function gtag() {
@@ -71,6 +75,18 @@
       f.parentNode.insertBefore(t, f);
     }
 
+    function loadRebuy() {
+      if (loaded.rebuy || !(hasGroup('C0002') || hasGroup('C0004'))) return;
+      loaded.rebuy = true;
+      if (document.getElementById('rebuy-onsite-script')) return;
+      var r = document.createElement('script');
+      r.async = true;
+      r.id = 'rebuy-onsite-script';
+      r.src = 'https://cdn.rebuyengine.com/onsite/js/rebuy.js?shop=' + REBUY_SHOP;
+      var f = document.getElementsByTagName('script')[0];
+      f.parentNode.insertBefore(r, f);
+    }
+
     window.planetBeautyLoadConsentTags = function () {
       if (
         typeof window.planetBeautyHasConsentChoice === 'function' &&
@@ -84,6 +100,7 @@
         loadGTM();
       }
       loadTaboola();
+      loadRebuy();
     };
   })();
 </script>
