@@ -3,6 +3,14 @@
   Uses the Secomapp SCA Store Locator app markup + assets; ProMap block replaced.
 {%- endcomment -%}
 
+{%- comment -%} pb (2026-07-10): resource hints so the map libs + Google Maps connect faster (store locator load-time fix). {%- endcomment -%}
+<link rel="preconnect" href="https://cdn.secomapp.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://maps.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.secomapp.com">
+<link rel="dns-prefetch" href="https://maps.googleapis.com">
+
 {{ 'sca.storelocator.css' | asset_url | stylesheet_tag }}
 {{ 'sca.api.storelocator.css' | asset_url | stylesheet_tag }}
 {{ 'pb-sca-storelocator.css' | asset_url | stylesheet_tag }}

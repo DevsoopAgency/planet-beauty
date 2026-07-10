@@ -116,8 +116,17 @@
         assign account_actions_style = '--header-actions-font-family: ' | append: font_family_safe | append: '; --header-actions-font-weight: ' | append: font_obj.weight | append: ';'
       endif
     %}
+    {%- comment -%} pb (2026-07-10) Rev 6: whole account item (icon + text) is clickable, not just the icon. {%- endcomment -%}
+    {%- liquid
+      if customer
+        assign pb_account_href = routes.account_url
+      else
+        assign pb_account_href = routes.account_login_url
+      endif
+    -%}
     <div
-      class="account-button header-actions__action pb-header-action--labeled{% if display_style == 'text' %} account-button--text{% endif %} color-{{ settings.popover_color_scheme }}"
+      class="account-button header-actions__action pb-header-action--labeled pb-account-clickable{% if display_style == 'text' %} account-button--text{% endif %} color-{{ settings.popover_color_scheme }}"
+      data-pb-account-href="{{ pb_account_href }}"
     >
       <shopify-account
         menu="{{ customer_account_menu }}"
@@ -137,14 +146,32 @@
           </span>
         {% endif %}
       </shopify-account>
-      <span class="account-button__text pb-header-action__label mobile:hidden">
+      <a
+        class="account-button__text pb-header-action__label mobile:hidden"
+        href="{{ pb_account_href }}"
+      >
         {% if customer %}
           {{ 'content.account_title' | t }}
         {% else %}
           Sign in/up
         {% endif %}
-      </span>
+      </a>
     </div>
+    {%- comment -%} pb Rev 6: forward clicks anywhere on the account item to the account link (icon keeps its own component behavior). {%- endcomment -%}
+    <script>
+      (function () {
+        if (window.__pbAccountClickInit) return;
+        window.__pbAccountClickInit = true;
+        document.addEventListener('click', function (e) {
+          var btn = e.target.closest('.pb-account-clickable');
+          if (!btn) return;
+          if (e.target.closest('shopify-account')) return;
+          if (e.target.closest('a')) return;
+          var href = btn.getAttribute('data-pb-account-href');
+          if (href) window.location.href = href;
+        });
+      })();
+    </script>
   {% endif %}
 
   {% if settings.cart_type == 'drawer' and template.name != 'cart' %}

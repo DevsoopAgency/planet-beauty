@@ -1,64 +1,187 @@
 {%- comment -%}
-  Classic customer account dashboard: order history + account details.
+  Classic customer account dashboard — LIVE-parity rebuild (2026-07-10).
+  Adds the actions the live theme exposes that were missing here:
+    - Update your information (inline default-address edit form)
+    - Reset password (inline recover form)
+    - Buy it Again        -> /account?view=buy-it-again   (Rebuy reorder, live parity)
+    - Manage Subscriptions -> /tools/recurring/login/      (Recharge portal, live parity)
+    - Update Email Preferences -> /pages/stay-beautiful/
+    - Update Your Address Book -> account addresses
+  Layout uses the shared .pb-account styles so it stays organized/consistent on
+  mobile (matches the live account layout). pb- custom; safe to restyle later.
 {%- endcomment -%}
 {% render 'pb-customer-account' %}
 
 <div class="pb-account">
-  <h1 class="pb-account__title">My account</h1>
-  <p class="pb-account__intro">
-    <a class="pb-account__link" href="{{ routes.account_logout_url }}">Log out</a>
-  </p>
+  <h1 class="pb-account__title">
+    Welcome{% if customer.first_name != blank %} {{ customer.first_name }}{% endif %}
+  </h1>
 
-  <div class="pb-account__grid pb-account__grid--2">
-    <div>
-      <h2>Account details</h2>
-      <p>
-        {{ customer.name }}<br>
-        {{ customer.email }}
+  <div class="pb-account__grid pb-account__grid--2 pb-account__dashboard">
+    {%- comment -%} Left: account info + edit actions {%- endcomment -%}
+    <div class="pb-account__panel">
+      <h2>Account Info</h2>
+      <p class="pb-account__info">
+        <strong>Name:</strong>
+        {% if customer.default_address %}{{ customer.default_address.first_name }} {{ customer.default_address.last_name }}{% else %}{{ customer.first_name }} {{ customer.last_name }}{% endif %}<br>
+        <strong>Email:</strong> {{ customer.email }}<br>
+        <strong>Phone:</strong>
+        {% if customer.default_address.phone != blank %}{{ customer.default_address.phone }}{% elsif customer.phone != blank %}{{ customer.phone }}{% else %}&mdash;{% endif %}<br>
+        <strong>Password:</strong> ********
       </p>
+
+      <div class="pb-account__linklist">
+        <button type="button" class="pb-account__linkbtn" data-toggle="pb-edit-info">Update your information</button>
+        <button type="button" class="pb-account__linkbtn" data-toggle="pb-recover">Reset password</button>
+        <a class="pb-account__linkbtn" href="{{ routes.account_logout_url }}">Log out</a>
+      </div>
+
+      {%- comment -%} Inline: update default address (real edit capability) {%- endcomment -%}
+      <div id="pb-edit-info" class="pb-account__editform" hidden>
+        <h3>Update your information</h3>
+        {%- assign edit_address = customer.default_address | default: customer.new_address -%}
+        {%- form 'customer_address', edit_address -%}
+          {% render 'pb-address-fields', address: edit_address, id_suffix: 'account' %}
+          <div class="pb-account__actions">
+            <button type="submit" class="button">Save changes</button>
+            <button type="button" class="pb-account__link" data-toggle="pb-edit-info">Cancel</button>
+          </div>
+        {%- endform -%}
+      </div>
+
+      {%- comment -%} Inline: password reset (emails a reset link) {%- endcomment -%}
+      <div id="pb-recover" class="pb-account__editform" hidden>
+        <h3>Reset password</h3>
+        <p>We'll email you a link to reset your password.</p>
+        {%- form 'recover_customer_password' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="pb-account__success">We've sent you an email with a link to update your password.</p>
+          {%- endif -%}
+          <div class="pb-account__field">
+            <label for="RecoverEmail">Email</label>
+            <input type="email" id="RecoverEmail" name="email" value="{{ customer.email }}" autocomplete="email">
+          </div>
+          <div class="pb-account__actions">
+            <button type="submit" class="button">Send reset link</button>
+            <button type="button" class="pb-account__link" data-toggle="pb-recover">Cancel</button>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+
+    {%- comment -%} Right: account service links (live parity) {%- endcomment -%}
+    <div class="pb-account__panel">
+      <h2>My Account</h2>
+      <div class="pb-account__linklist">
+        <button type="button" class="pb-account__linkbtn" data-toggle="pb-buy-again">Buy it Again</button>
+        <a class="pb-account__linkbtn" href="#pb-orders">Past Orders</a>
+        <a class="pb-account__linkbtn" href="/pages/stay-beautiful/">Update Email Preferences</a>
+        <a class="pb-account__linkbtn" href="/tools/recurring/login/">Manage Your Subscriptions</a>
+        <a class="pb-account__linkbtn" href="{{ routes.account_addresses_url }}">Update Your Address Book</a>
+      </div>
+
+      {%- comment -%}
+        Buy it Again — Rebuy reorder widget (live parity: live uses Rebuy for
+        buy-it-again). Widget 85478 = the same "Buy it again" widget used on the
+        homepage. Loaded via the global Rebuy app embed (re-enabled 2026-07-10).
+      {%- endcomment -%}
+      <div id="pb-buy-again" class="pb-account__editform" hidden>
+        <h3>Buy it Again</h3>
+        <div class="rebuy-widget-wrap"><div data-rebuy-id="85478"></div></div>
+      </div>
+
       {%- if customer.default_address -%}
         <h3>Default address</h3>
-        <p>{{ customer.default_address | format_address }}</p>
+        <p class="pb-account__info">{{ customer.default_address | format_address }}</p>
+        <p><a class="pb-account__link" href="{{ routes.account_addresses_url }}">View all addresses ({{ customer.addresses_count }})</a></p>
       {%- endif -%}
-      <p>
-        <a class="pb-account__link" href="{{ routes.account_addresses_url }}">View addresses ({{ customer.addresses_count }})</a>
-      </p>
-    </div>
-
-    <div>
-      <h2>Order history</h2>
-      {%- paginate customer.orders by 20 -%}
-        {%- if customer.orders.size > 0 -%}
-          <table class="pb-account__table">
-            <thead>
-              <tr>
-                <th scope="col">Order</th>
-                <th scope="col">Date</th>
-                <th scope="col">Payment</th>
-                <th scope="col">Fulfillment</th>
-                <th scope="col">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {%- for order in customer.orders -%}
-                <tr>
-                  <td><a class="pb-account__link" href="{{ order.customer_url }}">{{ order.name }}</a></td>
-                  <td>{{ order.created_at | date: "%b %d, %Y" }}</td>
-                  <td>{{ order.financial_status_label }}</td>
-                  <td>{{ order.fulfillment_status_label }}</td>
-                  <td>{{ order.total_net_amount | money }}</td>
-                </tr>
-              {%- endfor -%}
-            </tbody>
-          </table>
-
-          {%- if paginate.pages > 1 -%}
-            <nav class="pb-account__actions" role="navigation">{{ paginate | default_pagination }}</nav>
-          {%- endif -%}
-        {%- else -%}
-          <p>You haven't placed any orders yet.</p>
-        {%- endif -%}
-      {%- endpaginate -%}
     </div>
   </div>
+
+  {%- comment -%} Order history {%- endcomment -%}
+  <div class="pb-account__orders" id="pb-orders">
+    <h2>Order history</h2>
+    {%- paginate customer.orders by 20 -%}
+      {%- if customer.orders.size > 0 -%}
+        <table class="pb-account__table">
+          <thead>
+            <tr>
+              <th scope="col">Order</th>
+              <th scope="col">Date</th>
+              <th scope="col">Payment</th>
+              <th scope="col">Fulfillment</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for order in customer.orders -%}
+              <tr>
+                <td><a class="pb-account__link" href="{{ order.customer_url }}">{{ order.name }}</a></td>
+                <td>{{ order.created_at | date: "%b %d, %Y" }}</td>
+                <td>{{ order.financial_status_label }}</td>
+                <td>{{ order.fulfillment_status_label }}</td>
+                <td>{{ order.total_net_amount | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- if paginate.pages > 1 -%}
+          <nav class="pb-account__actions" role="navigation">{{ paginate | default_pagination }}</nav>
+        {%- endif -%}
+      {%- else -%}
+        <p>You haven't placed any orders yet.</p>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
 </div>
+
+<style>
+  /* pb- account dashboard: link buttons + organized mobile layout (live parity) */
+  .pb-account__panel { min-width: 0; }
+  .pb-account__info { margin: 0 0 20px; }
+  .pb-account__linklist {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 24px;
+  }
+  .pb-account__linkbtn {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    border: 1px solid var(--color-foreground);
+    background: transparent;
+    color: var(--color-foreground);
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 700;
+    text-align: left;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: var(--style-border-radius-base, 4px);
+    cursor: pointer;
+  }
+  .pb-account__linkbtn:hover { background: rgb(var(--color-foreground-rgb) / 0.06); }
+  .pb-account__editform { margin: 0 0 24px; max-width: 480px; }
+  .pb-account__editform[hidden] { display: none; }
+  .pb-account__orders { margin-top: 32px; }
+  @media (max-width: 749px) {
+    .pb-account__linkbtn { max-width: 100%; }
+    .pb-account__dashboard { gap: 24px; }
+    .pb-account__table { display: block; overflow-x: auto; white-space: nowrap; }
+  }
+</style>
+
+<script>
+  (function () {
+    document.querySelectorAll('.pb-account [data-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var el = document.getElementById(btn.getAttribute('data-toggle'));
+        if (el) el.hidden = !el.hidden;
+      });
+    });
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('view') === 'update') { var e = document.getElementById('pb-edit-info'); if (e) e.hidden = false; }
+  })();
+</script>

@@ -518,11 +518,32 @@
 
 @media only screen and (max-width: 768px) {
  .pb-account__title{
-  font-size: 
+  font-size: 24px;
  }
  .header__columns{
   padding:0;
  }
+}
+
+/* pb (2026-07-10) Rev 8: on mobile, pin the UserWay accessibility ("ADA")
+   launcher to the LEFT edge, vertically centered (mid-page) instead of floating
+   over the header. Scoped to mobile widths; safe to remove if UserWay position
+   is set in the UserWay dashboard instead. */
+@media only screen and (max-width: 768px) {
+  .uwy.userway_p1 .userway_buttons_wrapper,
+  .uwy.userway_p2 .userway_buttons_wrapper,
+  .uwy.userway_p3 .userway_buttons_wrapper,
+  .uwy.userway_p4 .userway_buttons_wrapper,
+  .uwy.userway_p5 .userway_buttons_wrapper,
+  .uwy.userway_p6 .userway_buttons_wrapper,
+  .uwy.userway_p7 .userway_buttons_wrapper,
+  .uwy.userway_p8 .userway_buttons_wrapper {
+    left: 0 !important;
+    right: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+  }
 }
 
 .rebuy-product-grid,
@@ -532,4 +553,203 @@
 }
 .pb-header-action--labeled.pb-header-stores .svg-wrapper{
   justify-content: end!important;
+}
+
+/* pb (2026-07-10) Rev 6: header account item fully clickable (icon + text). */
+.pb-account-clickable { cursor: pointer; }
+.pb-account-clickable .account-button__text {
+  color: inherit;
+  text-decoration: none;
+}
+.pb-account-clickable .account-button__text:hover { text-decoration: none; }
+
+/* pb (2026-07-10) Rev 10: style the Recharge customer-portal pages
+   (/tools/recurring/*  — "Request account invite" / subscription login) so they
+   match the theme instead of rendering with browser-default inputs. Recharge's
+   markup uses Bootstrap-ish classes (.rc_form__input / .form-control /
+   .btn-primary) wrapped in #recharge-app / .recharge — all rules below are
+   scoped to those roots so nothing leaks into the rest of the site.
+   Safe to remove if the portal is styled from the Recharge dashboard instead. */
+/* Recharge portal layout containers ship with Recharge's own grid classes
+   (rc_layout / rc_medium-up-max-width-half / rc_form) that the theme doesn't
+   style, so they collapse — force them to fill. Scoped to .recharge / the
+   request-invite container so nothing leaks into the rest of the site. */
+.recharge [class*="rc_layout"],
+.recharge [class*="rc_medium"],
+.recharge .rc_form,
+.recharge .rc_form__group,
+#content__customers__request-invite [class*="rc_layout"],
+#content__customers__request-invite .rc_form,
+#content__customers__request-invite .rc_form__group {
+  width: 100% !important;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.recharge.page__customers__request-invite,
+#content__customers__request-invite {
+  max-width: 620px;
+  margin: 40px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+.recharge .rc_medium-up-max-width-half {
+  max-width: 420px !important;
+  margin-inline: auto;
+}
+#recharge-app h1, #recharge-app h2, #recharge-app h3,
+.recharge h1, .recharge h2, .recharge h3 {
+  font-size: 28px !important;
+  line-height: 1.25 !important;
+  font-weight: 800;
+  margin: 0 0 12px;
+}
+#recharge-app p, .recharge p {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+#recharge-app .rc_form__input,
+#recharge-app .form-control,
+#recharge-app .input-field,
+#recharge-app input[type="email"],
+#recharge-app input[type="text"],
+.recharge .rc_form__input,
+.recharge input[type="email"],
+.recharge input[type="text"] {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  padding: 12px 14px;
+  border: 1px solid rgb(0 0 0 / 0.25);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 0 auto 14px;
+  display: block;
+  box-sizing: border-box;
+}
+#recharge-app .btn,
+#recharge-app .btn-primary,
+#recharge-app .btn--primary,
+#recharge-app button[type="submit"],
+.recharge .btn-primary,
+.recharge button[type="submit"] {
+  display: inline-block;
+  width: 100%;
+  max-width: 360px;
+  background-color: #ef0180 !important;
+  border: 1px solid #ef0180 !important;
+  color: #fff !important;
+  border-radius: 4px;
+  padding: 13px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+}
+#recharge-app .btn-primary:hover,
+.recharge .btn-primary:hover,
+#recharge-app button[type="submit"]:hover {
+  filter: brightness(0.94);
+}
+#recharge-app a, .recharge a { color: #ef0180; }
+
+/* pb (2026-07-10) Rev 1: hide the app-injected Trustpilot widget that Trustpilot
+   drops as a direct <body> child below the footer (duplicate). The intentional
+   homepage Trustpilot lives inside .pb-trustpilot-section (in #MainContent) and
+   is unaffected. Remove this if the bottom placement is disabled in the
+   Trustpilot app instead. */
+body > div[id^="trustpilot-widget-trustbox"],
+body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
+  display: none !important;
+}
+
+/* pb (2026-07-10) Rev 1 — redesign of the homepage Trustpilot reviews section.
+   The carousel is a Trustpilot-hosted iframe (its internals aren't restylable),
+   so this elevates the wrapper: a soft on-brand blush panel with a tinted
+   shadow for depth, a quiet eyebrow line, and a tighter, balanced headline. */
+.pb-trustpilot-section {
+  position: relative;
+  max-width: 1600px;
+  width: 100%;
+  margin: 24px auto;
+  padding: 56px clamp(20px, 5vw, 72px) 64px;
+  text-align: center;
+  background: radial-gradient(125% 150% at 50% -10%, #fdedf5 0%, #fdf6fb 46%, #ffffff 100%);
+  border: 1px solid rgb(239 1 128 / 0.10);
+  border-radius: 28px;
+  box-shadow: 0 30px 60px -42px rgb(239 1 128 / 0.35);
+  overflow-x: clip;            /* desktop: hide slider peek without clipping card height */
+  overflow-y: visible;
+  box-sizing: border-box;
+}
+/* quiet eyebrow above the heading (single neutral tone — keeps pink as the only accent) */
+.pb-trustpilot-section .pb-trustpilot-section__title::before {
+  content: "Trusted by thousands of shoppers";
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  margin-bottom: 14px;
+}
+.pb-trustpilot-section .pb-trustpilot-section__title {
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  color: #ef0180;
+  text-wrap: balance;
+  max-width: 22ch;
+  margin: 0 auto 32px;
+}
+.pb-trustpilot-section .trustpilot-widget {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding-inline: 8px;
+}
+/* Trustpilot Slider iframe — desktop: trim empty space below cards */
+@media (min-width: 750px) {
+  .pb-trustpilot-section .trustpilot-widget,
+  .pb-trustpilot-section .trustpilot-widget iframe {
+    height: 280px !important;
+    min-height: 0 !important;
+  }
+}
+@media (max-width: 749px) {
+  #shopify-section-custom_liquid_trustpilot,
+  #shopify-section-custom_liquid_trustpilot > .section {
+    overflow: visible;
+  }
+
+  .pb-trustpilot-section {
+    margin-inline: 12px;
+    padding: 32px 16px 40px;
+    border-radius: 18px;
+    overflow: visible;
+    width: calc(100% - 24px);
+    height: 400px;
+  }
+  .pb-trustpilot-section .pb-trustpilot-section__title {
+    margin-bottom: 24px;
+  }
+  /* Mobile cards are taller (wrapped text) — don't crop the iframe */
+  .pb-trustpilot-section .trustpilot-widget {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 180px !important;
+    min-height: 380px !important;
+    padding-inline: 0;
+    overflow: visible;
+  }
+  .pb-trustpilot-section .trustpilot-widget iframe {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 380px !important;
+    min-height: 380px !important;
+    overflow: visible !important;
+  }
 }

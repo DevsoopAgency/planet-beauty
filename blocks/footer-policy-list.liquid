@@ -12,8 +12,12 @@
     >
       {%- for policy in shop.policies -%}
         {%- if policy != blank -%}
+          {%- comment -%} pb: privacy policy points to the current /pages/privacy-policy (not the Shopify /policies default). {%- endcomment -%}
+          {%- assign policy_url = policy.url -%}
+          {%- assign policy_title_dc = policy.title | downcase -%}
+          {%- if policy_title_dc contains 'privacy' -%}{%- assign policy_url = '/pages/privacy-policy' -%}{%- endif -%}
           <li>
-            <a href="{{ policy.url }}" class="footer-utilities__text">
+            <a href="{{ policy_url }}" class="footer-utilities__text">
               {{- policy.title | escape -}}
             </a>
           </li>
@@ -53,9 +57,12 @@
         >
           {%- for policy in shop.policies -%}
             {%- if policy != blank -%}
+              {%- assign policy_url = policy.url -%}
+              {%- assign policy_title_dc = policy.title | downcase -%}
+              {%- if policy_title_dc contains 'privacy' -%}{%- assign policy_url = '/pages/privacy-policy' -%}{%- endif -%}
               <li>
                 <a
-                  href="{{ policy.url }}"
+                  href="{{ policy_url }}"
                   class="footer-utilities__text"
                 >
                   {{- policy.title | escape -}}

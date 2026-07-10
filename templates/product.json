@@ -168,7 +168,7 @@
                   "type": "custom-liquid",
                   "name": "t:names.custom_liquid",
                   "settings": {
-                    "custom_liquid": "<span style='text-transform:uppercase; font-size: 12px; font-weight:500;' class='item-sku'>Item: {{ product.selected_or_first_available_variant.sku }}</span>"
+                    "custom_liquid": "<span style='text-transform:uppercase; font-size: 12px; font-weight:500;' class='item-sku pb-item-sku' data-product-id='{{ product.id }}'>Item: <span class='item-sku__value'>{{ product.selected_or_first_available_variant.sku }}</span></span>{% comment %}pb: keep Item # in sync with the selected variant (live parity). Listens for the theme variant:update event. Safe to remove if reverting.{% endcomment %}<script>(function(){document.addEventListener('variant:update',function(e){try{var d=e.detail||{};var v=d.resource;if(!v)return;var pid=(d.data&&d.data.productId)||'';var np=d.data&&d.data.newProduct;document.querySelectorAll('.pb-item-sku').forEach(function(el){if(pid&&!np&&el.dataset.productId&&String(el.dataset.productId)!==String(pid))return;if(np&&np.id)el.dataset.productId=np.id;var val=el.querySelector('.item-sku__value');var sku=v.sku||'';if(val)val.textContent=sku;el.style.display=sku?'inline-block':'none';});}catch(err){}});})();</script>"
                   },
                   "blocks": {}
                 },
