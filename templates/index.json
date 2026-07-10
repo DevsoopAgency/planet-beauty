@@ -9,20 +9,6 @@
  */
 {
   "sections": {
-    "custom_liquid_trustpilot": {
-      "type": "custom-liquid",
-      "custom_css": [
-        ".pb-trustpilot-section {text-align: center;}"
-      ],
-      "name": "Trustpilot Reviews",
-      "settings": {
-        "custom_liquid": "<div class='pb-trustpilot-section'><h2 class='pb-trustpilot-section__title'>Real reviews from our customers</h2><!-- TrustBox widget - Slider --><div class='trustpilot-widget' data-locale='en-US' data-template-id='54ad5defc6454f065c28af8b' data-businessunit-id='5bcde4dd0448bd0001db68fd' data-style-height='380px' data-style-width='100%' data-stars='4,5' data-theme='light' data-text-color='#191919'><a href='https://www.trustpilot.com/review/planetbeauty.com' target='_blank' rel='noopener'>Trustpilot</a></div><!-- End TrustBox widget --><script type='text/javascript' src='https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js' async></script></div>",
-        "color_scheme": "",
-        "section_width": "full-width",
-        "padding-block-start": 32,
-        "padding-block-end": 32
-      }
-    },
     "slideshow_hNjgrd": {
       "type": "slideshow",
       "blocks": {
@@ -1885,9 +1871,22 @@
         "padding-block-end": 0
       }
     },
+    "custom_liquid_trustpilot": {
+      "type": "custom-liquid",
+      "custom_css": [
+        ".pb-trustpilot-section {text-align: center;}"
+      ],
+      "name": "Trustpilot Reviews",
+      "settings": {
+        "custom_liquid": "<div class='pb-trustpilot-section'><h2 class='pb-trustpilot-section__title'>Real reviews from our customers</h2><!-- TrustBox widget - Slider --><div class='trustpilot-widget' data-locale='en-US' data-template-id='54ad5defc6454f065c28af8b' data-businessunit-id='5bcde4dd0448bd0001db68fd' data-style-height='380px' data-style-width='100%' data-stars='4,5' data-theme='light' data-text-color='#191919'><a href='https://www.trustpilot.com/review/planetbeauty.com' target='_blank' rel='noopener'>Trustpilot</a></div><!-- End TrustBox widget --><script type='text/javascript' src='https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js' async></script></div>",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 32,
+        "padding-block-end": 32
+      }
+    },
     "section_8Hx78w": {
       "type": "section",
-      "disabled": true,
       "blocks": {
         "text_testi_heading": {
           "type": "text",
@@ -3220,6 +3219,7 @@
         "text_testi_heading",
         "group_testi_cards"
       ],
+      "disabled": true,
       "name": "Testimonials",
       "settings": {
         "content_direction": "column",
