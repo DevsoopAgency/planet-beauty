@@ -159,7 +159,15 @@
 
       {%- if pb_bia_cards | strip != blank -%}
         {%- if pb_is_fallback -%}<p class="pb-bia__note">You haven't placed an order yet — here are some of our best sellers to get you started.</p>{%- endif -%}
-        <div class="pb-bia"><div class="pb-bia__track">{{ pb_bia_cards }}</div></div>
+        <div class="pb-bia">
+          <button type="button" class="pb-bia__nav pb-bia__nav--prev" aria-label="Previous">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon-flickity-caret" viewBox="0 0 100 100" aria-hidden="true"><path d="M 10,50 L 60,100 L 70,90 L 30,50 L 70,10 L 60,0 Z"></path></svg>
+          </button>
+          <div class="pb-bia__track">{{ pb_bia_cards }}</div>
+          <button type="button" class="pb-bia__nav pb-bia__nav--next" aria-label="Next">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon-flickity-caret" viewBox="0 0 100 100" aria-hidden="true"><path d="M 10,50 L 60,100 L 70,90 L 30,50 L 70,10 L 60,0 Z"></path></svg>
+          </button>
+        </div>
       {%- else -%}
         <p class="pb-bia__empty">Once you place an order, your past purchases will appear here for easy reordering.</p>
       {%- endif -%}
@@ -250,5 +258,27 @@
     });
     var params = new URLSearchParams(window.location.search);
     if (params.get('view') === 'update') { var e = document.getElementById('pb-edit-info'); if (e) e.hidden = false; }
+
+    // Buy it Again carousel arrows (same flickity caret style as the homepage carousels)
+    document.querySelectorAll('.pb-bia').forEach(function (bia) {
+      var track = bia.querySelector('.pb-bia__track');
+      if (!track) return;
+      var update = function () {
+        var prev = bia.querySelector('.pb-bia__nav--prev');
+        var next = bia.querySelector('.pb-bia__nav--next');
+        var max = track.scrollWidth - track.clientWidth - 2;
+        if (prev) prev.disabled = track.scrollLeft <= 2;
+        if (next) next.disabled = track.scrollLeft >= max;
+      };
+      bia.querySelectorAll('.pb-bia__nav').forEach(function (nav) {
+        nav.addEventListener('click', function () {
+          var dir = nav.classList.contains('pb-bia__nav--next') ? 1 : -1;
+          track.scrollBy({ left: dir * track.clientWidth * 0.85, behavior: 'smooth' });
+        });
+      });
+      track.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    });
   })();
 </script>

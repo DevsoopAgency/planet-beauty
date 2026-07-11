@@ -769,6 +769,42 @@ body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
   padding-bottom: 12px;
   -webkit-overflow-scrolling: touch;
 }
+.pb-bia { position: relative; }
+/* Buy it Again carousel arrows — same flickity caret icon as the homepage carousels */
+.pb-bia__nav {
+  position: absolute;
+  top: 38%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid rgb(var(--color-foreground-rgb) / 0.15);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.10);
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+.pb-bia__nav--prev { left: -6px; }
+.pb-bia__nav--next { right: -6px; }
+.pb-bia__nav .icon-flickity-caret {
+  width: 13px;
+  height: 13px;
+  fill: var(--color-foreground);
+}
+.pb-bia__nav--next .icon-flickity-caret { transform: scaleX(-1); }
+.pb-bia__nav:hover { background: rgb(var(--color-foreground-rgb) / 0.06); }
+.pb-bia__nav[disabled] { opacity: 0.3; cursor: default; pointer-events: none; }
+@media (max-width: 749px) {
+  .pb-bia__nav { width: 34px; height: 34px; }
+  .pb-bia__nav--prev { left: -2px; }
+  .pb-bia__nav--next { right: -2px; }
+  .pb-bia__nav .icon-flickity-caret { width: 12px; height: 12px; }
+}
 .pb-bia__card {
   scroll-snap-align: start;
   display: flex;
