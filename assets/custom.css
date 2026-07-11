@@ -753,3 +753,114 @@ body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
     overflow: visible !important;
   }
 }
+
+/* pb (2026-07-10) Rev 11: account "Buy it Again" carousel — native horizontal
+   scroll of previously purchased products (parity with live buy-it-again).
+   4 per view desktop / 3 tablet / 2 mobile. */
+.pb-account__bia { margin: 32px 0; }
+.pb-account__bia > h2 { margin-bottom: 16px; }
+.pb-bia__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 3 * 20px) / 4);
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+.pb-bia__card {
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pb-bia__imglink { display: block; }
+.pb-bia__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  background: rgb(var(--color-foreground-rgb) / 0.04);
+}
+.pb-bia__info { padding: 10px 0 12px; flex: 1 1 auto; }
+.pb-bia__vendor {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgb(var(--color-foreground-rgb) / 0.6);
+  margin-bottom: 2px;
+}
+.pb-bia__name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--color-foreground);
+  text-decoration: none;
+  min-height: 2.7em;
+}
+.pb-bia__name:hover { text-decoration: underline; }
+.pb-bia__price { margin-top: 6px; font-size: 14px; font-weight: 700; }
+.pb-bia__form { margin: 0; }
+.pb-bia__btn {
+  width: 100%;
+  border: 1px solid #ef0180;
+  background: #ef0180;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+.pb-bia__btn:hover { filter: brightness(0.94); }
+.pb-bia__btn[disabled] {
+  background: transparent;
+  color: rgb(var(--color-foreground-rgb) / 0.5);
+  border-color: rgb(var(--color-foreground-rgb) / 0.25);
+  cursor: not-allowed;
+}
+.pb-bia__empty { color: rgb(var(--color-foreground-rgb) / 0.65); margin: 8px 0 0; }
+.pb-bia__note { color: rgb(var(--color-foreground-rgb) / 0.7); margin: 0 0 14px; font-size: 14px; }
+
+/* pb (2026-07-10) Rev 11b: account form buttons — brand-pink primary CTA
+   (Send reset link / Save changes) + a quiet text "Cancel", instead of the
+   default solid-black button. */
+.pb-account .button {
+  background-color: #ef0180 !important;
+  border: 1px solid #ef0180 !important;
+  color: #fff !important;
+  border-radius: 6px !important;
+  padding: 12px 26px !important;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+.pb-account .button:hover { filter: brightness(0.94); }
+.pb-account__actions {
+  align-items: center;
+  gap: 8px 16px;
+}
+.pb-account__actions button.pb-account__link {
+  background: none;
+  border: none;
+  padding: 8px 4px;
+  font-size: 14px;
+  color: rgb(var(--color-foreground-rgb) / 0.7);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.pb-account__actions button.pb-account__link:hover { color: var(--color-foreground); }
+@media (max-width: 989px) {
+  .pb-bia__track { grid-auto-columns: calc((100% - 2 * 16px) / 3); gap: 16px; }
+}
+@media (max-width: 749px) {
+  .pb-bia__track { grid-auto-columns: calc((100% - 14px) / 2); gap: 14px; }
+}

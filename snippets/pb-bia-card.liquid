@@ -1,0 +1,28 @@
+{%- comment -%}
+  Planet Beauty — single product card for the account "Buy it Again" carousel.
+  Param: p (product). pb- custom; used by pb-buy-it-again.liquid.
+{%- endcomment -%}
+{%- assign v = p.selected_or_first_available_variant -%}
+<div class="pb-bia__card">
+  <a class="pb-bia__imglink" href="{{ p.url }}">
+    {%- if p.featured_image -%}
+      <img class="pb-bia__img" src="{{ p.featured_image | image_url: width: 320 }}"
+           alt="{{ p.featured_image.alt | escape | default: p.title | escape }}"
+           loading="lazy" width="320" height="320">
+    {%- else -%}
+      <span class="pb-bia__img pb-bia__img--placeholder" aria-hidden="true"></span>
+    {%- endif -%}
+  </a>
+  <div class="pb-bia__info">
+    {%- if p.vendor != blank -%}<div class="pb-bia__vendor">{{ p.vendor }}</div>{%- endif -%}
+    <a class="pb-bia__name" href="{{ p.url }}">{{ p.title }}</a>
+    <div class="pb-bia__price">{{ p.price | money }}</div>
+  </div>
+  <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="pb-bia__form">
+    <input type="hidden" name="id" value="{{ v.id }}">
+    <input type="hidden" name="quantity" value="1">
+    <button type="submit" class="pb-bia__btn"{% unless v.available %} disabled aria-disabled="true"{% endunless %}>
+      {%- if v.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+    </button>
+  </form>
+</div>

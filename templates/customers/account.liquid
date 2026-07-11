@@ -73,21 +73,11 @@
     <div class="pb-account__panel">
       <h2>My Account</h2>
       <div class="pb-account__linklist">
-        <button type="button" class="pb-account__linkbtn" data-toggle="pb-buy-again">Buy it Again</button>
+        <a class="pb-account__linkbtn" href="#pb-buy-again">Buy it Again</a>
         <a class="pb-account__linkbtn" href="#pb-orders">Past Orders</a>
         <a class="pb-account__linkbtn" href="/pages/stay-beautiful/">Update Email Preferences</a>
         <a class="pb-account__linkbtn" href="/tools/recurring/login/">Manage Your Subscriptions</a>
         <a class="pb-account__linkbtn" href="{{ routes.account_addresses_url }}">Update Your Address Book</a>
-      </div>
-
-      {%- comment -%}
-        Buy it Again — Rebuy reorder widget (live parity: live uses Rebuy for
-        buy-it-again). Widget 85478 = the same "Buy it again" widget used on the
-        homepage. Loaded via the global Rebuy app embed (re-enabled 2026-07-10).
-      {%- endcomment -%}
-      <div id="pb-buy-again" class="pb-account__editform" hidden>
-        <h3>Buy it Again</h3>
-        <div class="rebuy-widget-wrap"><div data-rebuy-id="85478"></div></div>
       </div>
 
       {%- if customer.default_address -%}
@@ -96,6 +86,83 @@
         <p><a class="pb-account__link" href="{{ routes.account_addresses_url }}">View all addresses ({{ customer.addresses_count }})</a></p>
       {%- endif -%}
     </div>
+  </div>
+
+  {%- comment -%}
+    Buy it Again — native carousel built inline from customer.orders (live parity,
+    no Rebuy widget). Inlined here (not a snippet) so it deploys with this file.
+    Falls back to best sellers when the customer has no reorderable purchases.
+  {%- endcomment -%}
+  <div class="pb-account__bia" id="pb-buy-again">
+    <h2>Buy it Again</h2>
+    {%- assign pb_seen = '' -%}
+      {%- assign pb_is_fallback = false -%}
+      {%- capture pb_bia_cards -%}
+        {%- for order in customer.orders -%}
+          {%- for line in order.line_items -%}
+            {%- assign pb_p = line.product -%}
+            {%- if pb_p and pb_p.available -%}
+              {%- unless pb_seen contains pb_p.id -%}
+                {%- assign pb_h = line.title | handle -%}
+                {%- unless pb_h contains 'free' or pb_h contains 'shipping' or pb_h contains 'gift-card' -%}
+                  {%- assign pb_seen = pb_seen | append: pb_p.id | append: ',' -%}
+                  {%- assign pb_v = pb_p.selected_or_first_available_variant -%}
+                  <div class="pb-bia__card">
+                    <a class="pb-bia__imglink" href="{{ pb_p.url }}">
+                      {%- if pb_p.featured_image -%}<img class="pb-bia__img" src="{{ pb_p.featured_image | image_url: width: 320 }}" alt="{{ pb_p.featured_image.alt | escape | default: pb_p.title | escape }}" loading="lazy" width="320" height="320">{%- else -%}<span class="pb-bia__img pb-bia__img--placeholder" aria-hidden="true"></span>{%- endif -%}
+                    </a>
+                    <div class="pb-bia__info">
+                      {%- if pb_p.vendor != blank -%}<div class="pb-bia__vendor">{{ pb_p.vendor }}</div>{%- endif -%}
+                      <a class="pb-bia__name" href="{{ pb_p.url }}">{{ pb_p.title }}</a>
+                      <div class="pb-bia__price">{{ pb_p.price | money }}</div>
+                    </div>
+                    <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="pb-bia__form">
+                      <input type="hidden" name="id" value="{{ pb_v.id }}">
+                      <input type="hidden" name="quantity" value="1">
+                      <button type="submit" class="pb-bia__btn"{% unless pb_v.available %} disabled{% endunless %}>{% if pb_v.available %}Add to cart{% else %}Sold out{% endif %}</button>
+                    </form>
+                  </div>
+                {%- endunless -%}
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      {%- if pb_bia_cards | strip == blank -%}
+        {%- assign pb_is_fallback = true -%}
+        {%- assign pb_fb = collections['best-sellers'] -%}
+        {%- if pb_fb == empty or pb_fb.products_count == 0 -%}{%- assign pb_fb = collections.all -%}{%- endif -%}
+        {%- capture pb_bia_cards -%}
+          {%- for pb_p in pb_fb.products limit: 12 -%}
+            {%- if pb_p.available -%}
+              {%- assign pb_v = pb_p.selected_or_first_available_variant -%}
+              <div class="pb-bia__card">
+                <a class="pb-bia__imglink" href="{{ pb_p.url }}">
+                  {%- if pb_p.featured_image -%}<img class="pb-bia__img" src="{{ pb_p.featured_image | image_url: width: 320 }}" alt="{{ pb_p.featured_image.alt | escape | default: pb_p.title | escape }}" loading="lazy" width="320" height="320">{%- else -%}<span class="pb-bia__img pb-bia__img--placeholder" aria-hidden="true"></span>{%- endif -%}
+                </a>
+                <div class="pb-bia__info">
+                  {%- if pb_p.vendor != blank -%}<div class="pb-bia__vendor">{{ pb_p.vendor }}</div>{%- endif -%}
+                  <a class="pb-bia__name" href="{{ pb_p.url }}">{{ pb_p.title }}</a>
+                  <div class="pb-bia__price">{{ pb_p.price | money }}</div>
+                </div>
+                <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="pb-bia__form">
+                  <input type="hidden" name="id" value="{{ pb_v.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="pb-bia__btn"{% unless pb_v.available %} disabled{% endunless %}>{% if pb_v.available %}Add to cart{% else %}Sold out{% endif %}</button>
+                </form>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+      {%- endif -%}
+
+      {%- if pb_bia_cards | strip != blank -%}
+        {%- if pb_is_fallback -%}<p class="pb-bia__note">You haven't placed an order yet — here are some of our best sellers to get you started.</p>{%- endif -%}
+        <div class="pb-bia"><div class="pb-bia__track">{{ pb_bia_cards }}</div></div>
+      {%- else -%}
+        <p class="pb-bia__empty">Once you place an order, your past purchases will appear here for easy reordering.</p>
+      {%- endif -%}
   </div>
 
   {%- comment -%} Order history {%- endcomment -%}

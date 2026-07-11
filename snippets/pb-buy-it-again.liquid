@@ -1,0 +1,54 @@
+{%- comment -%}
+  Planet Beauty — "Buy it Again" carousel (parity with live buy-it-again.liquid).
+  Native rebuild from customer.orders (NO Rebuy widget dependency). Shows each
+  previously-ordered, still-available product once, with an add-to-cart reorder
+  button. If the customer has no reorderable past purchases (e.g. brand-new
+  account), falls back to best sellers so the section is never empty.
+  pb- custom; safe to remove.
+{%- endcomment -%}
+{%- if customer -%}
+  {%- paginate customer.orders by 50 -%}
+    {%- assign seen = '' -%}
+    {%- capture bia_cards -%}
+      {%- for order in customer.orders -%}
+        {%- for line in order.line_items -%}
+          {%- assign p = line.product -%}
+          {%- if p and p.available -%}
+            {%- unless seen contains p.id -%}
+              {%- assign htitle = line.title | handle -%}
+              {%- unless htitle contains 'free' or htitle contains 'shipping' or htitle contains 'gift-card' -%}
+                {%- assign seen = seen | append: p.id | append: ',' -%}
+                {% render 'pb-bia-card', p: p %}
+              {%- endunless -%}
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- if bia_cards | strip != blank -%}
+      <div class="pb-bia">
+        <div class="pb-bia__track">{{ bia_cards }}</div>
+      </div>
+    {%- else -%}
+      {%- comment -%} No reorderable past purchases — show best sellers so the section is populated. {%- endcomment -%}
+      {%- assign fallback = collections['best-sellers'] -%}
+      {%- if fallback == empty or fallback.products_count == 0 -%}
+        {%- assign fallback = collections.all -%}
+      {%- endif -%}
+      {%- capture fb_cards -%}
+        {%- for p in fallback.products limit: 12 -%}
+          {%- if p.available -%}{% render 'pb-bia-card', p: p %}{%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- if fb_cards | strip != blank -%}
+        <p class="pb-bia__note">You haven't placed an order yet — here are some of our best sellers to get you started.</p>
+        <div class="pb-bia">
+          <div class="pb-bia__track">{{ fb_cards }}</div>
+        </div>
+      {%- else -%}
+        <p class="pb-bia__empty">Once you place an order, your past purchases will appear here for easy reordering.</p>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endpaginate -%}
+{%- endif -%}
