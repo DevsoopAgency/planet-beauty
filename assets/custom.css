@@ -702,7 +702,6 @@ body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
   line-height: 1.08;
   color: #ef0180;
   text-wrap: balance;
-  max-width: 22ch;
   margin: 0 auto 32px;
 }
 .pb-trustpilot-section .trustpilot-widget {
