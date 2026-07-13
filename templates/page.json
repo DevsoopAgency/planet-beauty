@@ -48,9 +48,7 @@
         "heading",
         "page-content"
       ],
-      "custom_css": [
-        ".page-width-content{max-width: 1070px;}"
-      ],
+      "custom_css": [],
       "settings": {
         "content_direction": "column",
         "gap": 15,
