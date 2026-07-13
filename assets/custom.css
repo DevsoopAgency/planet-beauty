@@ -698,7 +698,7 @@ body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
 .pb-trustpilot-section .pb-trustpilot-section__title::after {
   content: "";
   height: 10px;
-  width: 100%;
+  width: 90%;
   max-width: 500px;
   background: #e3b2d2;
   position: absolute;
