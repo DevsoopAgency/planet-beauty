@@ -170,3 +170,16 @@
 .template-page .section.page-width-content.static-page {
   --page-content-width: 1080px;
 }
+
+/* Shopify policy pages (/policies/...) — constrain content width to 1080px */
+.shopify-policy__container {
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+@media screen and (min-width: 750px) {
+  .shopify-policy__container {
+    padding-inline: 40px;
+  }
+}
