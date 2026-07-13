@@ -662,7 +662,7 @@
       "custom_css": [
         ".overlay--gradient {background: linear-gradient( 180deg, rgba(0, 0, 0, 0) 45.42%, rgba(0, 0, 0, 0.6) 100% );}",
         ".group-block-content > .text-block h2 {color: #ef0180;}",
-        "h2 {background: linear-gradient(180deg, #fff0 70%, #e3b2d2 0); background-size: 90%; background-position: 50%; background-repeat: no-repeat; color: black!important;}"
+        "h2 {background: linear-gradient(180deg, #fff0 70%, #e3b2d2 0); background-size: 90%; background-position: 50%; background-repeat: no-repeat; color: black !important;}"
       ],
       "name": "Shop by Category",
       "settings": {
@@ -1875,7 +1875,8 @@
     "custom_liquid_trustpilot": {
       "type": "custom-liquid",
       "custom_css": [
-        ".pb-trustpilot-section {text-align: center;}"
+        ".pb-trustpilot-section {text-align: center;}",
+        ".pb-trustpilot-section__title {background: linear-gradient(180deg, #fff0 70%, #e3b2d2 0); background-size: 90%; background-position: 50%; background-repeat: no-repeat; color: black !important;}"
       ],
       "name": "Trustpilot Reviews",
       "settings": {
