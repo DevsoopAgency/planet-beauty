@@ -704,6 +704,7 @@ body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
   position: absolute;
   bottom: 10px;
   left: 50%;
+  z-index: -1;
   transform: translate(-50%, 10px);
 }
 .pb-trustpilot-section .pb-trustpilot-section__title {
