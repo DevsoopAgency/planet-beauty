@@ -1875,8 +1875,7 @@
     "custom_liquid_trustpilot": {
       "type": "custom-liquid",
       "custom_css": [
-        ".pb-trustpilot-section {text-align: center;}",
-        ".pb-trustpilot-section__title {background: linear-gradient(180deg, #fff0 70%, #e3b2d2 0); background-size: 90%; background-position: 50%; background-repeat: no-repeat; color: black !important;}"
+        ".pb-trustpilot-section {text-align: center;}"
       ],
       "name": "Trustpilot Reviews",
       "settings": {
