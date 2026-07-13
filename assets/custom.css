@@ -705,6 +705,7 @@ body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
   bottom: 0;
 }
 .pb-trustpilot-section .pb-trustpilot-section__title {
+  position: relative;
   font-size: clamp(28px, 3.4vw, 40px);
   font-weight: 800;
   letter-spacing: -0.02em;
