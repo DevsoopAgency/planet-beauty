@@ -4233,3 +4233,6 @@ product-recommendations:has([data-has-recommendations='false']) {
   font-size: 20px;
   margin-top: 20px!important;
 }
+.shopify-policy__container{
+  max-width: 1080px;
+}
