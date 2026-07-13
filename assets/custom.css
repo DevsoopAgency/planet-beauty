@@ -695,6 +695,15 @@ body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
   color: black;
   margin-bottom: 14px;
 }
+.pb-trustpilot-section .pb-trustpilot-section__title::after {
+  content: "";
+  height: 10px;
+  width: 100%;
+  max-width: 500px;
+  background: #e3b2d2;
+  position: absolute;
+  bottom: 0;
+}
 .pb-trustpilot-section .pb-trustpilot-section__title {
   font-size: clamp(28px, 3.4vw, 40px);
   font-weight: 800;
