@@ -165,3 +165,8 @@
   width: auto;
   max-inline-size: none;
 }
+
+/* Static pages — constrain content width to 1080px */
+.template-page .section.page-width-content.static-page {
+  --page-content-width: 1080px;
+}
