@@ -715,6 +715,7 @@ body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
   line-height: 1.08;
   color: black;
   text-wrap: balance;
+  z-index: 0;
   margin: 0 auto 32px;
 }
 .pb-trustpilot-section .trustpilot-widget {
