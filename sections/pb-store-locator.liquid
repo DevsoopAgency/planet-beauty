@@ -1,13 +1,18 @@
 {%- comment -%}
-  Planet Beauty — SCA Store Locator page (100% parity with live page.sca-storelocator.liquid).
-  Uses the Secomapp SCA Store Locator app markup + assets; ProMap block replaced.
+  Planet Beauty — SCA Store Locator page (parity with live page.sca-storelocator.liquid).
+
+  IMPORTANT: Do NOT load assets/sca.storelocator_scripttag.js here.
+  Live does not either. The SCA / Rosepearl app injects the real bootloader via
+  Shopify ScriptTags (cdn.roseperl.com/storelocator-prod/setting|fo|wtb/…).
+  Loading the theme scripttag on top of that double-inits Google Maps + geolocation
+  and is what made this page extremely slow on desktop/mobile.
 {%- endcomment -%}
 
-{%- comment -%} pb (2026-07-10): resource hints so the map libs + Google Maps connect faster (store locator load-time fix). {%- endcomment -%}
 <link rel="preconnect" href="https://cdn.secomapp.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://maps.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.roseperl.com">
 <link rel="dns-prefetch" href="https://cdn.secomapp.com">
 <link rel="dns-prefetch" href="https://maps.googleapis.com">
 
@@ -86,9 +91,13 @@
   <br style="clear:both !important;">
 </div>
 
-<script src="//cdn.secomapp.com/storelocator/assets/cdn/js/infobubble.min.js" defer></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js" defer></script>
-<script defer>
+{%- comment -%}
+  pb: deps mirror live page.sca-storelocator.liquid — sync (no defer).
+  App ScriptTag (roseperl setting.js) loads Maps/jQuery and boots #scasl-app-container.
+{%- endcomment -%}
+<script src="//cdn.secomapp.com/storelocator/assets/cdn/js/infobubble.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script>
   if ('undefined' == typeof Handlebars && 'function' == typeof define && define.amd) {
     var scasl_tempamd = define.amd;
     define.amd = void 0;
@@ -101,11 +110,9 @@
     }, 1000);
   }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js"></script>
 
-<script src="{{ 'sca.storelocator_scripttag.js' | asset_url }}" defer></script>
-
-<script id="scasl-infowindow-template" type="text/template">
+<script id="scasl-infowindow-template" type="text">
 {% raw %}
 {{#location}}
 <div id="scasl-window-container" class="scasl-info-window">
@@ -156,7 +163,7 @@
 {% endraw %}
 </script>
 
-<script id="scasl-list-template" type="text/template">
+<script id="scasl-list-template" type="text">
 {% raw %}
 {{#location}}
 <li id="scasl-list-container" data-markerid="{{markerid}}">
@@ -228,7 +235,7 @@
 {% endraw %}
 </script>
 
-<script id="scasl-viewmap-btn-template" type="text/template">
+<script id="scasl-viewmap-btn-template" type="text">
 {% raw %}
 <button class="scasl-view-map-btn">View Map</button>
 {% endraw %}

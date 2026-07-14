@@ -226,20 +226,116 @@
     }, DEBOUNCE_MS);
   }
 
+  var activeTrigger = null;
+  var positionRaf = null;
+
   function setTriggersExpanded(expanded) {
     document.querySelectorAll('[data-pb-search-open]').forEach(function (btn) {
       btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
     });
   }
 
-  function openPanel() {
+  function isVisible(el) {
+    return !!(el && el.getClientRects && el.getClientRects().length);
+  }
+
+  function getAnchorForTrigger(trigger) {
+    if (!trigger) return null;
+    var action = trigger.closest('.search-action');
+    if (action) {
+      var field = action.querySelector('.search-action__field');
+      if (field && isVisible(field)) return field;
+      if (isVisible(action)) return action;
+    }
+    return isVisible(trigger) ? trigger : null;
+  }
+
+  function clearPanelPosition() {
+    if (!panel) return;
+    panel.style.top = '';
+    panel.style.left = '';
+    panel.style.width = '';
+    panel.style.minHeight = '';
+    panel.classList.remove('pb-search-panel--mobile-row');
+  }
+
+  // Live parity: sit on the search field (desktop) / cover the header row (mobile).
+  function positionPanel() {
+    if (!panel || !isOpen) return;
+
+    var trigger = activeTrigger;
+    if (!trigger || !isVisible(trigger)) {
+      var triggers = document.querySelectorAll('[data-pb-search-open]');
+      for (var i = 0; i < triggers.length; i++) {
+        if (isVisible(triggers[i])) {
+          trigger = triggers[i];
+          break;
+        }
+      }
+    }
+    if (!trigger) return;
+
+    var isMobileTrigger =
+      trigger.classList.contains('pb-mobile-search') || window.matchMedia('(max-width: 749px)').matches;
+
+    if (isMobileTrigger) {
+      var headerRow =
+        document.querySelector('#header-component .header__row') ||
+        document.querySelector('#header-component') ||
+        document.querySelector('header-component');
+      if (!headerRow) return;
+      var hRect = headerRow.getBoundingClientRect();
+      panel.classList.add('pb-search-panel--mobile-row');
+      panel.style.top = Math.max(0, hRect.top) + 'px';
+      panel.style.left = hRect.left + 'px';
+      panel.style.width = hRect.width + 'px';
+      panel.style.minHeight = hRect.height + 'px';
+      return;
+    }
+
+    var anchor = getAnchorForTrigger(trigger);
+    if (!anchor) return;
+
+    var rect = anchor.getBoundingClientRect();
+    var minWidth = 340;
+    var width = Math.max(rect.width, minWidth);
+    var left = rect.right - width;
+    var gutter = 16;
+    if (left < gutter) left = gutter;
+    if (left + width > window.innerWidth - gutter) {
+      width = Math.max(rect.width, window.innerWidth - gutter - left);
+    }
+
+    // Vertically center the ~42px input on the field
+    var inputHeight = 42;
+    var top = rect.top + (rect.height - inputHeight) / 2;
+    if (top < 4) top = 4;
+
+    panel.classList.remove('pb-search-panel--mobile-row');
+    panel.style.top = top + 'px';
+    panel.style.left = left + 'px';
+    panel.style.width = width + 'px';
+    panel.style.minHeight = '';
+  }
+
+  function schedulePosition() {
+    if (positionRaf) cancelAnimationFrame(positionRaf);
+    positionRaf = requestAnimationFrame(function () {
+      positionRaf = null;
+      positionPanel();
+    });
+  }
+
+  function openPanel(trigger) {
     if (!panel || !input) return;
+    activeTrigger = trigger || null;
     panel.classList.add('is-open');
     panel.removeAttribute('hidden');
     panel.setAttribute('aria-hidden', 'false');
     isOpen = true;
     document.documentElement.classList.add('pb-search-open');
     setTriggersExpanded(true);
+    positionPanel();
     input.focus();
     if ((input.value || '').trim()) scheduleFetch();
   }
@@ -256,6 +352,8 @@
     panel.setAttribute('hidden', '');
     panel.setAttribute('aria-hidden', 'true');
     isOpen = false;
+    activeTrigger = null;
+    clearPanelPosition();
     document.documentElement.classList.remove('pb-search-open');
     setTriggersExpanded(false);
   }
@@ -321,7 +419,7 @@
         if (isOpen) {
           closePanel();
         } else {
-          openPanel();
+          openPanel(btn);
         }
       });
     });
@@ -345,6 +443,16 @@
 
     document.addEventListener('click', onDocumentClick);
     document.addEventListener('keydown', onKeyDown);
+    window.addEventListener('resize', function () {
+      if (isOpen) schedulePosition();
+    });
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (isOpen) schedulePosition();
+      },
+      true
+    );
   }
 
   function init() {

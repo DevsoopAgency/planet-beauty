@@ -22,9 +22,12 @@
   float: none !important;
 }
 
-/* Enforce page section order */
-.pb-store-locator #scasl-app-container {
-  display: flex;
+/* Enforce page section order once SCA reveals the container.
+   Do not set display here while inline style="display:none" — that races init.
+   After jQuery .show() sets display:block, promote to flex for our layout. */
+.pb-store-locator #scasl-app-container[style*='display: block'],
+.pb-store-locator #scasl-app-container[style*='display:block'] {
+  display: flex !important;
   flex-direction: column;
   align-items: stretch;
   width: 100%;
