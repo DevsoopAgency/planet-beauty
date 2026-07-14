@@ -172,5 +172,17 @@
     {% comment %} {% if template.name == 'product' %}
       {% render 'rebuy-fbt-widget-82672' %}
     {% endif %} {% endcomment %}
+
+    {%- comment -%}
+      pb: MyLiveChat is injected store-wide via ScriptTag (not theme liquid).
+      Live hides the float widget — same override here so preview/dev matches.
+      To kill it entirely: Shopify admin → Settings → Customer events / Apps /
+      Script tags → remove MyLiveChat. CSS alone only hides the UI.
+    {%- endcomment -%}
+    <style>
+      .mylivechat_inline.mylivechat_template5.mylivechat_template_float_right.mylivechat_template_float_bottom {
+        display: none !important;
+      }
+    </style>
   </body>
 </html>
