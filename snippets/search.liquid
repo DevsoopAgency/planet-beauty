@@ -1,7 +1,8 @@
 {%- doc -%}
-  Renders the search action button.
+  Renders the header search trigger and (once per page) the inline predictive-search panel.
+  Live-parity: opens an inline box + suggest.json dropdown instead of the Horizon search modal.
 
-  @param {string} [style] - The style of the search action.
+  @param {string} [style] - The style of the search action ('none' skips render).
   @param {string} [class] - Additional classes for the search action.
   @param {string} [display_style] - The display style ('icon' or 'text').
 
@@ -10,15 +11,19 @@
 {%- enddoc -%}
 
 {% unless style == 'none' %}
+  {%- comment -%} pb: shared panel only once even when snippet renders in multiple header slots {%- endcomment -%}
+  {%- capture pb_slot -%}{%- increment pb_search_slot -%}{%- endcapture -%}
+
   <search-button
     class="search-action{% if class != blank %} {{ class | strip }}{% endif %}"
   >
     <button
-      on:click="#search-modal/showDialog"
-      class="button-unstyled search-action__trigger"
-      aria-label="{{ 'content.search_input_label' | t }}"
-      aria-haspopup="dialog"
       type="button"
+      class="button-unstyled search-action__trigger"
+      data-pb-search-open="pb-search-panel"
+      aria-label="{{ 'content.search_input_label' | t }}"
+      aria-expanded="false"
+      aria-controls="pb-search-panel"
     >
       <span class="search-action__field">
         <span class="search-action__field-text">What can we help you find?</span>
@@ -26,9 +31,79 @@
       </span>
     </button>
   </search-button>
+
+  {%- if pb_slot == '0' -%}
+    <div
+      id="pb-search-panel"
+      class="pb-search-panel"
+      data-pb-search-panel
+      hidden
+      aria-hidden="true"
+    >
+      <form
+        class="pb-search-panel__form"
+        action="{{ routes.search_url }}"
+        method="get"
+        role="search"
+      >
+        <div class="pb-search-panel__input-wrapper">
+          <div class="pb-search-panel__field">
+            <button
+              type="submit"
+              class="pb-search-panel__submit button-unstyled"
+              aria-label="{{ 'content.search_input_label' | t }}"
+            >
+              <span class="svg-wrapper" aria-hidden="true">
+                {{ 'icon-search.svg' | inline_asset_content }}
+              </span>
+            </button>
+
+            <label class="visually-hidden" for="pb-search-input">
+              {{ 'content.search_input_label' | t }}
+            </label>
+            <input
+              id="pb-search-input"
+              class="pb-search-panel__input"
+              type="search"
+              name="q"
+              data-pb-search-input
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="{{ 'content.search_input_placeholder' | t }}"
+            >
+
+            <input type="hidden" name="options[prefix]" value="last">
+            <input type="hidden" name="type" value="product">
+
+            <button
+              type="button"
+              class="pb-search-panel__close button-unstyled"
+              data-pb-search-close
+              aria-label="{{ 'accessibility.close_dialog' | t }}"
+            >
+              <span class="svg-wrapper" aria-hidden="true">
+                {{ 'icon-close.svg' | inline_asset_content }}
+              </span>
+            </button>
+          </div>
+
+          <div
+            class="pb-search-suggestions__wrapper"
+            data-pb-search-results
+            aria-hidden="true"
+          ></div>
+        </div>
+      </form>
+    </div>
+
+    <script src="{{ 'pb-search-suggestions.js' | asset_url }}" defer></script>
+  {%- endif -%}
 {% endunless %}
 
 {% stylesheet %}
+  /* pb: live-parity inline predictive search (replaces modal trigger) */
   .search-action {
     display: flex;
   }
@@ -98,5 +173,220 @@
     [data-menu-style='menu'] .header__column--right .search-action {
       margin-inline: 0;
     }
+  }
+
+  /* --- Inline search panel (live parity) --- */
+  .pb-search-panel {
+    --pb-search-top-offset: var(--header-group-height, 80px);
+    --pb-search-top-offset-mobile: var(--header-group-height, 60px);
+    --pb-search-input-bg: #f7ece9;
+    --pb-search-input-border: #323a45;
+    --pb-search-divider: #c8c8c8;
+    --pb-search-focus: #f0bebe;
+
+    position: fixed;
+    top: var(--pb-search-top-offset);
+    left: 0;
+    right: 0;
+    z-index: calc(var(--layer-temporary, 20) + 5);
+    display: none;
+    padding: 0;
+    background: #fff;
+    box-shadow: 0 8px 16px rgb(0 0 0 / 0.08);
+  }
+
+  .pb-search-panel.is-open {
+    display: block;
+  }
+
+  @media screen and (max-width: 749px) {
+    .pb-search-panel {
+      top: var(--pb-search-top-offset-mobile);
+    }
+  }
+
+  .pb-search-panel__form {
+    display: block;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 12px 16px 16px;
+  }
+
+  .pb-search-panel__input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .pb-search-panel__field {
+    position: relative;
+    width: 100%;
+  }
+
+  .pb-search-panel__input {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 12px 48px;
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    line-height: 18px;
+    color: #323a45;
+    background-color: var(--pb-search-input-bg);
+    border: 1px solid var(--pb-search-input-border);
+    border-radius: 0;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .pb-search-panel__input::-webkit-search-decoration,
+  .pb-search-panel__input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+
+  .pb-search-panel__input::placeholder {
+    color: #c8c8c8;
+    opacity: 1;
+  }
+
+  .pb-search-panel__input:focus {
+    background-color: var(--pb-search-input-bg);
+    border-color: var(--pb-search-input-border);
+    box-shadow: none;
+  }
+
+  .pb-search-panel__submit,
+  .pb-search-panel__close {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    color: #323a45;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .pb-search-panel__submit {
+    left: 4px;
+  }
+
+  .pb-search-panel__close {
+    right: 4px;
+  }
+
+  .pb-search-panel__submit .svg-wrapper,
+  .pb-search-panel__close .svg-wrapper {
+    display: flex;
+    width: 18px;
+    height: 18px;
+  }
+
+  .pb-search-panel__submit .svg-wrapper svg,
+  .pb-search-panel__close .svg-wrapper svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .pb-search-suggestions__wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-top: -1px;
+    padding-bottom: 14px;
+    background-color: #fff;
+    border: 1px solid var(--pb-search-divider);
+    z-index: 1000;
+    overflow-y: auto;
+    max-height: 400px;
+    display: none;
+  }
+
+  .pb-search-suggestions__wrapper.active {
+    display: block;
+  }
+
+  .pb-search-suggestions {
+    font-size: 14px;
+    line-height: 18px;
+    color: #323a45;
+  }
+
+  .pb-search-suggestions__title {
+    padding: 14px;
+    font-weight: 700;
+    text-transform: capitalize;
+    position: relative;
+  }
+
+  .pb-search-suggestions__title:after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    left: 14px;
+    height: 1px;
+    bottom: -1px;
+    background-color: var(--pb-search-divider);
+  }
+
+  .pb-search-suggestions__results {
+    padding: 14px 14px 0;
+    list-style-type: none;
+    margin: 0;
+  }
+
+  .pb-search-suggestions-item {
+    padding-bottom: 14px;
+    min-height: 30px;
+  }
+
+  .pb-search-suggestions-item:last-of-type {
+    padding-bottom: 0;
+  }
+
+  .pb-search-suggestions-item a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .pb-search-suggestions-item__link {
+    display: flex;
+    align-items: center;
+  }
+
+  .pb-search-suggestions-item__link:hover {
+    text-decoration: underline;
+  }
+
+  .pb-search-suggestions-item__image-wrapper {
+    width: 10%;
+    flex-shrink: 0;
+    min-height: 30px;
+  }
+
+  .pb-search-suggestions-item__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 48px;
+    object-fit: contain;
+  }
+
+  .pb-search-suggestions-item__text-wrapper {
+    width: 90%;
+    padding-left: 14px;
+  }
+
+  .pb-search-suggestions-item.selected-item a {
+    outline: 2px solid var(--pb-search-focus);
   }
 {% endstylesheet %}

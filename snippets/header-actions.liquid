@@ -89,10 +89,11 @@
   {% if section.settings.show_search %}
     <button
       type="button"
-      on:click="#search-modal/showDialog"
+      data-pb-search-open="pb-search-panel"
       class="button-unstyled header-actions__action pb-mobile-search desktop:hidden"
       aria-label="{{ 'content.search_input_label' | t }}"
-      aria-haspopup="dialog"
+      aria-controls="pb-search-panel"
+      aria-expanded="false"
     >
       <span class="svg-wrapper" aria-hidden="true">{{ 'icon-search.svg' | inline_asset_content }}</span>
     </button>
