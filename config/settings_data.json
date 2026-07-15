@@ -130,6 +130,11 @@
         "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-global-embed/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
         "disabled": false,
         "settings": {}
+      },
+      "15621005432394230896": {
+        "type": "shopify://apps/onetrust-consent-management/blocks/consent_management/a0f47f36-e440-438e-946e-6f1b3963b606",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
