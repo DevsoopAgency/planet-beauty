@@ -133,7 +133,7 @@
       },
       "15621005432394230896": {
         "type": "shopify://apps/onetrust-consent-management/blocks/consent_management/a0f47f36-e440-438e-946e-6f1b3963b606",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     },
