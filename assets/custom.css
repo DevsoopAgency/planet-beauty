@@ -540,7 +540,7 @@
   .uwy.userway_p8 .userway_buttons_wrapper {
     left: 0 !important;
     right: auto !important;
-    top: 30px !important;
+    top: 50% !important;
     bottom: auto !important;
     transform: translateY(-50%) !important;
   }
