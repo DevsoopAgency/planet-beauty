@@ -24,13 +24,25 @@
   assign pb_product = closest.product | default: product
 -%}
 {%- if block.settings.tag != blank and pb_product.tags contains block.settings.tag -%}
-  <span class="pb-tag-message" {{ block.shopify_attributes }}>{{ block.settings.message }}</span>
+  {%- comment -%}
+    pb a11y (WCAG 1.4.1 Use of Colour): these messages are purchase-affecting
+    ("Final sale", "Max 6 per customer"). Live conveyed that weight with red
+    text alone; the visually-hidden "Important:" prefix gives screen-reader
+    users the same signal without changing the visual design.
+  {%- endcomment -%}
+  <span class="pb-tag-message" {{ block.shopify_attributes }}>
+    <span class="visually-hidden">{{ 'accessibility.important_note' | t | default: 'Important:' }}</span>
+    {{- block.settings.message -}}
+  </span>
 {%- endif -%}
 
 {% stylesheet %}
-  /* Matches the live theme's .custom-message styling exactly. */
+  /* Matches the live theme's .custom-message styling.
+     pb a11y (WCAG 1.4.3 AA): live used `red` (#ff0000), which is 4.00:1 on
+     white — under the 4.5:1 required at 12px bold. #d40000 is 5.53:1 and reads
+     as the same warning red. */
   .pb-tag-message {
-    color: red;
+    color: #d40000;
     font-weight: bold;
     font-size: 12px;
     display: block;

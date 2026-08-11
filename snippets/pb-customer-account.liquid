@@ -104,6 +104,17 @@
     font-size: 14px;
     line-height: 14px;
   }
+  /* pb a11y: several .pb-account__link controls are <button> elements — they
+     toggle a view rather than navigate, so they must not be <a href="#">
+     (WCAG 4.1.2). This strips the native button chrome so they still read as
+     inline text links visually. */
+  button.pb-account__link {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    cursor: pointer;
+  }
   .pb-account .button {
     font-size: 16px;
     line-height: 22px;

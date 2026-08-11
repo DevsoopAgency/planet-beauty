@@ -27,7 +27,14 @@
     <ul class="pb-hot-items__grid">
       {%- for product in pb_products limit: pb_limit -%}
         <li class="pb-hot-items__card">
-          <a class="pb-hot-items__img" href="{{ product.url }}">
+          {%- comment -%}
+            pb a11y (WCAG 2.4.4 / 1.1.1): the image link had no accessible name
+            at all when the product had no featured image, and duplicated the
+            title link when it did. aria-hidden + tabindex="-1" removes it from
+            the accessibility tree and the tab order — the adjacent title link
+            already points at the same product, so nothing is lost.
+          {%- endcomment -%}
+          <a class="pb-hot-items__img" href="{{ product.url }}" aria-hidden="true" tabindex="-1">
             {%- if product.featured_image -%}
               <img
                 src="{{ product.featured_image | image_url: width: 300 }}"
@@ -44,7 +51,10 @@
             </h3>
             <p class="pb-hot-items__desc">{{ product.description | strip_html | truncate: 60 }}</p>
             <span class="pb-hot-items__price">{{ product.price | money }}</span>
-            <a class="pb-hot-items__link" href="{{ product.url }}">View Item</a>
+            {%- comment -%} pb a11y (WCAG 2.4.4): unique accessible name per card. {%- endcomment -%}
+            <a class="pb-hot-items__link" href="{{ product.url }}">
+              View Item<span class="visually-hidden">: {{ product.title | strip_html | escape }}</span>
+            </a>
           </div>
         </li>
       {%- endfor -%}
@@ -115,6 +125,9 @@
     color: var(--color-foreground);
   }
   .pb-hot-items__price { font-weight: 700; font-size: 14px; }
+  /* pb a11y (WCAG 1.4.3): brand pink #ef0180 is 4.21:1 on white — below the
+     4.5:1 minimum for text this size. --pb-pink-accessible (#d6007b, 5.07:1)
+     is defined in assets/pb-a11y.css; the literal is the fallback. */
   .pb-hot-items__link {
     position: absolute;
     bottom: 16px;
@@ -123,7 +136,7 @@
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-weight: 600;
-    color: #ef0180;
+    color: var(--pb-pink-accessible, #d6007b);
     text-decoration: none;
   }
   .pb-hot-items__link::after { content: ' \00bb'; }
@@ -133,7 +146,7 @@
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 1px;
-    color: #ef0180;
+    color: var(--pb-pink-accessible, #d6007b); /* pb a11y: see note above */
     text-decoration: none;
   }
 

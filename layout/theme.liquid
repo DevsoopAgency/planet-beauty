@@ -41,6 +41,14 @@
     {%- render 'theme-styles-variables' -%}
     {%- render 'color-schemes' -%}
 
+    {%- comment -%}
+      pb: ADA / WCAG 2.1 AA remediation layer. MUST stay after 'color-schemes'
+      so it comes later in document order than base.css and than the inline
+      :root variables in 'theme-styles-variables' — that ordering is what makes
+      its focus-indicator and contrast overrides apply. Safe to remove.
+    {%- endcomment -%}
+    {{ 'pb-a11y.css' | asset_url | stylesheet_tag }}
+
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
     {% endif %}

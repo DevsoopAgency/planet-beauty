@@ -29,6 +29,9 @@
       "other": "{{ count }} filters applied"
     },
     "home_logo_alt": "{{ store_name }} - Home",
+    // pb a11y: screen-reader-only prefix for the PDP tag messages, which convey
+    // purchase-affecting terms using red text alone in the visual design.
+    "important_note": "Important:",
     "increase_quantity": "Increase quantity",
     "inventory_status": "Inventory status",
     "localization_region_and_language": "Region and language selector",

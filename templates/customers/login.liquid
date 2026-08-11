@@ -11,9 +11,15 @@
     please <a class="pb-account__link" href="{{ routes.account_register_url }}">re-register with a new account here</a>.
   </p>
 
-  {%- comment -%} ===== Recover password ===== {%- endcomment -%}
-  <div id="recover-password" style="display:none;">
-    <h1 class="pb-account__title">Reset your password</h1>
+  {%- comment -%}
+    ===== Recover password =====
+    pb a11y: uses the `hidden` attribute rather than an inline display:none so
+    the panel's state is exposed to assistive tech, and the heading carries
+    tabindex="-1" so focus can be moved to it when the panel is revealed
+    (WCAG 2.4.3 Focus Order).
+  {%- endcomment -%}
+  <div id="recover-password" hidden>
+    <h1 class="pb-account__title" tabindex="-1">Reset your password</h1>
     <p class="pb-account__intro">We will send you an email to reset your password.</p>
 
     {%- form 'recover_customer_password' -%}
@@ -26,14 +32,19 @@
       </div>
       <div class="pb-account__actions">
         <button type="submit" class="button">Submit</button>
-        <a class="pb-account__link" href="#" onclick="document.getElementById('recover-password').style.display='none';document.getElementById('login').style.display='block';return false;">Cancel</a>
+        {%- comment -%}
+          pb a11y (WCAG 4.1.2 / 2.1.1): this was an <a href="#">, which screen
+          readers announce as a link to nowhere and which leaves a stray "#" in
+          the URL. It only toggles view state, so it is a button.
+        {%- endcomment -%}
+        <button type="button" class="pb-account__link" data-pb-account-view="login">Cancel</button>
       </div>
     {%- endform -%}
   </div>
 
   {%- comment -%} ===== Login ===== {%- endcomment -%}
   <div id="login">
-    <h1 class="pb-account__title">Login</h1>
+    <h1 class="pb-account__title" tabindex="-1">Login</h1>
 
     {%- form 'customer_login', novalidate: 'novalidate' -%}
       {%- if form.errors -%}
@@ -51,7 +62,10 @@
           <input type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required>
         </div>
         <p>
-          <a class="pb-account__link" href="#" onclick="document.getElementById('login').style.display='none';document.getElementById('recover-password').style.display='block';return false;">Forgot your password?</a>
+          {%- comment -%} pb a11y: see note above — view toggle, not a link. {%- endcomment -%}
+          <button type="button" class="pb-account__link" data-pb-account-view="recover-password">
+            Forgot your password?
+          </button>
         </p>
       {%- endif -%}
 
@@ -73,9 +87,36 @@
 {%- endif -%}
 
 <script>
-  // Deep-link to the recover-password view via #recover
-  if (window.location.hash === '#recover') {
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('recover-password').style.display = 'block';
-  }
+  // pb a11y: swaps the login / recover-password views.
+  // Uses the `hidden` attribute (state is exposed to assistive tech) and moves
+  // focus to the newly revealed <h1>. Previously the toggle hid the element the
+  // user had just activated, which dropped focus to <body> and left screen
+  // reader and keyboard users with no idea the view had changed.
+  // WCAG 2.4.3 Focus Order, 4.1.2 Name/Role/Value.
+  (function () {
+    var views = {
+      login: document.getElementById('login'),
+      'recover-password': document.getElementById('recover-password'),
+    };
+
+    function showView(name) {
+      Object.keys(views).forEach(function (key) {
+        if (views[key]) views[key].hidden = key !== name;
+      });
+      var heading = views[name] && views[name].querySelector('.pb-account__title');
+      if (heading) heading.focus();
+    }
+
+    document.querySelectorAll('[data-pb-account-view]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        showView(button.dataset.pbAccountView);
+      });
+    });
+
+    // Deep-link to the recover-password view via #recover (no focus move on load).
+    if (window.location.hash === '#recover') {
+      if (views.login) views.login.hidden = true;
+      if (views['recover-password']) views['recover-password'].hidden = false;
+    }
+  })();
 </script>

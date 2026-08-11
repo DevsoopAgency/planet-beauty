@@ -116,12 +116,19 @@
     padding: 0 10px;
   }
 
+  /* pb a11y (WCAG 1.4.3 AA): the live theme used white text on both pastel
+     fills — 1.55:1 on mint and 1.82:1 on pink, against a 4.5:1 requirement
+     (12px bold does not qualify as "large text"). Badge colours are unchanged;
+     only the ink is darkened. #1a1a1a is 11.2:1 on mint, 9.6:1 on pink.
+     The --sold-out badge (white on #323a45) already passes at 11.5:1. */
   .pb-product-card-label--sale {
     background: #73e4be;
+    color: #1a1a1a;
   }
 
   .pb-product-card-label--new {
     background: #e3b2d2;
+    color: #1a1a1a;
   }
 
   .pb-product-card-label--sold-out {

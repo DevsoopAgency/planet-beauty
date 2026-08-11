@@ -51,8 +51,14 @@
         </div>
 
         <div class="c-col-6 m-auto">
+          {%- comment -%}
+            pb a11y (WCAG 1.3.1): the eyebrow was an <h4> rendered *before* the
+            <h1>, so the page's heading outline started at level 4 and jumped
+            back to 1. It is a kicker line, not a heading — rendered as a <p>
+            and styled by .pb-blog-eyebrow in pb-blog.css.
+          {%- endcomment -%}
           {%- if pb_eyebrow != blank -%}
-            <h4>{{ pb_eyebrow }}</h4>
+            <p class="pb-blog-eyebrow">{{ pb_eyebrow }}</p>
           {%- endif -%}
           <h1>{{ blog.title | escape }} & <span>Updates</span></h1>
           {%- if pb_categories != blank -%}
@@ -104,9 +110,14 @@
       <div class="pb-blog-recent__grid">
         {%- for article in blog.articles -%}
           <article class="pb-blog-recent__item">
-            <h4 class="pb-blog-recent__item-title">
+            {%- comment -%}
+              pb a11y (WCAG 1.3.1): these cards sit under the section's <h2>, so
+              they must be h3 — h4 skipped a level. Class is unchanged, so the
+              styling in pb-blog.css still applies.
+            {%- endcomment -%}
+            <h3 class="pb-blog-recent__item-title">
               <a href="{{ article.url }}">{{ article.title | truncate: 70 }}</a>
-            </h4>
+            </h3>
             <p class="pb-blog-banner__meta">
               <svg class="pb-blog-banner__meta-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="#000" d="M421.7 220.3L188.5 453.4L154.6 419.5L158.1 416H112C103.2 416 96 408.8 96 400V353.9L92.51 357.4C87.78 362.2 84.31 368 82.42 374.4L59.44 452.6L137.6 429.6C143.1 427.7 149.8 424.2 154.6 419.5L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L291.7 90.34L421.7 220.3zM492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75z"/></svg>
               <span>
@@ -121,8 +132,14 @@
                 {{ article.content | strip_html | truncate: 150 }}
               {%- endif -%}
             </p>
+            {%- comment -%}
+              pb a11y (WCAG 2.4.4): every card used the identical link text, so
+              a screen reader's link list read "Full Article" N times with no way
+              to tell them apart. Hidden suffix names the article. ("Articale"
+              was also a typo in the visible label.)
+            {%- endcomment -%}
             <a class="pb-blog-recent__read-more" href="{{ article.url }}">
-              Full Articale
+              Full Article<span class="visually-hidden">: {{ article.title | escape }}</span>
               <svg style="width:12px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path fill="#EF0180" d="M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"/></svg>
             </a>
             {%- if article.image -%}
@@ -163,7 +180,10 @@
                 </h3>
                 <p class="pb-blog-deals__desc">{{ product.description | strip_html | truncate: 30 }}</p>
                 <span class="pb-blog-deals__price">{{ product.price | money | remove: ' ' | remove: '.00' }}</span>
-                <a class="pb-blog-deals__link" href="{{ product.url }}">View Item &rsaquo;</a>
+                {%- comment -%} pb a11y (WCAG 2.4.4): unique accessible name per card. {%- endcomment -%}
+                <a class="pb-blog-deals__link" href="{{ product.url }}">
+                  View Item<span class="visually-hidden">: {{ product.title | strip_html | escape }}</span> &rsaquo;
+                </a>
               </div>
             </li>
           {%- endfor -%}

@@ -13,7 +13,10 @@
 
 .pb-blog {
   --pb-blog-dark: #242424;
-  --pb-blog-pink: #ef0180;
+  /* pb a11y (WCAG 1.4.3 AA): #ef0180 is 4.21:1 on white — under 4.5:1. Both
+     uses of this token ("Full Article", "View Item") are 14px links on white.
+     #d6007b is 5.07:1. */
+  --pb-blog-pink: #d6007b;
   --pb-blog-accent-bg: #faeaea;
   --pb-blog-border: #5d5d5d;
   --pb-blog-muted-border: #cfcfcf;
@@ -246,7 +249,10 @@
   margin: auto;
 }
 
-.pb-blog-banner h4 {
+/* pb a11y: the banner eyebrow moved from <h4> to <p class="pb-blog-eyebrow">
+   so the heading outline starts at <h1> (WCAG 1.3.1). Both selectors kept. */
+.pb-blog-banner h4,
+.pb-blog-banner .pb-blog-eyebrow {
   font-size: 21px;
   color: #fff;
   font-weight: 600;
@@ -281,7 +287,7 @@
   font-family: 'Park Lane', serif;
 }
 
-.pb-blog-banner .c-col-6 > p {
+.pb-blog-banner .c-col-6 > p:not(.pb-blog-eyebrow) {
   position: absolute;
   left: -10px;
   bottom: 40px;
@@ -620,7 +626,7 @@
     right: 60px;
   }
 
-  .pb-blog-banner .c-col-6 > p {
+  .pb-blog-banner .c-col-6 > p:not(.pb-blog-eyebrow) {
     bottom: -10px;
     left: 20px;
   }
@@ -687,7 +693,7 @@
     display: none;
   }
 
-  .pb-blog-banner .c-col-6 > p {
+  .pb-blog-banner .c-col-6 > p:not(.pb-blog-eyebrow) {
     left: 20px;
   }
 
@@ -723,7 +729,7 @@
     width: 100%;
   }
 
-  .pb-blog-banner .c-col-6 > p {
+  .pb-blog-banner .c-col-6 > p:not(.pb-blog-eyebrow) {
     position: static;
     width: 70%;
     margin-top: 30px;

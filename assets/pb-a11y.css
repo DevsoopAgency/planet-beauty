@@ -1,0 +1,216 @@
+/*
+ * ============================================================================
+ * Planet Beauty — ADA / WCAG 2.1 Level AA remediation layer
+ * ----------------------------------------------------------------------------
+ * Every rule in this file exists for a documented accessibility reason and is
+ * labelled with the WCAG success criterion it addresses.
+ *
+ * Loaded from layout/theme.liquid AFTER 'color-schemes' so that it comes later
+ * in document order than base.css AND than the inline :root variables in
+ * snippets/theme-styles-variables.liquid — that is what lets these rules win
+ * at equal specificity.
+ *
+ * `!important` is used only where an existing theme rule explicitly cancels a
+ * focus indicator (`outline: none`) from a `{% stylesheet %}` block whose
+ * position in the cascade we can't control from here. Each is commented.
+ *
+ * TO REVERT: delete the pb-a11y.css <link> in layout/theme.liquid. Nothing
+ * else in the theme depends on this file.
+ * ============================================================================
+ */
+
+:root {
+  /* ---- WCAG 2.4.7 Focus Visible (AA) / 2.4.11 Focus Appearance ------------
+   * Theme default was 0.09375rem (1.5px), which is below the 2px minimum
+   * perimeter thickness and very hard to see against light backgrounds.       */
+  --focus-outline-width: 0.125rem; /* 2px */
+
+  /* ---- WCAG 1.4.3 Contrast (Minimum) (AA) --------------------------------
+   * Brand pink #ef0180 measures 4.21:1 against white — below the 4.5:1 needed
+   * for text smaller than 24px (or 18.66px bold). #d6007b measures 5.07:1 and
+   * is visually near-identical. Used ONLY where pink meets white as text or as
+   * a button fill; decorative pink (icons, heading underlines, badges behind
+   * dark text) intentionally keeps the original #ef0180.                      */
+  --pb-pink-accessible: #d6007b;
+
+  /* Dark ink for text sitting on the pastel brand badge colours.
+   * #1a1a1a is 11.2:1 on mint #73e4be and 9.6:1 on pink #e3b2d2.              */
+  --pb-badge-ink: #1a1a1a;
+}
+
+/* ---------------------------------------------------------------------------
+ * 1. Text inputs had NO visible keyboard focus indicator. (WCAG 2.4.7, AA)
+ *
+ *    base.css sets `.field__input { outline: none }` and the only remaining
+ *    affordance was `--input-box-shadow-focus`, which is the same colour as
+ *    the resting border and only 0.5px thicker — effectively invisible,
+ *    especially with scheme-1's `input_border_color: #0000000f` (6% black).
+ *
+ *    Affects: newsletter signup, contact form, gift-card recipient form,
+ *    login / register / reset-password / address forms, quantity input.
+ * ------------------------------------------------------------------------- */
+.field__input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible,
+input[type='text']:focus-visible,
+input[type='email']:focus-visible,
+input[type='password']:focus-visible,
+input[type='search']:focus-visible,
+input[type='tel']:focus-visible,
+input[type='number']:focus-visible,
+input[type='url']:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: var(--focus-outline-width) solid var(--color-foreground);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Site search had its focus indicator explicitly removed. (WCAG 2.4.7, AA)
+ *
+ *    snippets/search-modal.liquid nulls both `outline` and `box-shadow` on
+ *    `.search-input:is(:focus, :focus-visible, :focus-within)` and on
+ *    `.predictive-search-form__header:focus-within`, so tabbing into the
+ *    header search produced no visible change at all.
+ *
+ *    The input itself is borderless inside a bordered wrapper, so the ring goes
+ *    on the wrapper — but only when the INPUT has focus, so that tabbing to the
+ *    adjacent "Clear" / "Close" buttons rings those buttons instead of the
+ *    whole search box. `!important` is required because the rules being
+ *    corrected live in a {% stylesheet %} block we can't reorder from here.
+ * ------------------------------------------------------------------------- */
+.predictive-search-form__header-inner:has(.search-input:focus-visible),
+.predictive-search-form__header button:focus-visible {
+  /* stylelint-disable-next-line declaration-no-important */
+  outline: var(--focus-outline-width) solid var(--color-foreground) !important;
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* Fallback for engines without :has() — rings the box on any focus inside it. */
+@supports not selector(:has(*)) {
+  .predictive-search-form__header-inner:focus-within {
+    /* stylelint-disable-next-line declaration-no-important */
+    outline: var(--focus-outline-width) solid var(--color-foreground) !important;
+    outline-offset: var(--focus-outline-offset);
+  }
+}
+
+/* pb custom mobile search panel (snippets/search.liquid) — same problem. */
+.pb-search-panel__input:focus-visible {
+  /* stylelint-disable-next-line declaration-no-important */
+  outline: var(--focus-outline-width) solid #323a45 !important;
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Brand pink as small text on white. (WCAG 1.4.3, AA — 4.21:1 vs 4.5:1)
+ *
+ *    Recharge portal links and the header "Sale" nav link. The article and
+ *    blog pages are corrected at source instead, via the --pb-article-pink /
+ *    --pb-blog-pink tokens in pb-article.css and pb-blog.css.
+ * ------------------------------------------------------------------------- */
+#recharge-app a,
+.recharge a,
+.menu-list__list-item.sale-link a span {
+  color: var(--pb-pink-accessible);
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. White text on a brand-pink fill. (WCAG 1.4.3, AA — 4.21:1 vs 4.5:1)
+ *
+ *    Account form CTAs, "Buy it again" add-to-cart, Recharge buttons.
+ *    The source rules in custom.css already use !important, so these must too.
+ * ------------------------------------------------------------------------- */
+.pb-account .button,
+.pb-bia__btn,
+#recharge-app .btn,
+#recharge-app .btn-primary,
+#recharge-app .btn--primary,
+#recharge-app button[type='submit'],
+.recharge .btn-primary,
+.recharge button[type='submit'] {
+  /* stylelint-disable-next-line declaration-no-important */
+  background-color: var(--pb-pink-accessible) !important;
+  /* stylelint-disable-next-line declaration-no-important */
+  border-color: var(--pb-pink-accessible) !important;
+}
+
+/* Store locator search button — matches the ID selector it overrides. */
+.pb-store-locator .scasl-search-btn #bh-sl-submit {
+  /* stylelint-disable-next-line declaration-no-important */
+  background-color: var(--pb-pink-accessible) !important;
+}
+
+.pb-bia__btn[disabled] {
+  /* Disabled controls are exempt from 1.4.3 — keep the theme's muted style. */
+  background-color: transparent !important;
+  border-color: rgb(var(--color-foreground-rgb) / 0.25) !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Product-card tag badges: white text on pastel fills.  (WCAG 1.4.3, AA)
+ *
+ *    Ported from the live theme, these measured 1.55:1 (white on mint
+ *    #73e4be) and 1.82:1 (white on pink #e3b2d2) — far below 4.5:1. The badge
+ *    colours are kept; only the text ink changes.
+ *    See snippets/product-card-badges.liquid.
+ * ------------------------------------------------------------------------- */
+.pb-product-card-label--sale,
+.pb-product-card-label--new {
+  color: var(--pb-badge-ink);
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. `hidden` must actually hide. (WCAG 1.3.2, 2.4.3, 4.1.2)
+ *
+ *    The account templates switched from inline display:none to the `hidden`
+ *    attribute so panel state is exposed to assistive tech. This guards against
+ *    a stray `display:` rule re-showing a panel that AT still reports as hidden.
+ * ------------------------------------------------------------------------- */
+[hidden] {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Skip link — make sure it is not visually clipped by the sticky header
+ *    and that it renders above it. (WCAG 2.4.1 Bypass Blocks, A)
+ * ------------------------------------------------------------------------- */
+.skip-to-content-link:focus {
+  /* stylelint-disable-next-line declaration-no-important */
+  position: fixed !important;
+  outline: var(--focus-outline-width) solid var(--color-foreground);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 8. Motion. (WCAG 2.3.3 Animation from Interactions / 2.2.2 Pause, Stop, Hide)
+ *
+ *    Safety net for the ported pb-* sections and any third-party widget markup
+ *    (Rebuy / Elfsight / Trustpilot) that animates without honouring the OS
+ *    "reduce motion" setting.
+ * ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  [class^='pb-'],
+  [class*=' pb-'],
+  .rebuy-widget *,
+  [class*='elfsight-app'] * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * 9. Windows High Contrast Mode / forced colours. (WCAG 1.4.1, A)
+ *
+ *    Focus rings drawn with `currentcolor` disappear in forced-colours mode;
+ *    `Highlight` is the system-reserved focus colour.
+ * ------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  *:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}

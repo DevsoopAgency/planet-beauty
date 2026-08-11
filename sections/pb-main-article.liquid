@@ -19,12 +19,17 @@
 
 <div class="pb-article-page page-2">
   {% render 'pb-article-back-link', position: 'top', blog: blog %}
-  <section
+  {%- comment -%}
+    pb a11y: this banner is a decorative background image whose only "content"
+    is the article title, which is already announced by the <h1> immediately
+    below. It previously carried role="img" + aria-label, which made screen
+    readers read the title twice. Marked decorative instead. (WCAG 1.1.1)
+  {%- endcomment -%}
+  <div
     class="banner-sec inner-banner"
-    role="img"
-    aria-label="{{ article.title | escape }}"
+    role="presentation"
     style="background-image:url('{{ pb_banner_url }}');"
-  ></section>
+  ></div>
 
   <section class="product-details halfsec content-wrapper">
     <div class="c-container">
@@ -36,8 +41,14 @@
                 <div class="blog-title">{{ blog.title }}</div>
               {%- endif -%}
               <h1>{{ article.title }}</h1>
+              {%- comment -%}
+                pb a11y (WCAG 1.3.1): the subtitle was an <h3> directly after the
+                <h1>, which skips a level and advertises a section that doesn't
+                exist. It's a deck line, not a heading — rendered as a <p> and
+                styled identically via .article-subtitle in pb-article.css.
+              {%- endcomment -%}
               {%- if article.metafields.custom.subtitle != blank -%}
-                <h3>{{ article.metafields.custom.subtitle }}</h3>
+                <p class="article-subtitle">{{ article.metafields.custom.subtitle }}</p>
               {%- endif -%}
             </div>
             <div class="content-wrap">
@@ -107,8 +118,21 @@
                     <div class="content">
                       <h3>{{ product.title | strip_html | truncate: 25 }}</h3>
                       <p class="pera">{{ product.description | strip_html | truncate: 90 }}</p>
-                      <h6 class="pr">{{ product.price | money | remove: ' ' | remove: '.00' }}</h6>
-                      <a href="{{ product.url }}">View Item</a>
+                      {%- comment -%}
+                        pb a11y (WCAG 1.3.1): price was an <h6> used purely for
+                        styling — it is not a section heading. Same class, so
+                        .content .pr in pb-article.css still styles it.
+                      {%- endcomment -%}
+                      <p class="pr">{{ product.price | money | remove: ' ' | remove: '.00' }}</p>
+                      {%- comment -%}
+                        pb a11y (WCAG 2.4.4): every card linked with the same
+                        "View Item" text. The hidden suffix gives each link a
+                        unique, self-describing name in a screen reader's link
+                        list without changing the visual design.
+                      {%- endcomment -%}
+                      <a href="{{ product.url }}">
+                        View Item<span class="visually-hidden">: {{ product.title | strip_html | escape }}</span>
+                      </a>
                     </div>
                   </li>
                 {%- endfor -%}
@@ -148,8 +172,11 @@
                 <div class="content">
                   <h3>{{ product.title | strip_html | truncate: 28 }}</h3>
                   <p class="pera">{{ product.description | strip_html | truncate: 30 }}</p>
-                  <h6>{{ product.price | money | remove: ' ' | remove: '.00' }}</h6>
-                  <a href="{{ product.url }}">View Item</a>
+                  {%- comment -%} pb a11y: see note above — price is not a heading (1.3.1). {%- endcomment -%}
+                  <p class="pr">{{ product.price | money | remove: ' ' | remove: '.00' }}</p>
+                  <a href="{{ product.url }}">
+                    View Item<span class="visually-hidden">: {{ product.title | strip_html | escape }}</span>
+                  </a>
                 </div>
               </li>
             </ul>
