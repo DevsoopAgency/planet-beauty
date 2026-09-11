@@ -12,6 +12,38 @@
     "slideshow_hNjgrd": {
       "type": "slideshow",
       "blocks": {
+        "slide_LncGyF": {
+          "type": "_slide",
+          "name": "t:names.slide",
+          "settings": {
+            "media_type_1": "image",
+            "image_1": "shopify://shop_images/Hero_Banner_Luna_London.png",
+            "video_aspect_ratio": "auto",
+            "video_aspect_ratio_mobile": "inherit",
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "content_position_x": 50,
+            "content_position_y": 50,
+            "inherit_color_scheme": false,
+            "color_scheme": "scheme-6",
+            "color_scheme_mobile": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 48,
+            "padding-block-end": 48,
+            "padding-inline-start": 48,
+            "padding-inline-end": 48
+          },
+          "blocks": {}
+        },
         "slide_xLYXR3": {
           "type": "_slide",
           "settings": {
@@ -46,6 +78,7 @@
         }
       },
       "block_order": [
+        "slide_LncGyF",
         "slide_xLYXR3"
       ],
       "name": "t:names.slideshow_full_frame",
