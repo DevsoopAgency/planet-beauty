@@ -186,19 +186,28 @@
     margin: 0;
   }
 
+  /* pb: adaptive height — JS ([adaptive-height]) sizes container to the ACTIVE slide.
+     Do NOT use height:auto !important or overflow:visible here: that lets inactive
+     (taller) slides inflate the section (dots float in white space) and kills
+     overflow scrolling so arrow/swipe navigation never moves. */
   slideshow-component.slideshow--adaptive {
     height: auto;
   }
 
   slideshow-component.slideshow--adaptive slideshow-container,
   slideshow-component.slideshow--adaptive slideshow-slides {
-    height: auto !important;
-    min-height: 0 !important;
-    overflow: visible;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
   slideshow-component.slideshow--adaptive slideshow-slides {
     align-items: flex-start;
+    scrollbar-width: none;
+  }
+
+  slideshow-component.slideshow--adaptive slideshow-slides::-webkit-scrollbar {
+    display: none;
   }
 
   slideshow-component.slideshow--adaptive slideshow-slide {
@@ -206,8 +215,21 @@
     max-height: none;
   }
 
+  /* pb: keep dots overlaid on the image bottom (not below empty adaptive gap) */
+  slideshow-component.slideshow--adaptive > slideshow-controls[controls-on-media] {
+    bottom: 0;
+  }
+
+  /* pb: arrows are hover-only in Horizon; always show on touch/mobile for the hero */
+  @media screen and (max-width: 749px) {
+    .slideshow-section slideshow-component.slideshow--adaptive > slideshow-container > slideshow-arrows .slideshow-control {
+      opacity: 1;
+    }
+  }
+
   /* Planet Beauty: allow touch drag/swipe on hero slideshows while keeping vertical page scroll.
-     Scoped away from resource-list carousels (e.g. Shop by Category) which need pan-x. */
+     Scoped away from resource-list carousels (e.g. Shop by Category) which need pan-x.
+     Use pan-y pinch-zoom so arrow clicks still work; horizontal drag uses pointer handlers. */
   slideshow-component:not(.resource-list__carousel) slideshow-slides {
     touch-action: pan-y;
   }
