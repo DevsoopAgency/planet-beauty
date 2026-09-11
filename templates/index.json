@@ -193,7 +193,8 @@
           "settings": {
             "media_type_1": "image",
             "image_1": "shopify://shop_images/Bioderma_Hero_Banner.png",
-            "link": "",
+            "mobile_image_1": "shopify://shop_images/Bioderma_Hero_Mobile.jpg",
+            "link": "shopify://collections/bioderma",
             "open_in_new_tab": false,
             "video_aspect_ratio": "auto",
             "video_aspect_ratio_mobile": "inherit",
