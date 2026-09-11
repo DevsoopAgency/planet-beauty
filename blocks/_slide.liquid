@@ -19,6 +19,17 @@
       assign rounded_image_corners = true
     endif
   %}
+  {%- comment -%} pb: whole-banner click-through (same stretched-link pattern as cards) {%- endcomment -%}
+  {%- if block_settings.link != blank and block_settings.media_type_1 != 'video' -%}
+    <a
+      href="{{ block_settings.link }}"
+      class="slide__link"
+      draggable="false"
+      {% if block_settings.open_in_new_tab %}
+        target="_blank" rel="noopener"
+      {% endif %}
+    ></a>
+  {%- endif -%}
   <div class="slide__image-container{% if rounded_image_corners %} slide__image-container--rounded{% endif %}">
     {%- if block_settings.toggle_overlay -%}
       {% render 'overlay', settings: block_settings %}
@@ -215,6 +226,34 @@
 %}
 
 {% stylesheet %}
+  /* pb: whole-slide banner link — card stretched-link pattern */
+  .slide__link {
+    position: absolute;
+    inset: 0;
+    z-index: var(--layer-raised);
+  }
+
+  .slide__link ~ .slide__image-container {
+    pointer-events: none;
+  }
+
+  /* Content above the link so nested CTAs work; empty areas pass clicks through */
+  .slide__link ~ .slide__content {
+    pointer-events: none;
+    z-index: calc(var(--layer-raised) + 1);
+  }
+
+  .slide__link ~ .slide__content :is(a, button, input, textarea, select) {
+    pointer-events: auto;
+  }
+
+  /* Adaptive slide content uses z-index:1 — keep it above the banner link when present */
+  slideshow-component.slideshow--adaptive
+    slideshow-slide.slideshow-slide--adaptive:has(.slide__link)
+    > .slide__content {
+    z-index: calc(var(--layer-raised) + 1);
+  }
+
   .slide__content {
     height: 100%;
     position: relative;
@@ -628,6 +667,22 @@
       "label": "Mobile image (optional)",
       "info": "If set, this image will be displayed on mobile devices instead of the main image",
       "visible_if": "{{ block.settings.media_type_1 == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.block_link"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link",
+      "info": "Makes the entire slide clickable"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "t:settings.open_new_tab",
+      "default": false
     },
     {
       "type": "video",
