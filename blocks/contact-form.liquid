@@ -1,5 +1,3 @@
-
-
 {% capture submit_button %}
   {% content_for 'block', type: 'contact-form-submit-button', id: 'submit-button' %}
 {% endcapture %}
@@ -24,7 +22,17 @@
       value="{{ form_id }}"
     >
 
+    {%- comment -%}
+      One flag reused below: it decides both the confirmation and whether the
+      fields are rendered at all. Leaving an empty form on screen after a
+      successful send is what makes people submit again.
+    {%- endcomment -%}
+    {%- assign posted = false -%}
     {%- if form.posted_successfully? and form.id == form_id -%}
+      {%- assign posted = true -%}
+    {%- endif -%}
+
+    {%- if posted -%}
       <div
         class="contact-form__success-message"
         role="status"
@@ -34,6 +42,11 @@
       >
         <h2 class="contact-form__success-heading">{{ 'blocks.contact_form.post_success_heading' | t }}</h2>
         <p>{{ 'blocks.contact_form.post_success' | t }}</p>
+        <p class="contact-form__success-note">
+          Our team replies Monday to Friday, 8am–4pm PT.
+          <strong>No need to send it again</strong> — a second message won't reach us any faster.
+        </p>
+        <a class="contact-form__success-link" href="{{ routes.root_url }}">Continue shopping</a>
       </div>
     {%- endif -%}
 
@@ -44,81 +57,84 @@
         tabindex="-1"
         autofocus
       >
+        <p class="contact-form__error-heading">{{ 'blocks.contact_form.error_heading' | t }}</p>
         {{ form.errors | default_errors }}
       </div>
     {%- endif -%}
 
-    <div class="contact-form__field">
-      <label for="{{ form_id }}-name">
-        {{- 'blocks.contact_form.name' | t -}}
-        <span class="contact-form__required" aria-hidden="true">*</span>
-      </label>
-      <input
-        type="text"
-        id="{{ form_id }}-name"
-        class="contact-form__input"
-        autocomplete="name"
-        name="contact[name]"
-        required
-        value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-      >
-    </div>
+    {%- unless posted -%}
+      <div class="contact-form__field">
+        <label for="{{ form_id }}-name">
+          {{- 'blocks.contact_form.name' | t -}}
+          <span class="contact-form__required" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="{{ form_id }}-name"
+          class="contact-form__input"
+          autocomplete="name"
+          name="contact[name]"
+          required
+          value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+        >
+      </div>
 
-    <div class="contact-form__field">
-      <label for="{{ form_id }}-email">
-        {{- 'blocks.contact_form.email' | t -}}
-        <span class="contact-form__required" aria-hidden="true">*</span>
-      </label>
-      <input
-        type="email"
-        id="{{ form_id }}-email"
-        class="contact-form__input"
-        autocomplete="email"
-        name="contact[email]"
-        spellcheck="false"
-        autocapitalize="off"
-        required
-        value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
-        aria-required="true"
-        {% if form.errors contains 'email' and form.id == form_id %}
-          aria-invalid="true"
-        {% endif %}
-      >
-    </div>
+      <div class="contact-form__field">
+        <label for="{{ form_id }}-email">
+          {{- 'blocks.contact_form.email' | t -}}
+          <span class="contact-form__required" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="email"
+          id="{{ form_id }}-email"
+          class="contact-form__input"
+          autocomplete="email"
+          name="contact[email]"
+          spellcheck="false"
+          autocapitalize="off"
+          required
+          value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+          aria-required="true"
+          {% if form.errors contains 'email' and form.id == form_id %}
+            aria-invalid="true"
+          {% endif %}
+        >
+      </div>
 
-    <div class="contact-form__field">
-      <label for="{{ form_id }}-phone">
-        {{- 'blocks.contact_form.phone' | t -}}
-      </label>
-      <input
-        type="tel"
-        id="{{ form_id }}-phone"
-        class="contact-form__input"
-        autocomplete="tel"
-        name="contact[phone]"
-        value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
-      >
-    </div>
+      <div class="contact-form__field">
+        <label for="{{ form_id }}-phone">
+          {{- 'blocks.contact_form.phone' | t -}}
+        </label>
+        <input
+          type="tel"
+          id="{{ form_id }}-phone"
+          class="contact-form__input"
+          autocomplete="tel"
+          name="contact[phone]"
+          value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+        >
+      </div>
 
-    <div class="contact-form__field">
-      <label for="{{ form_id }}-body">
-        {{- 'blocks.contact_form.comment' | t -}}
-        <span class="contact-form__required" aria-hidden="true">*</span>
-      </label>
-      <textarea
-        rows="10"
-        id="{{ form_id }}-body"
-        class="contact-form__input contact-form__input--textarea"
-        name="contact[body]"
-        required
-      >
-        {{- form.body -}}
-      </textarea>
-    </div>
+      <div class="contact-form__field">
+        <label for="{{ form_id }}-body">
+          {{- 'blocks.contact_form.comment' | t -}}
+          <span class="contact-form__required" aria-hidden="true">*</span>
+        </label>
+        <textarea
+          rows="10"
+          id="{{ form_id }}-body"
+          class="contact-form__input contact-form__input--textarea"
+          name="contact[body]"
+          required
+        >
+          {{- form.body -}}
+        </textarea>
+      </div>
 
-    <div class="contact-form__actions">
-      {{ submit_button }}
-    </div>
+      <div class="contact-form__actions">
+        {{ submit_button }}
+      </div>
+    {%- endunless -%}
   {%- endform -%}
 
   {%- if block.settings.business_hours != blank -%}
@@ -127,6 +143,43 @@
     </div>
   {%- endif -%}
 </div>
+
+<script>
+  // Guard against double-submits. Re-running is harmless but pointless when
+  // the block appears more than once on a page.
+  if (!window.__contactFormSubmitGuard) {
+    window.__contactFormSubmitGuard = true;
+
+    document.addEventListener('submit', function (event) {
+      var form = event.target;
+      if (!form || !form.classList || !form.classList.contains('contact-form__form')) return;
+
+      var btn = form.querySelector('button[type="submit"]');
+      if (!btn || btn.dataset.submitting === 'true') return;
+
+      btn.dataset.submitting = 'true';
+      btn.dataset.originalLabel = btn.textContent.trim();
+      btn.textContent = 'Sending…';
+
+      // Deferred on purpose: disabling the button synchronously inside its own
+      // submit handler cancels the submission in some browsers.
+      setTimeout(function () {
+        btn.disabled = true;
+      }, 0);
+    });
+
+    // Browsers restore the cached page on Back. Without this the customer
+    // returns to a dead button still reading "Sending…".
+    window.addEventListener('pageshow', function (event) {
+      if (!event.persisted) return;
+      document.querySelectorAll('.contact-form__form button[type="submit"]').forEach(function (btn) {
+        btn.disabled = false;
+        btn.dataset.submitting = 'false';
+        if (btn.dataset.originalLabel) btn.textContent = btn.dataset.originalLabel;
+      });
+    });
+  }
+</script>
 
 {% stylesheet %}
   .contact-form__form {
@@ -182,21 +235,62 @@
     font-weight: 700;
   }
 
+  .contact-form__actions .submit-button[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  /* Success and error are deliberately hard-coded green/red rather than
+     inheriting the brand palette — a confirmation rendered in brand pink
+     reads as decoration, not as a state change. */
   .contact-form__success-message,
   .contact-form__error-message {
     width: 100%;
     max-width: 600px;
     margin-inline: auto;
+    padding: var(--padding-xl, 1.25rem);
+    border-radius: var(--style-border-radius-inputs, 8px);
+    border-inline-start: 4px solid;
+  }
+
+  .contact-form__success-message {
+    border-color: #1a7f37;
+    background-color: #eef7f0;
+    color: #14532d;
   }
 
   .contact-form__success-heading {
-    margin: 0;
+    margin: 0 0 0.5rem;
     font-size: var(--font-h4--size);
     line-height: var(--font-h4--line-height);
   }
 
+  .contact-form__success-message p {
+    margin: 0 0 0.5rem;
+    line-height: 1.5;
+  }
+
+  .contact-form__success-note {
+    font-size: 0.95em;
+    opacity: 0.9;
+  }
+
+  .contact-form__success-link {
+    display: inline-block;
+    margin-block-start: 0.5rem;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
   .contact-form__error-message {
+    border-color: #c62828;
+    background-color: #fdeeee;
     color: var(--color-error, #c62828);
+  }
+
+  .contact-form__error-heading {
+    margin: 0 0 0.5rem;
+    font-weight: 700;
   }
 
   .contact-form__business-hours {
