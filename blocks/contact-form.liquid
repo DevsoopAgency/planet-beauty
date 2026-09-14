@@ -95,7 +95,7 @@
           required
           value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
           aria-required="true"
-          {% if form.errors contains 'email' and form.id == form_id %}
+          {% if form.errors contains 'email' %}
             aria-invalid="true"
           {% endif %}
         >
