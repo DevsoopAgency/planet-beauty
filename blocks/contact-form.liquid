@@ -28,7 +28,7 @@
       successful send is what makes people submit again.
     {%- endcomment -%}
     {%- assign posted = false -%}
-    {%- if form.posted_successfully? and form.id == form_id -%}
+    {%- if form.posted_successfully? -%}
       {%- assign posted = true -%}
     {%- endif -%}
 
