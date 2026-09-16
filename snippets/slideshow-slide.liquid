@@ -54,6 +54,9 @@
 <slideshow-slide
   ref="slides[]"
   aria-hidden="{% if index == 0 %}false{% else %}true{% endif %}"
+  {% unless index == 0 %}
+    inert
+  {% endunless %}
   style="{{ combined_style }}"
   {% if class != blank %}
     class="{{ class }}"

@@ -333,9 +333,24 @@ footer .policy_list a:focus-visible {
 .footer-content--planet-beauty .menu__item a,
 .footer-content--planet-beauty .group-block > .text-block:nth-of-type(2) p,
 .footer-content--planet-beauty .group-block > .text-block:nth-of-type(3) p,
+.footer-content--planet-beauty .group-block > .text-block:nth-of-type(3) a,
+footer a[href*='stay-beautiful'],
 footer .email-signup label,
 footer .email-signup .field__label,
-footer .newsletter-signup label {
-  color: #f2f0ea;
+footer .newsletter-signup label,
+footer .policy_list a,
+footer .footer-utilities__text,
+footer .pb-privacy-choices-link,
+footer .pb-privacy-choices-link span {
+  /* stylelint-disable-next-line declaration-no-important */
+  color: #f2f0ea !important;
+  background-color: #0a0a0a;
   opacity: 1;
+}
+
+/* Rebuy homepage carousels — Flickity kills the focus ring (F78). Not cart. */
+.rebuy-widget:not(.rebuy-cart):not([id*='cart']) .rebuy-product-grid:focus,
+.rebuy-widget:not(.rebuy-cart):not([id*='cart']) .rebuy-product-grid:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 2px;
 }

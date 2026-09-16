@@ -4,13 +4,13 @@
   Hidden mini-cart shell keeps Rebuy admin selectors working if they target [data-mini-cart] etc.
 {%- endcomment -%}
 
-<div class="mini-cart-container visually-hidden" aria-hidden="true" hidden>
+<div class="mini-cart-container visually-hidden" hidden>
   <div class="mini-cart" data-mini-cart>
     <div class="mini-cart__header">
       <div class="mini-cart__item-count">
         <span data-minicart-count>{{ cart.item_count }}</span>
       </div>
-      <button type="button" data-minicart-close-button></button>
+      <button type="button" data-minicart-close-button aria-label="Close cart"></button>
     </div>
     <div class="mini-cart__items" data-mini-cart-items></div>
     <div class="mini-cart__footer" data-minicart-footer></div>
