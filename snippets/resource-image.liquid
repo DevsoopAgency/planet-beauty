@@ -153,10 +153,18 @@
       {% render 'overlay', settings: block_settings %}
     {%- endif -%}
 
+    {%- liquid
+      assign pb_resource_alt = image_resource.alt | default: collection.title | default: ''
+    -%}
     {{
       image_resource
       | image_url: width: 3840
-      | image_tag: widths: widths, class: 'resource-image__image', sizes: sizes, loading: loading
+      | image_tag:
+        widths: widths,
+        class: 'resource-image__image',
+        sizes: sizes,
+        loading: loading,
+        alt: pb_resource_alt
     }}
   </div>
 {% else %}

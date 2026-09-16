@@ -166,7 +166,7 @@
       id="footer-cookie-preferences" that calls OneTrust.ToggleInfoDisplay() — the
       footer is out of scope for now, so this hidden trigger is provided for parity.
     {%- endcomment -%}
-    <button style="display:none;" id="ot-sdk-btn" class="ot-sdk-show-settings">Cookie Settings</button>
+    <button type="button" style="display:none;" id="ot-sdk-btn" class="ot-sdk-show-settings">Cookie Settings</button>
 
     {%- comment -%} SCA Store Locator — product WTB hooks (live snippets/sca.storelocator.liquid) {%- endcomment -%}
     {% render 'pb-sca-storelocator' %}
@@ -187,6 +187,28 @@
       To kill it entirely: Shopify admin → Settings → Customer events / Apps /
       Script tags → remove MyLiveChat. CSS alone only hides the UI.
     {%- endcomment -%}
+    {%- comment -%} pb a11y (WCAG 2.4.1): Trustpilot iframe is injected without a title. {%- endcomment -%}
+    <script>
+      (function () {
+        function titleTrustpilotFrames() {
+          document.querySelectorAll('.pb-trustpilot-section iframe, .trustpilot-widget iframe').forEach(function (frame) {
+            if (!frame.getAttribute('title')) {
+              frame.setAttribute('title', 'Customer reviews from Trustpilot');
+            }
+          });
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', titleTrustpilotFrames);
+        } else {
+          titleTrustpilotFrames();
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+          var root = document.querySelector('.pb-trustpilot-section');
+          if (!root || !window.MutationObserver) return;
+          new MutationObserver(titleTrustpilotFrames).observe(root, { childList: true, subtree: true });
+        });
+      })();
+    </script>
     <style>
       .mylivechat_inline.mylivechat_template5.mylivechat_template_float_right.mylivechat_template_float_bottom {
         display: none !important;

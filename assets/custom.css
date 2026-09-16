@@ -685,15 +685,14 @@ body > div[id*="trustpilot-widget-trustbox"][id*="wrapper"] {
   box-sizing: border-box;
 }
 /* quiet eyebrow above the heading (single neutral tone — keeps pink as the only accent) */
-.pb-trustpilot-section .pb-trustpilot-section__title::before {
-  content: "Trusted by thousands of shoppers";
+.pb-trustpilot-section .pb-trustpilot-section__eyebrow {
   display: block;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: black;
-  margin-bottom: 14px;
+  margin: 0 0 14px;
 }
 .pb-trustpilot-section .pb-trustpilot-section__title::after {
   content: "";

@@ -331,7 +331,8 @@
     activeTrigger = trigger || null;
     panel.classList.add('is-open');
     panel.removeAttribute('hidden');
-    panel.setAttribute('aria-hidden', 'false');
+    panel.removeAttribute('aria-hidden');
+    panel.removeAttribute('inert');
     isOpen = true;
     document.documentElement.classList.add('pb-search-open');
     setTriggersExpanded(true);
@@ -350,7 +351,8 @@
     hideResults();
     panel.classList.remove('is-open');
     panel.setAttribute('hidden', '');
-    panel.setAttribute('aria-hidden', 'true');
+    panel.removeAttribute('aria-hidden');
+    panel.setAttribute('inert', '');
     isOpen = false;
     activeTrigger = null;
     clearPanelPosition();

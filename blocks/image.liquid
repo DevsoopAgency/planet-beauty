@@ -38,6 +38,22 @@
   assign media_width_mobile = '100vw'
   assign sizes = 'auto, (min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
   assign widths = '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
+
+  # pb a11y (WCAG 1.1.1 / F30 / WAVE linked-image): shop images often have
+  # filename alts or none. Prefer a real description; fall back to the link target.
+  assign pb_image_alt = block_settings.image.alt | default: '' | strip
+  assign pb_alt_down = pb_image_alt | downcase
+  if pb_alt_down contains '.jpg' or pb_alt_down contains '.jpeg' or pb_alt_down contains '.png' or pb_alt_down contains '.gif' or pb_alt_down contains '.webp' or pb_alt_down contains '.avif' or pb_alt_down contains '.svg'
+    assign pb_image_alt = ''
+  endif
+  if pb_image_alt contains '_'
+    unless pb_image_alt contains ' '
+      assign pb_image_alt = pb_image_alt | replace: '_', ' '
+    endunless
+  endif
+  if pb_image_alt == blank and block_settings.link != blank
+    assign pb_image_alt = block_settings.link | split: '/' | last | replace: '-', ' ' | replace: '_', ' '
+  endif
 %}
 
 {% capture image %}
@@ -51,7 +67,8 @@
         height: block_settings.image.height,
         class: 'image-block__image border-style',
         style: image_border_style,
-        sizes: sizes
+        sizes: sizes,
+        alt: pb_image_alt
     }}
   {%- else -%}
     <div class="placeholder-image border-style size-style" style="{{ image_border_style }}">
@@ -73,6 +90,9 @@
     href="{{ block_settings.link }}"
     class="{{ class }}"
     style="{{ style }}"
+    {% if pb_image_alt != blank %}
+      aria-label="{{ pb_image_alt | escape }}"
+    {% endif %}
     {{ block.shopify_attributes }}
   >
     {{ image }}

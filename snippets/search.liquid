@@ -11,8 +11,13 @@
 {%- enddoc -%}
 
 {% unless style == 'none' %}
-  {%- comment -%} pb: shared panel only once even when snippet renders in multiple header slots {%- endcomment -%}
-  {%- capture pb_slot -%}{%- increment pb_search_slot -%}{%- endcapture -%}
+  {%- comment -%}
+    pb a11y: only the first header render includes the panel (include_panel: true).
+    Duplicate IDs/labels were firing WAVE "multiple form labels" because this
+    snippet is captured twice in header.liquid plus the drawer.
+    Trigger has no aria-label so the visible "What can we help you find?" is the
+    accessible name (WCAG 2.5.3).
+  {%- endcomment -%}
 
   <search-button
     class="search-action{% if class != blank %} {{ class | strip }}{% endif %}"
@@ -21,7 +26,6 @@
       type="button"
       class="button-unstyled search-action__trigger"
       data-pb-search-open="pb-search-panel"
-      aria-label="{{ 'content.search_input_label' | t }}"
       aria-expanded="false"
       aria-controls="pb-search-panel"
     >
@@ -32,13 +36,13 @@
     </button>
   </search-button>
 
-  {%- if pb_slot == '0' -%}
+  {%- if include_panel -%}
     <div
       id="pb-search-panel"
       class="pb-search-panel"
       data-pb-search-panel
       hidden
-      aria-hidden="true"
+      inert
     >
       <form
         class="pb-search-panel__form"

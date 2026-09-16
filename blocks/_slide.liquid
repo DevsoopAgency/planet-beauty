@@ -19,16 +19,41 @@
       assign rounded_image_corners = true
     endif
   %}
-  {%- comment -%} pb: whole-banner click-through (same stretched-link pattern as cards) {%- endcomment -%}
+  {%- comment -%}
+    pb a11y (WCAG 2.4.4 / F89): stretched slide <a> was empty — WAVE "empty link".
+    Name the destination from image alt or the last URL segment. Images below
+    stay alt="" because the overlay link is the accessible name.
+  {%- endcomment -%}
+  {%- liquid
+    assign pb_slide_label = block_settings.image_1.alt | default: '' | strip
+    assign pb_slide_alt_down = pb_slide_label | downcase
+    if pb_slide_alt_down contains '.jpg' or pb_slide_alt_down contains '.jpeg' or pb_slide_alt_down contains '.png' or pb_slide_alt_down contains '.gif' or pb_slide_alt_down contains '.webp' or pb_slide_alt_down contains '.avif' or pb_slide_alt_down contains '.svg'
+      assign pb_slide_label = ''
+    endif
+    if pb_slide_label contains '_'
+      unless pb_slide_label contains ' '
+        assign pb_slide_label = pb_slide_label | replace: '_', ' '
+      endunless
+    endif
+    if pb_slide_label == blank and block_settings.link != blank
+      assign pb_slide_label = block_settings.link | split: '/' | last | replace: '-', ' ' | replace: '_', ' '
+    endif
+    if pb_slide_label == blank
+      assign pb_slide_label = 'Featured promotion'
+    endif
+  -%}
   {%- if block_settings.link != blank and block_settings.media_type_1 != 'video' -%}
     <a
       href="{{ block_settings.link }}"
       class="slide__link"
       draggable="false"
+      aria-label="{{ pb_slide_label | escape }}"
       {% if block_settings.open_in_new_tab %}
         target="_blank" rel="noopener"
       {% endif %}
-    ></a>
+    >
+      <span class="visually-hidden">{{ pb_slide_label | escape }}</span>
+    </a>
   {%- endif -%}
   <div class="slide__image-container{% if rounded_image_corners %} slide__image-container--rounded{% endif %}">
     {%- if block_settings.toggle_overlay -%}
@@ -101,7 +126,8 @@
                 widths: widths,
                 class: 'slide__image',
                 loading: loading,
-                fetchpriority: fetchpriority
+                fetchpriority: fetchpriority,
+                alt: ''
             }}
           </picture>
         {%- else -%}
@@ -116,13 +142,14 @@
                 widths: widths,
                 class: 'slide__image',
                 loading: loading,
-                fetchpriority: fetchpriority
+                fetchpriority: fetchpriority,
+                alt: ''
             }}
           {%- else -%}
             {{
               block_settings.image_1
               | image_url: width: 3840
-              | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image', loading: loading, fetchpriority: fetchpriority
+              | image_tag: height: height, sizes: sizes, widths: widths, class: 'slide__image', loading: loading, fetchpriority: fetchpriority, alt: ''
             }}
           {%- endif -%}
         {%- endif -%}

@@ -214,3 +214,78 @@ select:focus-visible {
     outline-offset: 2px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * 10. Sale / compare-at price contrast. (WCAG 1.4.3, AA)
+ *
+ *    Rebuy widgets use #44be70 sale green (2.37:1 on white) and #9a9a9a
+ *    compare-at (2.81:1). Theme compare-at uses opacity 0.4 on black (~2.85:1).
+ *    #1a7a3a is 5.4:1; #5c5c5c is 7:1. Rebuy cart is not restyled.
+ * ------------------------------------------------------------------------- */
+.rebuy-widget:not(.rebuy-cart):not([id*='cart']) .rebuy-money.sale {
+  color: #1a7a3a;
+}
+
+.compare-at-price,
+.rebuy-widget:not(.rebuy-cart):not([id*='cart']) .rebuy-money.compare-at,
+.rebuy-widget:not(.rebuy-cart):not([id*='cart']) .compare-at {
+  /* stylelint-disable-next-line declaration-no-important */
+  opacity: 1 !important;
+  color: #5c5c5c;
+  text-decoration-line: line-through;
+}
+
+/* ---------------------------------------------------------------------------
+ * 11. Footer policy links. (WCAG 1.4.3 / 2.4.7 / F78)
+ *
+ *    Horizon sets outline-color: #0000 on .policy_list a which hides the
+ *    focus ring. Footer ink #b9b6b0 on the dark bar is 6.71:1 (AA) but the
+ *    scanner also flags it; bump to near-white.
+ * ------------------------------------------------------------------------- */
+footer .footer-utilities__text,
+footer .policy_list a {
+  color: #f2f0ea;
+}
+
+footer .policy_list a,
+footer .footer-utilities__text:focus-visible,
+footer .policy_list a:focus-visible {
+  outline-color: currentColor;
+}
+
+footer .footer-utilities__text:focus-visible,
+footer .policy_list a:focus-visible {
+  outline: var(--focus-outline-width) solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 12. OneTrust "Manage your preferences" on the dark banner. (WCAG 1.4.3 / F24)
+ *
+ *    Unstyled <a> uses browser default #0000ee on #0a0a0a (2.11:1). Set both
+ *    color and background so user stylesheets cannot produce white-on-white.
+ * ------------------------------------------------------------------------- */
+#onetrust-banner-sdk a,
+#onetrust-pc-sdk a,
+#onetrust-consent-sdk a,
+.onetrust-pc-dark-filter a,
+.ot-sdk-container a {
+  color: #c9ddff;
+  background-color: transparent;
+}
+
+#onetrust-banner-sdk a:focus-visible,
+#onetrust-pc-sdk a:focus-visible,
+.ot-sdk-container a:focus-visible {
+  outline: 2px solid #c9ddff;
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 13. Header / mega-menu links missing an explicit color. (WCAG F24)
+ * ------------------------------------------------------------------------- */
+.header a,
+.menu-list a,
+.menu-drawer a {
+  color: inherit;
+}

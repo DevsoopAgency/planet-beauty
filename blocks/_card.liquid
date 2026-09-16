@@ -16,10 +16,13 @@
     <a
       href="{{ block_settings.link }}"
       class="card__link"
+      aria-label="{{ block_settings.link | split: '/' | last | replace: '-', ' ' | escape }}"
       {% if block_settings.open_in_new_tab %}
         target="_blank" rel="noopener"
       {% endif %}
-    ></a>
+    >
+      <span class="visually-hidden">{{ block_settings.link | split: '/' | last | replace: '-', ' ' | escape }}</span>
+    </a>
   {%- endif -%}
 
   {%- liquid

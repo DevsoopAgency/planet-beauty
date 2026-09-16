@@ -16,7 +16,16 @@
   {% assign image_height = height | default: image.height %}
   {% assign image_height_2x = height | default: image_height | times: 2 %}
   {% assign image_height_3x = height | default: image_height | times: 3 %}
+  {%- comment -%} pb a11y (WCAG F30): don't voice filename-like alts. {%- endcomment -%}
   {% assign image_alt_text = image.alt | default: alt_text_fallback | default: '' %}
+  {% assign image_alt_down = image_alt_text | downcase %}
+  {% if image_alt_down contains '.jpg' or image_alt_down contains '.jpeg' or image_alt_down contains '.png' or image_alt_down contains '.gif' or image_alt_down contains '.webp' or image_alt_down contains '.avif' or image_alt_down contains '.svg' %}
+    {% assign image_alt_text = alt_text_fallback | default: '' %}
+  {% elsif image_alt_text contains '_' %}
+    {% unless image_alt_text contains ' ' %}
+      {% assign image_alt_text = image_alt_text | replace: '_', ' ' %}
+    {% endunless %}
+  {% endif %}
 
   {% capture image_srcset -%}
     {{ image | image_url: height: image_height }} 1x, {{ image | image_url: height: image_height_2x }} 2x, {{ image | image_url: height: image_height_3x }} 3x

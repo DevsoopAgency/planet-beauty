@@ -76,7 +76,7 @@
   <a
     href="/pages/store-locator"
     class="pb-header-stores header-actions__action pb-header-action--labeled"
-    aria-label="Locator"
+    aria-label="Stores"
   >
     <span class="svg-wrapper" aria-hidden="true">
       <svg width="18" height="18" viewBox="0 0 26 26" class="pb-icon-location" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -91,7 +91,7 @@
       type="button"
       data-pb-search-open="pb-search-panel"
       class="button-unstyled header-actions__action pb-mobile-search desktop:hidden"
-      aria-label="{{ 'content.search_input_label' | t }}"
+      aria-label="What can we help you find?"
       aria-controls="pb-search-panel"
       aria-expanded="false"
     >
@@ -182,7 +182,7 @@
     <a
       href="{{ routes.cart_url }}"
       class="header-actions__action action__cart mini-cart__toggle btn-link btn-link--text{% if display_style == 'text' %} header-actions__text-style{% endif %}"
-      aria-label="{{ 'accessibility.cart' | t }}"
+      aria-label="{{ 'accessibility.cart' | t }} {{ cart.item_count }}"
       aria-describedby="cart-bubble-text"
       data-testid="cart-drawer-trigger"
       data-minicart-toggle
@@ -193,7 +193,7 @@
     <a
       href="{{ routes.cart_url }}"
       class="header-actions__action action__cart{% if display_style == 'text' %} header-actions__text-style{% endif %}"
-      aria-label="{{ 'accessibility.cart' | t }}"
+      aria-label="{{ 'accessibility.cart' | t }} {{ cart.item_count }}"
       aria-describedby="cart-bubble-text"
     >
       {{ cart_icon }}
