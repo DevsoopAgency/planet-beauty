@@ -289,3 +289,53 @@ footer .policy_list a:focus-visible {
 .menu-drawer a {
   color: inherit;
 }
+
+/* ---------------------------------------------------------------------------
+ * 14. Quantity selector contrast. (WCAG 1.4.3, AA)
+ *
+ *    Scheme input text/border is a low-alpha black (~2–3:1 on the input fill).
+ *    Force ink + border on the stepper so WAVE/PDP quantity isn't a miss.
+ * ------------------------------------------------------------------------- */
+.quantity-selector,
+.quantity-selector input[type='number'],
+.quantity-selector :is(.quantity-minus, .quantity-plus) {
+  color: #1a1a1a;
+}
+
+.quantity-selector {
+  background-color: #fff;
+  border-color: #1a1a1a;
+}
+
+/* ---------------------------------------------------------------------------
+ * 15. Boost collection cards. (WCAG 1.4.3 / 4.1.2)
+ *
+ *    Vendor + inactive pagination use #7a7a7a (4.48:1 on white). Pagination
+ *    color is inline from Boost, so !important is required.
+ * ------------------------------------------------------------------------- */
+.boost-sd__product-vendor {
+  /* stylelint-disable-next-line declaration-no-important */
+  color: #595959 !important;
+}
+
+.boost-sd__pagination-number:not(.boost-sd__pagination-number--active),
+.boost-sd__pagination-button {
+  /* stylelint-disable-next-line declaration-no-important */
+  color: #595959 !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * 16. Footer accordion / newsletter ink. (WCAG 1.4.3, AA)
+ *
+ *    Menu links are `rgb(245 241 232 / 70%)` and supporting copy uses
+ *    opacity 0.6–0.7 — scanners treat that as a fail against the dark bar.
+ * ------------------------------------------------------------------------- */
+.footer-content--planet-beauty .menu__item a,
+.footer-content--planet-beauty .group-block > .text-block:nth-of-type(2) p,
+.footer-content--planet-beauty .group-block > .text-block:nth-of-type(3) p,
+footer .email-signup label,
+footer .email-signup .field__label,
+footer .newsletter-signup label {
+  color: #f2f0ea;
+  opacity: 1;
+}

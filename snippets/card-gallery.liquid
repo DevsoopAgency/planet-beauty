@@ -152,7 +152,12 @@
           endif
 
           capture slideshow_children
-            render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true
+            # pb a11y: hover/carousel slides duplicate the product alt — decorative.
+            if forloop.first
+              render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true, is_main_product_media: true
+            else
+              render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true, decorative: true
+            endif
           endcapture
 
           render 'slideshow-slide', slide_id: media.id, index: forloop.index0, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: media_fit
@@ -164,11 +169,12 @@
         assign slideshow_attributes = slideshow_attributes | append: ' disabled="true"'
       endif
     %}
+    {%- comment -%} pb a11y: stretched .product-card__link already names the card. {%- endcomment -%}
     <a
       class="contents"
       ref="cardGalleryLink"
       href="{{ product.selected_or_first_available_variant.url }}"
-      aria-label="{{- product.title -}}"
+      tabindex="-1"
     >
       {% render 'slideshow',
         ref: 'slideshow',

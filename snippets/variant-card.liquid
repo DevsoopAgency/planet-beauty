@@ -109,7 +109,7 @@
       data-product-id="{{ product.id }}"
       data-image-ratio="{{ image_ratio }}"
     >
-      <a class="contents" ref="cardGalleryLink" href="{{ variant_url }}" aria-label="{{ card_title }}">
+      <a class="contents" ref="cardGalleryLink" href="{{ variant_url }}" tabindex="-1">
         <div class="product-media-container media-fit product-media-container--image">
           {% if card_image != blank %}
             {{

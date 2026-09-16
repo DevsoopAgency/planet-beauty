@@ -228,7 +228,7 @@
 
 				<h4 class="super-title" v-if="config.language.super_title != ''" v-html="config.language.super_title"></h4>
 
-				<h3 class="primary-title" v-if="config.language.title != ''" v-html="config.language.title"></h3>
+				<h2 class="primary-title" v-if="config.language.title != ''" v-html="config.language.title"></h2>
 
 				<div class="description" v-if="config.language.description != ''" v-html="config.language.description"></div>
 
@@ -237,8 +237,8 @@
 					<div class="rebuy-bundle__images">
 
 						<div class="rebuy-bundle__image" v-for="(product, index) in products" v-if="product.selected" v-bind:class="[product.handle, 'product-id-' + product.id, cartHasProduct(product) ? 'cart-has-item' : '', productTagClasses(product)]">
-							<a class="rebuy-bundle__image-item" v-bind:href="learnMoreURL(product)" v-bind:style="imageStyles" v-on:click="learnMore(product);" v-bind:class="[hasLearnMore() && !isInputProduct(product) ? 'clickable' : '' ]">
-								<img v-bind:src="itemImage(product, product.selected_variant, '400x400')" v-bind:alt="product.title">
+							<a class="rebuy-bundle__image-item" v-bind:href="learnMoreURL(product)" v-bind:style="imageStyles" v-on:click="learnMore(product);" v-bind:class="[hasLearnMore() && !isInputProduct(product) ? 'clickable' : '' ]" tabindex="-1" aria-hidden="true">
+								<img v-bind:src="itemImage(product, product.selected_variant, '400x400')" alt="">
 							</a>
 							<div class="rebuy-bundle__image-divider">
 								<i class="far fa-plus"></i>
@@ -253,8 +253,8 @@
 				    <div class="rebuy-product-block" v-for="(product, product_index) in products" v-bind:class="[product.handle, 'product-id-' + product.id, cartHasProduct(product) ? 'cart-has-item' : '', productTagClasses(product), isInputProduct(product) ? 'is-input-product' : '' ,product.selected ? 'is-selected': '']">
 
 							<div class="rebuy-product-info">
-                            	<a class="rebuy-bundle__image-item bundle-single-image" v-bind:href="learnMoreURL(product)" v-bind:style="imageStyles" v-on:click="learnMore(product);" v-bind:class="[hasLearnMore() && !isInputProduct(product) ? 'clickable' : '' ]">
-									<img v-bind:src="itemImage(product, product.selected_variant)" v-bind:alt="product.title">
+                            	<a class="rebuy-bundle__image-item bundle-single-image" v-bind:href="learnMoreURL(product)" v-bind:style="imageStyles" v-on:click="learnMore(product);" v-bind:class="[hasLearnMore() && !isInputProduct(product) ? 'clickable' : '' ]" tabindex="-1" aria-hidden="true">
+									<img v-bind:src="itemImage(product, product.selected_variant)" alt="">
 								</a>
                                 <div class="rebuy-product-checkbox">
                                     <label class="rebuy-checkbox-label">
@@ -262,6 +262,7 @@
                                             class="checkbox-input rebuy-checkbox"
                                             v-model="product.selected"
                                             type="checkbox" />
+                                        <span class="visually-hidden" v-text="'Include ' + product.title"></span>
                                     </label>
                                 </div>
                                 <strong class="rebuy-product-label" v-if="isInputProduct(product)" v-html="'This item:'"></strong>
@@ -287,6 +288,10 @@
 								<div class="rebuy-product-description" v-if="showProductDescription(product)" v-html="text(product.body_html)"></div>
 							</div>
 							<div class="rebuy-product-options" v-if="showVariantSelect(product)">
+								<label
+									class="visually-hidden"
+									:for="id + '-' + 'select' + '-' + product_index"
+									v-text="'Variant for ' + product.title"></label>
 								<select
 									:id="id + '-' + 'select' + '-' + product_index"
 									:class="{ hide : settings.view_options.variant_selector == 'buttons' }"
@@ -310,7 +315,7 @@
 											:for="id + '-color-' + option_index + '-' + value + '-' + value_index"
 											:style="{ backgroundColor: value }"
 											:title="value"
-											class="rebuy-color-label"></label>
+											class="rebuy-color-label"><span class="visually-hidden" v-text="value"></span></label>
 									</div>
 								</div>
 

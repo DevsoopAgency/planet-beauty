@@ -187,6 +187,8 @@
       To kill it entirely: Shopify admin → Settings → Customer events / Apps /
       Script tags → remove MyLiveChat. CSS alone only hides the UI.
     {%- endcomment -%}
+    {%- comment -%} pb a11y: Boost/Rebuy injected controls (empty buttons, unlabeled selects). {%- endcomment -%}
+    <script src="{{ 'pb-a11y.js' | asset_url }}" defer></script>
     {%- comment -%} pb a11y (WCAG 2.4.1): Trustpilot iframe is injected without a title. {%- endcomment -%}
     <script>
       (function () {

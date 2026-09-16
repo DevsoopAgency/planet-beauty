@@ -11,6 +11,8 @@
   @param {boolean} [first_3d_model] - Indicates if this is the first 3D model.
   @param {boolean} [is_main_product_media] - Indicates if this is the main product image.
   @param {string} [image_ref] - Optional ref attribute for the image element.
+  @param {string} [image_alt] - Override alt.
+  @param {boolean} [decorative] - If true, alt is empty (card hover/swap images).
 
   @example
   {% render 'product-media', media: media, preview_image_only: false, loading: 'lazy' %}
@@ -21,6 +23,23 @@
   assign ref_image_to_transition = ''
   if settings.transition_to_main_product
     assign ref_image_to_transition = 'imagesToTransition[]'
+  endif
+
+  # pb a11y: unique alt per gallery frame so WAVE doesn't flag duplicate nearby alts.
+  if decorative
+    assign resolved_alt = ''
+  elsif image_alt == nil
+    assign resolved_alt = media.alt | default: ''
+    if resolved_alt == blank and closest.product != blank
+      assign resolved_alt = closest.product.title
+    endif
+    unless is_main_product_media
+      if resolved_alt != blank
+        assign resolved_alt = resolved_alt | append: ', image ' | append: media.id
+      endif
+    endunless
+  else
+    assign resolved_alt = image_alt
   endif
 %}
 
@@ -42,7 +61,7 @@
     | image_url: width: 3840
     | image_tag:
       widths: widths,
-      alt: media.alt,
+      alt: resolved_alt,
       sizes: sizes,
       loading: loading,
       class: 'product-media__image',
@@ -69,7 +88,7 @@
               | image_url: width: 3840
               | image_tag:
                 widths: widths,
-                alt: media.alt,
+                alt: resolved_alt,
                 sizes: sizes,
                 loading: loading,
                 class: 'deferred-media__poster-image'
