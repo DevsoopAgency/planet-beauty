@@ -8,6 +8,27 @@
   overflow-x: clip;
 }
 
+/*
+ * pb a11y/layout: Firefox splits short brand words mid-glyph
+ * (e.g. REDKEN → REDKE / N) when text-wrap:pretty + overflow-wrap:break-word
+ * meet a min-width:0 product-details column. Keep wraps at word boundaries;
+ * vendor/brand line stays on one line.
+ */
+#MainContent[data-template='product'] .product-details .text-block,
+#MainContent[data-template='product'] .product-details .text-block > *,
+#MainContent[data-template='product'] .product-details .text-block :is(p, h1, h2, h3, strong) {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+  text-wrap: wrap;
+}
+
+/* Vendor is a single uppercase brand word — never mid-break */
+#MainContent[data-template='product'] .product-details .text-block:has(> p > strong:only-child) {
+  white-space: nowrap;
+  max-width: 100%;
+}
+
 @media screen and (max-width: 749px) {
   /* Subgrid children default to min-width:auto and can push past the viewport */
   .product-information,
