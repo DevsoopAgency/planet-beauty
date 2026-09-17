@@ -21,6 +21,7 @@
       "block_order": [
         "contact_chat_widget"
       ],
+      "disabled": true,
       "name": "Contact chat",
       "settings": {
         "content_direction": "column",
