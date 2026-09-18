@@ -117,7 +117,7 @@
                 "text_7CeN7E": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Our shipping warehouse is open M-F 9am - 5pm, orders placed within this time frame on average go out in 1-2 business days, however we reserve up to 4 business days to ship orders. In a case where an order is delayed beyond 4 days, the customer will be notified.</p>",
+                    "text": "<p>Our shipping warehouse is open M-F 9am - 4pm, orders placed within this time frame on average go out in 1-2 business days, however we reserve up to 4 business days to ship orders. In a case where an order is delayed beyond 4 days, the customer will be notified.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -279,7 +279,7 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "text": "<p>All our coupon codes are case sensitive as well as subject to some exclusions which you may see the full list here: <a href=\"/pages/coupon-exclusions\">Coupon Exclusions</a>. If you are still unsure or having trouble please give us a call or email, we will be happy to assist you.</p>",
+                    "text": "<p>Discounts cannot be combined, so coupons won't apply to already discounted items. All our coupon codes are case sensitive as well as subject to some exclusions which you may see the full list here: <a href=\"/pages/coupon-exclusions\">Coupon Exclusions</a>. If you are still unsure or having trouble please give us a call or email, we will be happy to assist you.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -359,7 +359,7 @@
                 "text_caj4Hx": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>You have 30 days to return your items from when they were received. If it was an online order, shipping charges may apply. Please see our full return policy here: <a href=\"/pages/returns\"> Returns</a></p>",
+                    "text": "<p>You have 30 days to return your items from when they were received, except select items that have a no return policy, these items will show that information in their page. If it was an online order, shipping charges may apply. Please see our full return policy here: <a href=\"/pages/returns\"> Returns</a></p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -559,7 +559,7 @@
                 "text_EWahMA": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Yes you may switch your shipping order to a store pick up, as long as it hasn't already shipped and the location of your choice has the items available. Feel free to give us a call or email, we would be happy to help!</p>",
+                    "text": "<p>Yes you may switch your shipping order to a store pick up, as long as it hasn't already shipped and the location of your choice has the items available. Feel free to email, we would be happy to help!</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -599,7 +599,7 @@
                 "text_bWkbXh": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>If your tracking link isnt working. You can always copy and paste your tracking number directly into the google search engine for the most up to date tracking information.</p>",
+                    "text": "<p>If your tracking link isn't working. You can always copy and paste your tracking number directly into the google search engine for the most up to date tracking information.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -679,7 +679,7 @@
                 "text_raMM6N": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "text": "<p>Please email info@planetbeauty.com with pictures of the damages. Do not discard boxes or contents. We will work quickly to reship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
