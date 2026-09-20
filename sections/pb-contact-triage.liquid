@@ -1,0 +1,364 @@
+{%- comment -%}
+  Planet Beauty — contact triage form (v1)
+
+  Deliberately does NOT look up or display any order data. Order numbers are
+  sequential, so showing order details on an order-number + email pair would let
+  anyone walk the range and read another customer's order. The order number is
+  captured and passed to staff; nothing about the order is ever shown back.
+
+  Posts to n8n (Contact Form v2 — intake), which emails info@ with a structured
+  subject and hands off to the existing acknowledgement workflow.
+{%- endcomment -%}
+
+<style>
+  .pbct{--pbct-ink:#231b20;--pbct-ink2:#5c5157;--pbct-ink3:#8b8085;--pbct-line:#e6dde1;
+        --pbct-line2:#d5c8ce;--pbct-surface:#fff;--pbct-soft:#f7f2f4;--pbct-brand:#d6007b;
+        --pbct-brandsoft:#fce7f2;--pbct-warm:#a86616;
+        max-width:720px;margin:0 auto;padding:32px 16px 64px;color:var(--pbct-ink);
+        font-size:16px;line-height:1.6}
+  .pbct *{box-sizing:border-box}
+  .pbct h1{font-size:clamp(24px,4vw,32px);font-weight:800;letter-spacing:-.02em;margin:0 0 6px;text-wrap:balance}
+  .pbct .pbct-sub{color:var(--pbct-ink2);margin:0 0 28px;font-size:16px}
+  .pbct label{display:block;font-size:13.5px;font-weight:700;margin-bottom:5px}
+  .pbct input[type=text],.pbct input[type=email],.pbct textarea{
+    width:100%;font:inherit;font-size:16px;border:1px solid var(--pbct-line2);border-radius:3px;
+    padding:12px 13px;background:var(--pbct-surface);color:var(--pbct-ink)}
+  .pbct textarea{resize:vertical;min-height:110px}
+  .pbct input:focus-visible,.pbct textarea:focus-visible,.pbct button:focus-visible{
+    outline:2px solid var(--pbct-brand);outline-offset:2px}
+  .pbct .pbct-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+  @media (max-width:600px){.pbct .pbct-row{grid-template-columns:1fr}}
+  .pbct .pbct-field{margin-bottom:18px}
+  .pbct .pbct-hint{font-size:12.5px;color:var(--pbct-ink3);margin-top:4px}
+  .pbct .pbct-legend{font-size:13.5px;font-weight:700;margin:26px 0 10px}
+  .pbct .pbct-reasons{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+  {%- comment -%} The theme upper-cases every button. These are choices, not calls to action. {%- endcomment -%}
+  .pbct .pbct-reason{font:inherit;font-size:15px;text-align:left;cursor:pointer;color:var(--pbct-ink);
+    text-transform:none;letter-spacing:normal;
+    background:var(--pbct-surface);border:1px solid var(--pbct-line2);border-radius:3px;padding:13px 14px;
+    transition:border-color .12s,background .12s}
+  .pbct .pbct-reason:hover{border-color:var(--pbct-brand)}
+  .pbct .pbct-reason[aria-pressed=true]{border-color:var(--pbct-brand);background:var(--pbct-brandsoft);font-weight:700}
+  .pbct .pbct-answer{background:var(--pbct-soft);border-radius:3px;padding:16px 18px;margin:18px 0 0}
+  .pbct .pbct-answer h2{font-size:15.5px;font-weight:700;margin:0 0 6px}
+  .pbct .pbct-answer p{margin:0 0 9px;font-size:15px;color:var(--pbct-ink2)}
+  .pbct .pbct-answer p:last-child{margin-bottom:0}
+  .pbct .pbct-answer a{color:var(--pbct-brand)}
+  .pbct .pbct-send{background:var(--pbct-brand);color:#fff;border:none;border-radius:3px;
+    font-weight:700;font-size:16px;padding:14px 26px;cursor:pointer;margin-top:6px}
+  .pbct .pbct-send[disabled]{opacity:.55;cursor:default}
+  .pbct .pbct-notice{font-size:12.5px;color:var(--pbct-ink3);margin-top:14px;line-height:1.5}
+  .pbct .pbct-notice a{color:var(--pbct-ink2)}
+  .pbct .pbct-err{color:#b3261e;font-size:14px;margin-top:10px}
+  .pbct .pbct-trap{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+  {%- comment -%}
+    The bare OS file input looks unfinished next to the rest of the form, and the
+    theme's global input margin pushes the hint text away from it. Both pinned here.
+  {%- endcomment -%}
+  .pbct input[type=file]{font:inherit;font-size:14.5px;color:var(--pbct-ink2);margin:0;
+    width:100%;background:var(--pbct-surface);border:1px dashed var(--pbct-line2);
+    border-radius:3px;padding:11px 12px;cursor:pointer}
+  .pbct input[type=file]::file-selector-button{font:inherit;font-size:14px;font-weight:700;
+    text-transform:none;letter-spacing:normal;cursor:pointer;margin:0 12px 0 0;
+    background:var(--pbct-soft);color:var(--pbct-ink);border:1px solid var(--pbct-line2);
+    border-radius:3px;padding:8px 14px;transition:border-color .12s}
+  .pbct input[type=file]::file-selector-button:hover{border-color:var(--pbct-brand)}
+  .pbct input[type=file]:hover{border-color:var(--pbct-line2)}
+  .pbct #pbct-photo-field .pbct-hint{margin:7px 0 0}
+  .pbct .pbct-thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  .pbct .pbct-thumb{position:relative;width:84px;height:84px;border-radius:3px;overflow:hidden;
+    border:1px solid var(--pbct-line2);background:var(--pbct-soft)}
+  .pbct .pbct-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .pbct .pbct-thumb button{position:absolute;top:2px;right:2px;width:22px;height:22px;border:none;
+    border-radius:50%;background:rgba(0,0,0,.62);color:#fff;font-size:14px;line-height:22px;
+    padding:0;cursor:pointer;text-transform:none}
+  .pbct .pbct-done{background:var(--pbct-brandsoft);border-radius:4px;padding:28px 26px;text-align:left}
+  .pbct .pbct-done h2{margin:0 0 8px;font-size:20px;font-weight:800}
+  .pbct .pbct-done p{margin:0 0 8px;color:var(--pbct-ink2)}
+  @media (prefers-reduced-motion:reduce){.pbct *{transition:none!important}}
+</style>
+
+<div class="pbct" id="pbct">
+  <div id="pbct-form-wrap">
+    <h1>{{ section.settings.heading | default: 'How can we help?' }}</h1>
+    {%- comment -%}
+      Reply time must match the acknowledgement email word for word. That email
+      says "one to two business days"; if this page promises something shorter,
+      customers chase us on day two quoting our own page back at us.
+    {%- endcomment -%}
+    <p class="pbct-sub">{{ section.settings.intro | default: 'Tell us what you need and we will reply within one to two business days.' }}</p>
+
+    <form id="pbct-form" novalidate>
+      <div class="pbct-row">
+        <div>
+          <label for="pbct-name">Your name</label>
+          <input type="text" id="pbct-name" name="name" autocomplete="name" maxlength="80">
+        </div>
+        <div>
+          <label for="pbct-email">Your email <span aria-hidden="true">*</span></label>
+          <input type="email" id="pbct-email" name="email" autocomplete="email" required maxlength="160">
+        </div>
+      </div>
+
+      <div class="pbct-field">
+        <label for="pbct-order">Order number</label>
+        <input type="text" id="pbct-order" name="order_number" inputmode="numeric" maxlength="20" placeholder="e.g. 697382">
+        <p class="pbct-hint">Optional, but it gets you a faster answer. It is in your confirmation email.</p>
+      </div>
+
+      {%- comment -%}
+        Anti-bot trap. NEVER name this something an autofill engine recognises.
+        It was called "company" for one day and Chrome filled it from the
+        visitor's saved details, silently dropping a real person as a bot.
+      {%- endcomment -%}
+      <div class="pbct-trap" aria-hidden="true">
+        <label for="pbct-ref">Leave this field empty</label>
+        <input type="text" id="pbct-ref" name="pbct_ref" tabindex="-1"
+               autocomplete="off" data-lpignore="true" data-1p-ignore>
+      </div>
+
+      <p class="pbct-legend" id="pbct-reason-label">What can we help with?</p>
+      <div class="pbct-reasons" role="group" aria-labelledby="pbct-reason-label">
+        <button type="button" class="pbct-reason" data-k="wismo" aria-pressed="false">Where is my order</button>
+        <button type="button" class="pbct-reason" data-k="addr" aria-pressed="false">My address is wrong</button>
+        <button type="button" class="pbct-reason" data-k="cancel" aria-pressed="false">Cancel my order</button>
+        <button type="button" class="pbct-reason" data-k="ret" aria-pressed="false">Return or exchange</button>
+        <button type="button" class="pbct-reason" data-k="damaged" aria-pressed="false">Damaged, wrong or missing item</button>
+        <button type="button" class="pbct-reason" data-k="other" aria-pressed="false">Something else</button>
+      </div>
+
+      <div id="pbct-answer" hidden></div>
+
+      <div class="pbct-field" id="pbct-photo-field" style="margin-top:22px" hidden>
+        <label for="pbct-photos">Add a photo</label>
+        <input type="file" id="pbct-photos" accept="image/*" multiple>
+        <p class="pbct-hint">Up to 3 photos. They are resized on your device before sending,
+          so a large photo will not fail.</p>
+        <div class="pbct-thumbs" id="pbct-thumbs"></div>
+      </div>
+
+      <div class="pbct-field" style="margin-top:22px">
+        <label for="pbct-message" id="pbct-message-label">Tell us what is happening</label>
+        <textarea id="pbct-message" name="message" maxlength="4000"
+          placeholder="Anything the options above do not cover"></textarea>
+      </div>
+
+      <button type="submit" class="pbct-send" id="pbct-send">Send message</button>
+      <p class="pbct-err" id="pbct-err" hidden></p>
+
+      <p class="pbct-notice">
+        We use your name, email, order number, message and any photos only to answer you, and we keep them
+        with your customer service history. We do not sell your information. See our
+        <a href="/policies/privacy-policy">Privacy Policy</a> for how to request or delete your data.
+      </p>
+    </form>
+  </div>
+
+  <div class="pbct-done" id="pbct-done" hidden>
+    <h2>Thanks — we have got it</h2>
+    <p id="pbct-done-line">We will reply to <strong id="pbct-done-email"></strong> within one to two business days.</p>
+    <p>If you gave us an order number, it is already attached, so nobody will need to ask you for it.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var ENDPOINT = 'https://planetbeauty.app.n8n.cloud/webhook/contact-form-v2';
+  var LOADED_AT = Date.now();
+  var MAX_PHOTOS = 3;
+
+  // Answers are static. Nothing here is specific to an order, because the page
+  // never looks one up.
+  var ANSWERS = {
+    wismo: {
+      h: 'Most orders leave the warehouse within 1 to 2 business days',
+      p: ['Your tracking number arrives by email the moment your order ships. If the link will not open, copy the number straight into fedex.com, ups.com or usps.com.',
+          'If tracking shows nothing yet, the label exists but the carrier has not scanned the parcel. That usually clears within 24 hours.',
+          'If tracking says delivered and it is not with you, check anywhere a parcel might be left and ask others at the address, then tell us below and we will open a claim.']
+    },
+    addr: {
+      h: 'We can usually change it before the order is packed',
+      p: ['Put the correct address in the message below with your order number and we will update it if it has not shipped.',
+          'If your order is on hold, that is an address check, not a payment problem. Nothing is wrong with your card. Confirm the address below and it ships the same business day.']
+    },
+    cancel: {
+      h: 'We can cancel any order that has not shipped',
+      p: ['Tell us below and we will cancel it and start the refund. Refunds go back to the original payment method.',
+          'If it has already shipped, send it back unopened within 30 days and we will refund it in full.']
+    },
+    ret: {
+      h: 'You have 30 days from delivery',
+      p: ['Tell us what you would like to return and why, and we will confirm it is eligible and send instructions.',
+          'If the item arrived damaged or is not what you ordered, add a photo below and we will replace it.',
+          'Full details are on our <a href="/pages/returns">returns page</a>.']
+    },
+    damaged: {
+      h: 'We will replace it',
+      p: ['Add a photo of the item and the box below, and tell us what happened. That is everything we need to arrange a replacement.',
+          'Please keep the item and its packaging until you hear from us.',
+          'If part of your order is missing rather than damaged, just tell us which items below. No photo needed.']
+    },
+    other: { h: '', p: [] }
+  };
+
+  var PROMPTS = {
+    wismo: 'e.g. ordered on the 12th and tracking has not moved',
+    addr: 'The correct address, and your order number if you have it',
+    cancel: 'Which order you would like cancelled',
+    ret: 'What you would like to return, and why',
+    damaged: 'e.g. I only received one of the two items I ordered',
+    other: 'Tell us what is happening'
+  };
+
+  // Reasons that plausibly need a photo. Others keep the field hidden so the
+  // form stays as short as the customer's problem requires.
+  var WANTS_PHOTO = { damaged: true, ret: true };
+
+  var form = document.getElementById('pbct-form');
+  if (!form) { return; }
+  var buttons = Array.prototype.slice.call(document.querySelectorAll('.pbct-reason'));
+  var answerEl = document.getElementById('pbct-answer');
+  var messageEl = document.getElementById('pbct-message');
+  var errEl = document.getElementById('pbct-err');
+  var sendEl = document.getElementById('pbct-send');
+  var photoField = document.getElementById('pbct-photo-field');
+  var photoInput = document.getElementById('pbct-photos');
+  var thumbsEl = document.getElementById('pbct-thumbs');
+  var chosen = '';
+  var photos = [];
+
+  function showAnswer(k) {
+    var a = ANSWERS[k];
+    if (!a || !a.h) { answerEl.hidden = true; answerEl.innerHTML = ''; return; }
+    var html = '<div class="pbct-answer"><h2>' + a.h + '</h2>';
+    for (var i = 0; i < a.p.length; i++) { html += '<p>' + a.p[i] + '</p>'; }
+    answerEl.innerHTML = html + '</div>';
+    answerEl.hidden = false;
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      chosen = b.getAttribute('data-k');
+      buttons.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      showAnswer(chosen);
+      messageEl.setAttribute('placeholder', PROMPTS[chosen] || '');
+      photoField.hidden = !WANTS_PHOTO[chosen];
+    });
+  });
+
+  // Resize on the device. A modern phone photo is 4-8MB; Graph refuses a message
+  // over about 3MB, so sending the original would simply lose the attachment.
+  function shrink(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('read failed')); };
+      reader.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error('decode failed')); };
+        img.onload = function () {
+          var max = 1600;
+          var w = img.width, h = img.height;
+          if (w > max || h > max) {
+            if (w >= h) { h = Math.round(h * (max / w)); w = max; }
+            else { w = Math.round(w * (max / h)); h = max; }
+          }
+          var canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.72));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function drawThumbs() {
+    thumbsEl.innerHTML = '';
+    photos.forEach(function (p, i) {
+      var wrap = document.createElement('div');
+      wrap.className = 'pbct-thumb';
+      var im = document.createElement('img');
+      im.src = p.dataUrl; im.alt = p.name;
+      var rm = document.createElement('button');
+      rm.type = 'button';
+      rm.setAttribute('aria-label', 'Remove ' + p.name);
+      rm.textContent = '×';
+      rm.addEventListener('click', function () { photos.splice(i, 1); drawThumbs(); });
+      wrap.appendChild(im); wrap.appendChild(rm);
+      thumbsEl.appendChild(wrap);
+    });
+  }
+
+  photoInput.addEventListener('change', function () {
+    var files = Array.prototype.slice.call(photoInput.files || []);
+    var room = MAX_PHOTOS - photos.length;
+    if (room <= 0) { photoInput.value = ''; return; }
+    var queue = files.slice(0, room).filter(function (f) { return /^image\//.test(f.type); });
+    Promise.all(queue.map(function (f) {
+      return shrink(f).then(function (dataUrl) { return { name: f.name, dataUrl: dataUrl }; })
+        .catch(function () { return null; });
+    })).then(function (done) {
+      done.filter(Boolean).forEach(function (p) { photos.push(p); });
+      photoInput.value = '';
+      drawThumbs();
+    });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errEl.hidden = true;
+    var email = document.getElementById('pbct-email').value.trim();
+    var message = messageEl.value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) {
+      errEl.textContent = 'Please check your email address so we can reply to you.';
+      errEl.hidden = false; document.getElementById('pbct-email').focus(); return;
+    }
+    if (!chosen && !message) {
+      errEl.textContent = 'Please choose what we can help with, or write us a message.';
+      errEl.hidden = false; return;
+    }
+    sendEl.disabled = true; sendEl.textContent = 'Sending…';
+
+    var payload = {
+      name: document.getElementById('pbct-name').value.trim(),
+      email: email,
+      order_number: document.getElementById('pbct-order').value.trim(),
+      pbct_ref: document.getElementById('pbct-ref').value.trim(),
+      elapsed_ms: Date.now() - LOADED_AT,
+      reason: chosen || 'other',
+      message: message,
+      photos: photos,
+      page: window.location.pathname
+    };
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      if (!r.ok) { throw new Error('bad status'); }
+      document.getElementById('pbct-done-email').textContent = email;
+      document.getElementById('pbct-form-wrap').hidden = true;
+      document.getElementById('pbct-done').hidden = false;
+      document.getElementById('pbct-done').scrollIntoView({ block: 'center' });
+    }).catch(function () {
+      sendEl.disabled = false; sendEl.textContent = 'Send message';
+      errEl.innerHTML = 'Something went wrong sending that. Please email us at ' +
+        '<a href="mailto:info@planetbeauty.com">info@planetbeauty.com</a> and we will pick it up.';
+      errEl.hidden = false;
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Contact triage",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "How can we help?" },
+    { "type": "text", "id": "intro", "label": "Intro line", "default": "Tell us what you need and we will reply within one to two business days." }
+  ],
+  "presets": [{ "name": "Contact triage" }]
+}
+{% endschema %}
