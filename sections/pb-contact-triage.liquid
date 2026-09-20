@@ -19,6 +19,13 @@
   .pbct *{box-sizing:border-box}
   .pbct h1{font-size:clamp(24px,4vw,32px);font-weight:800;letter-spacing:-.02em;margin:0 0 6px;text-wrap:balance}
   .pbct .pbct-sub{color:var(--pbct-ink2);margin:0 0 28px;font-size:16px}
+  {%- comment -%}
+    When the hours line is present it owns the gap below the intro, so the intro
+    tightens up. When it is blank the intro keeps its own spacing and nothing
+    collapses. Editable in the theme editor, so hours can be corrected without code.
+  {%- endcomment -%}
+  .pbct .pbct-sub--tight{margin-bottom:8px}
+  .pbct .pbct-hours{margin:0 0 28px;font-size:14px;font-weight:700;color:var(--pbct-ink)}
   .pbct label{display:block;font-size:13.5px;font-weight:700;margin-bottom:5px}
   .pbct input[type=text],.pbct input[type=email],.pbct textarea{
     width:100%;font:inherit;font-size:16px;border:1px solid var(--pbct-line2);border-radius:3px;
@@ -86,7 +93,10 @@
       says "one to two business days"; if this page promises something shorter,
       customers chase us on day two quoting our own page back at us.
     {%- endcomment -%}
-    <p class="pbct-sub">{{ section.settings.intro | default: 'Tell us what you need and we will reply within one to two business days.' }}</p>
+    <p class="pbct-sub{% if section.settings.hours != blank %} pbct-sub--tight{% endif %}">{{ section.settings.intro | default: 'Tell us what you need and we will reply within one to two business days.' }}</p>
+    {%- if section.settings.hours != blank -%}
+      <p class="pbct-hours">{{ section.settings.hours }}</p>
+    {%- endif -%}
 
     <form id="pbct-form" novalidate>
       <div class="pbct-row">
@@ -357,7 +367,8 @@
   "name": "Contact triage",
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "How can we help?" },
-    { "type": "text", "id": "intro", "label": "Intro line", "default": "Tell us what you need and we will reply within one to two business days." }
+    { "type": "text", "id": "intro", "label": "Intro line", "default": "Tell us what you need and we will reply within one to two business days." },
+    { "type": "text", "id": "hours", "label": "Hours line (leave blank to hide)", "default": "Customer care is open Monday to Friday, 9am to 4pm PT." }
   ],
   "presets": [{ "name": "Contact triage" }]
 }
