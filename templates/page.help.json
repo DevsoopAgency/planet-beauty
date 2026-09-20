@@ -13,7 +13,8 @@
       "type": "pb-contact-triage",
       "settings": {
         "heading": "How can we help?",
-        "intro": "Tell us what you need and we will reply within one to two business days."
+        "intro": "Tell us what you need and we will reply within one to two business days.",
+        "hours": "Customer care is open Monday to Friday, 9am to 4pm PT."
       }
     }
   },
