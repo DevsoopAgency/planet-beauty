@@ -222,7 +222,11 @@
 
   // Reasons that plausibly need a photo. Others keep the field hidden so the
   // form stays as short as the customer's problem requires.
-  var WANTS_PHOTO = { damaged: true, ret: true };
+  // 'other' is here because a real customer on day one wrote that her shampoo
+  // arrived broken and ended with "tengo fotos" - I have photos - but she had
+  // picked Something else, so the upload never appeared. Whoever cannot find a
+  // button for their problem is exactly who most needs to show us.
+  var WANTS_PHOTO = { damaged: true, ret: true, other: true };
 
   var form = document.getElementById('pbct-form');
   if (!form) { return; }
