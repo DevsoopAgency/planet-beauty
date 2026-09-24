@@ -946,6 +946,20 @@
         "padding-block-end": 32
       }
     },
+    "custom_liquid_dg6CGT": {
+      "type": "custom-liquid",
+      "custom_css": [
+        ".rebuy-widget {max-width: 100%;}"
+      ],
+      "name": "t:names.custom_liquid",
+      "settings": {
+        "custom_liquid": "<!-- Shop Our Newest -->\n<div class=\"homepage-rebuy-bestsellers\">\n  <div data-rebuy-id=\"312006\"></div>\n</div>\n<script src=\"{{ 'rebuy-home.js' | asset_url }}\" defer></script>",
+        "color_scheme": "",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "custom_liquid_qLjjxM": {
       "type": "custom-liquid",
       "custom_css": [
@@ -1160,20 +1174,6 @@
       "name": "t:names.custom_liquid",
       "settings": {
         "custom_liquid": "<!-- Gifts Under $50 -->\n<div class=\"homepage-rebuy-giftsunder50\">\n  <div data-rebuy-id=\"181855\"></div>\n</div>\n<script src=\"{{ 'rebuy-home.js' | asset_url }}\" defer></script>",
-        "color_scheme": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
-    },
-    "custom_liquid_dg6CGT": {
-      "type": "custom-liquid",
-      "custom_css": [
-        ".rebuy-widget {max-width: 100%;}"
-      ],
-      "name": "t:names.custom_liquid",
-      "settings": {
-        "custom_liquid": "<!-- Shop Our Newest -->\n<div class=\"homepage-rebuy-bestsellers\">\n  <div data-rebuy-id=\"312006\"></div>\n</div>\n<script src=\"{{ 'rebuy-home.js' | asset_url }}\" defer></script>",
         "color_scheme": "",
         "section_width": "page-width",
         "padding-block-start": 0,
@@ -3542,11 +3542,11 @@
     "slideshow_hNjgrd",
     "grid_slider_hTYj9P",
     "collection_list_zAQAKh",
+    "custom_liquid_dg6CGT",
     "custom_liquid_qLjjxM",
     "section_UxEDxx",
     "custom_liquid_4PUtGP",
     "custom_liquid_giftsU50",
-    "custom_liquid_dg6CGT",
     "section_eCYAbX",
     "section_wBqfa4",
     "custom_liquid_trustpilot",
