@@ -74,6 +74,60 @@
       f.parentNode.insertBefore(t, f);
     }
 
+    /* pb-consent-marketing-apps (migration-added, 2026-09-29):
+       Klaviyo onsite + Attentive tag were firing before consent. Their theme app
+       embeds are DISABLED in config/settings_data.json and they load here only
+       after a Marketing (C0004) choice. The apps also inject legacy ScriptTags
+       through content_for_header (asyncLoad); those are held back by the
+       insert guard below. To undo: remove this block + re-enable both embeds. */
+    var MARKETING_APP_SCRIPTS = [
+      {
+        match: /static\.klaviyo\.com\/onsite\/js\/(TTJxvR\/)?klaviyo\.js/,
+        src: 'https://static.klaviyo.com/onsite/js/TTJxvR/klaviyo.js?company_id=TTJxvR',
+      },
+      {
+        match: /cdn\.attn\.tv\/planetbeauty\/dtag\.js/,
+        src: 'https://cdn.attn.tv/planetbeauty/dtag.js',
+      },
+    ];
+    var marketingAppsLoaded = false;
+
+    function isHeldMarketingScript(node) {
+      if (marketingAppsLoaded || !node || node.nodeName !== 'SCRIPT' || !node.src) return false;
+      for (var i = 0; i < MARKETING_APP_SCRIPTS.length; i++) {
+        if (MARKETING_APP_SCRIPTS[i].match.test(node.src)) return true;
+      }
+      return false;
+    }
+
+    ['appendChild', 'insertBefore'].forEach(function (method) {
+      var original = Node.prototype[method];
+      Node.prototype[method] = function (node) {
+        if (isHeldMarketingScript(node)) return node;
+        return original.apply(this, arguments);
+      };
+    });
+
+    /* Klaviyo queue stub (same as the app embed) so klaviyo.push calls are kept until load. */
+    window._klOnsite = window._klOnsite || [];
+    window.klaviyo = window.klaviyo || [];
+    if (typeof window.klaviyo.push !== 'function') {
+      window.klaviyo.push = function () {
+        window._klOnsite.push.apply(window._klOnsite, arguments);
+      };
+    }
+
+    function loadMarketingApps() {
+      if (marketingAppsLoaded || !hasGroup('C0004')) return;
+      marketingAppsLoaded = true;
+      MARKETING_APP_SCRIPTS.forEach(function (entry) {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = entry.src;
+        document.head.appendChild(s);
+      });
+    }
+
     window.planetBeautyLoadConsentTags = function () {
       if (
         typeof window.planetBeautyHasConsentChoice === 'function' &&
@@ -87,6 +141,7 @@
         loadGTM();
       }
       loadTaboola();
+      loadMarketingApps();
     };
   })();
 </script>
