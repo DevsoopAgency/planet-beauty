@@ -218,6 +218,20 @@
                   },
                   "blocks": {}
                 },
+                "flex_flex_badge_W9NAqW": {
+                  "type": "shopify://apps/flex/blocks/flex-badge/7944fcd9-6423-42f1-9cd2-c38b5e996536",
+                  "settings": {
+                    "lomn": "ineligible",
+                    "show_subscription_tab": false,
+                    "style": "light",
+                    "alignment": "left",
+                    "width": 315,
+                    "use_custom_font_size": false,
+                    "font_size": 16,
+                    "use_custom_letter_spacing": false,
+                    "letter_spacing": 0
+                  }
+                },
                 "pb_pr_snippet": {
                   "type": "custom-liquid",
                   "name": "Power Reviews rating",
@@ -235,6 +249,7 @@
                 "pb_tag_no_return",
                 "pb_tag_limited_ship",
                 "price_tVjtKg",
+                "flex_flex_badge_W9NAqW",
                 "pb_pr_snippet"
               ]
             },
