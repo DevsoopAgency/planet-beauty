@@ -848,7 +848,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>Foundation, Lips & Eyes</p>",
+                "text": "",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
