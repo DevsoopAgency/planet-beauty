@@ -74,26 +74,34 @@
       f.parentNode.insertBefore(t, f);
     }
 
-    /* pb-consent-marketing-apps (migration-added, 2026-09-29):
-       Klaviyo onsite + Attentive tag were firing before consent. Their theme app
-       embeds are DISABLED in config/settings_data.json and they load here only
-       after a Marketing (C0004) choice. The apps also inject legacy ScriptTags
-       through content_for_header (asyncLoad); those are held back by the
-       insert guard below. To undo: remove this block + re-enable both embeds. */
+    /* pb-consent-marketing-apps (migration-added, 2026-09-29, updated 2026-10-02):
+       Klaviyo onsite was firing before consent. Its theme app embed is DISABLED
+       in config/settings_data.json and it loads here only after a Marketing
+       (C0004) choice. Klaviyo also injects a legacy ScriptTag through
+       content_for_header (asyncLoad); the insert guard below holds it back.
+       Attentive is intentionally NOT gated (client decision 2026-10-02: its
+       signup popup carries its own disclosure). Its app embed stays ENABLED;
+       the guard only drops Attentive's duplicate legacy ScriptTag when the
+       embed copy is already on the page.
+       To undo: remove this block + re-enable the Klaviyo embed. */
     var MARKETING_APP_SCRIPTS = [
       {
         match: /static\.klaviyo\.com\/onsite\/js\/(TTJxvR\/)?klaviyo\.js/,
         src: 'https://static.klaviyo.com/onsite/js/TTJxvR/klaviyo.js?company_id=TTJxvR',
       },
-      {
-        match: /cdn\.attn\.tv\/planetbeauty\/dtag\.js/,
-        src: 'https://cdn.attn.tv/planetbeauty/dtag.js',
-      },
     ];
     var marketingAppsLoaded = false;
 
+    var ATTENTIVE_TAG = /cdn\.attn\.tv\/planetbeauty\/dtag\.js/;
+
+    function isDuplicateAttentiveTag(node) {
+      return ATTENTIVE_TAG.test(node.src) && !!document.querySelector('script[src*="cdn.attn.tv/planetbeauty/dtag.js"]');
+    }
+
     function isHeldMarketingScript(node) {
-      if (marketingAppsLoaded || !node || node.nodeName !== 'SCRIPT' || !node.src) return false;
+      if (!node || node.nodeName !== 'SCRIPT' || !node.src) return false;
+      if (isDuplicateAttentiveTag(node)) return true;
+      if (marketingAppsLoaded) return false;
       for (var i = 0; i < MARKETING_APP_SCRIPTS.length; i++) {
         if (MARKETING_APP_SCRIPTS[i].match.test(node.src)) return true;
       }
