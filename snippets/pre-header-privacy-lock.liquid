@@ -1,67 +1,36 @@
 {% comment %}
-  Must run immediately before {{ content_for_header }} so Shopify pixels (TikTok shopify_pixel, etc.)
-  stay denied until the user accepts or rejects the OneTrust banner.
+  Must run immediately before {{ content_for_header }}. Waits for Shopify's consent API,
+  then hands over to the single consent sync in snippets/onetrust-shopify-privacy.liquid.
+  pb-consent-sync-queue (2026-10-05): the old 10ms "deny" poll was removed. Shopify now
+  starts every visit denied (Settings > Customer privacy requires consent in all regions),
+  and the repeated deny calls could overwrite a visitor's Accept.
 {% endcomment %}
 <script type="text/javascript">
   (function () {
-    var DENY_ALL = {
-      analytics: false,
-      marketing: false,
-      preferences: false,
-      sale_of_data: false,
-    };
-    var apiLoaded = false;
-
-    function applyConsent(consent) {
-      if (
-        !window.Shopify ||
-        !window.Shopify.customerPrivacy ||
-        typeof window.Shopify.customerPrivacy.setTrackingConsent !== 'function'
-      ) {
-        return false;
-      }
-      window.Shopify.customerPrivacy.setTrackingConsent(consent);
-      return true;
-    }
-
-    function lockDeny() {
-      applyConsent(DENY_ALL);
-    }
+    var started = false;
 
     function initPrivacyApi() {
-      if (apiLoaded) return;
-      if (!window.Shopify || typeof window.Shopify.loadFeatures !== 'function') return;
+      if (started) return true;
+      if (!window.Shopify || typeof window.Shopify.loadFeatures !== 'function') return false;
 
-      apiLoaded = true;
+      started = true;
       window.Shopify.loadFeatures(
         [{ name: 'consent-tracking-api', version: '0.1' }],
         function (error) {
           if (error) return;
-          if (
-            typeof window.planetBeautyHasConsentChoice === 'function' &&
-            window.planetBeautyHasConsentChoice() &&
-            typeof window.planetBeautyApplyConsentAfterChoice === 'function'
-          ) {
+          if (typeof window.planetBeautyApplyConsentAfterChoice === 'function') {
             window.planetBeautyApplyConsentAfterChoice();
-          } else {
-            lockDeny();
           }
         }
       );
+      return true;
     }
 
-    initPrivacyApi();
+    if (initPrivacyApi()) return;
 
     var attempts = 0;
     var poll = setInterval(function () {
-      initPrivacyApi();
-      if (
-        typeof window.planetBeautyHasConsentChoice === 'function' &&
-        !window.planetBeautyHasConsentChoice()
-      ) {
-        lockDeny();
-      }
-      if (++attempts >= 80) clearInterval(poll);
+      if (initPrivacyApi() || ++attempts >= 80) clearInterval(poll);
     }, 10);
   })();
 </script>

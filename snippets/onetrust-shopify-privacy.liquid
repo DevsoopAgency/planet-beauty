@@ -48,48 +48,87 @@
       );
     }
 
-    window.planetBeautySyncShopifyConsent = function () {
-      if (!window.planetBeautyHasConsentChoice()) return;
+    /* pb-consent-sync-queue (2026-10-05):
+       Shopify keeps whichever setTrackingConsent call reaches it LAST. The old code
+       fired many overlapping deny/grant calls (10ms deny poll + a deny during the
+       Accept click), so a late "deny" could overwrite the visitor's "grant" and
+       checkout then ran as consent-denied (Google Ads/GA4 purchases not recorded).
+       Now: one call at a time, no-op calls skipped, and the queue always ends on
+       the state OneTrust reports at that moment.
+       Relies on Shopify Admin > Settings > Customer privacy requiring consent in
+       all regions (pixels start denied) and on OneTrust being opt-in. */
+    var DENY_ALL = { analytics: false, marketing: false, preferences: false, sale_of_data: false };
+    var consentInFlight = false;
+    var consentPending = false;
+    var consentTimer = null;
+    var consentAttempts = 0;
 
-      var consent = buildTrackingConsent();
-      loadConsentApi(function (error) {
-        if (error) return;
-        if (!window.Shopify.customerPrivacy || typeof window.Shopify.customerPrivacy.setTrackingConsent !== 'function') {
-          return;
-        }
-        window.Shopify.customerPrivacy.setTrackingConsent(consent);
-      });
-    };
+    function desiredConsent() {
+      return window.planetBeautyHasConsentChoice() ? buildTrackingConsent() : DENY_ALL;
+    }
 
-    window.planetBeautyDenyShopifyConsent = function () {
-      loadConsentApi(function (error) {
-        if (error) return;
-        if (!window.Shopify.customerPrivacy || typeof window.Shopify.customerPrivacy.setTrackingConsent !== 'function') {
-          return;
-        }
-        window.Shopify.customerPrivacy.setTrackingConsent({
-          analytics: false,
-          marketing: false,
-          preferences: false,
-          sale_of_data: false,
-        });
-      });
-    };
+    function matchesCurrent(target) {
+      var cp = window.Shopify && window.Shopify.customerPrivacy;
+      if (!cp || typeof cp.currentVisitorConsent !== 'function') return false;
+      var current = cp.currentVisitorConsent() || {};
+      var keys = ['analytics', 'marketing', 'preferences', 'sale_of_data'];
+      for (var i = 0; i < keys.length; i++) {
+        if (current[keys[i]] !== (target[keys[i]] ? 'yes' : 'no')) return false;
+      }
+      return true;
+    }
 
-    window.planetBeautyApplyConsentAfterChoice = function () {
-      if (!window.planetBeautyHasConsentChoice()) {
-        window.planetBeautyDenyShopifyConsent();
+    function flushConsent() {
+      if (consentInFlight) {
+        consentPending = true;
         return;
       }
+      consentInFlight = true;
+      consentPending = false;
+      loadConsentApi(function (error) {
+        var cp = window.Shopify && window.Shopify.customerPrivacy;
+        if (error || !cp || typeof cp.setTrackingConsent !== 'function') {
+          consentInFlight = false;
+          return;
+        }
+        var target = desiredConsent();
+        if (matchesCurrent(target)) {
+          consentInFlight = false;
+          if (consentPending) flushConsent();
+          return;
+        }
+        consentAttempts++;
+        cp.setTrackingConsent(target, function () {
+          consentInFlight = false;
+          /* Re-send only if OneTrust changed meanwhile; capped so a failing API can't loop. */
+          if (consentAttempts < 5 && (consentPending || !matchesCurrent(desiredConsent()))) flushConsent();
+        });
+      });
+    }
 
-      window.planetBeautySyncShopifyConsent();
+    /* Short delay so OneTrust has finished updating (banner closed + groups) before we read it. */
+    function scheduleConsentSync() {
+      if (consentTimer) clearTimeout(consentTimer);
+      consentTimer = setTimeout(function () {
+        consentTimer = null;
+        consentAttempts = 0;
+        flushConsent();
+      }, 50);
+    }
 
-      if (typeof window.planetBeautyLoadConsentTags === 'function') {
+    window.planetBeautySyncShopifyConsent = scheduleConsentSync;
+    window.planetBeautyDenyShopifyConsent = scheduleConsentSync;
+
+    window.planetBeautyApplyConsentAfterChoice = function () {
+      scheduleConsentSync();
+
+      if (
+        window.planetBeautyHasConsentChoice() &&
+        typeof window.planetBeautyLoadConsentTags === 'function'
+      ) {
         window.planetBeautyLoadConsentTags();
       }
     };
-
-    window.planetBeautyDenyShopifyConsent();
 
     document.addEventListener('OneTrustGroupsUpdated', function () {
       window.planetBeautyApplyConsentAfterChoice();
