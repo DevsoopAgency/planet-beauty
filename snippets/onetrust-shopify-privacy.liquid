@@ -63,8 +63,26 @@
     var consentTimer = null;
     var consentAttempts = 0;
 
+    /* pb-google-always-on (2026-10-05, client request "Google conversions for everyone"):
+       When true, Shopify analytics + marketing consent is granted for EVERY visitor
+       (no choice, Accept or Reject), so the Google & YouTube app and the
+       "Google ads purchase" pixel record conversions through checkout.
+       sale_of_data + preferences still follow OneTrust, which keeps the Meta app,
+       TikTok, Refersion and the Awin/Taboola custom pixels blocked until Accept.
+       DO NOT set to true until the Meta pixel inside the Simprosys app is turned off:
+       Simprosys fires Meta PageView as soon as marketing consent is granted.
+       Set back to false to return to strict opt-in. */
+    var GOOGLE_ALWAYS_ON = false;
+
     function desiredConsent() {
-      return window.planetBeautyHasConsentChoice() ? buildTrackingConsent() : DENY_ALL;
+      var chosen = window.planetBeautyHasConsentChoice() ? buildTrackingConsent() : DENY_ALL;
+      if (!GOOGLE_ALWAYS_ON) return chosen;
+      return {
+        analytics: true,
+        marketing: true,
+        preferences: chosen.preferences,
+        sale_of_data: chosen.sale_of_data,
+      };
     }
 
     function matchesCurrent(target) {
