@@ -30,11 +30,42 @@
       wait_for_update: 500,
     });
 
+    /* pb-consent-early-read (2026-10-06):
+       On every page load there is a short gap before OneTrust has loaded. The theme
+       used to read "no groups" in that gap and tell Shopify + Google "denied", even
+       for visitors who had already accepted; it was corrected ~0.5s later, but hits
+       sent in between went out as consent-denied. Until OneTrust is ready we now
+       read the visitor's stored choice from OneTrust's own cookies instead. */
+    function readCookie(name) {
+      var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+      if (!m) return '';
+      try {
+        return decodeURIComponent(m[1]);
+      } catch (e) {
+        return m[1];
+      }
+    }
+
+    window.planetBeautyActiveGroups = function () {
+      var live = window.OnetrustActiveGroups || window.OptanonActiveGroups;
+      if (live) return live;
+      var stored = readCookie('OptanonConsent').match(/(?:^|&)groups=([^&]*)/);
+      if (!stored) return '';
+      var active = [];
+      stored[1].split(',').forEach(function (pair) {
+        var parts = pair.split(':');
+        if (parts[1] === '1') active.push(parts[0]);
+      });
+      return ',' + active.join(',') + ',';
+    };
+
+    /* True once the visitor has clicked a banner button (not just seen the banner). */
+    window.planetBeautyStoredChoice = function () {
+      return document.cookie.indexOf('OptanonAlertBoxClosed=') > -1;
+    };
+
     function hasGroup(id) {
-      return (
-        typeof OnetrustActiveGroups !== 'undefined' &&
-        OnetrustActiveGroups.indexOf(id) > -1
-      );
+      return window.planetBeautyActiveGroups().indexOf(id) > -1;
     }
 
     function updateConsentMode() {

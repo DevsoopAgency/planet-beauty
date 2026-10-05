@@ -9,21 +9,29 @@
     var GROUP_PREFERENCES = 'C0003';
     var GROUP_MARKETING = 'C0004';
 
+    /* pb-consent-early-read (2026-10-06): before OneTrust has loaded, groups and the
+       "has the visitor chosen" answer come from OneTrust's cookies (helpers defined in
+       snippets/consent-gated-tags.liquid), so an accepted visitor is not briefly
+       treated as denied on each page load. */
+    function activeGroups() {
+      if (typeof window.planetBeautyActiveGroups === 'function') return window.planetBeautyActiveGroups();
+      return window.OnetrustActiveGroups || window.OptanonActiveGroups || '';
+    }
+
     window.planetBeautyMarketingAllowed = function () {
-      var groups = window.OnetrustActiveGroups || window.OptanonActiveGroups || '';
-      return groups.indexOf(GROUP_MARKETING) > -1;
+      return activeGroups().indexOf(GROUP_MARKETING) > -1;
     };
 
     window.planetBeautyHasConsentChoice = function () {
       if (window.OneTrust && typeof window.OneTrust.IsAlertBoxClosed === 'function') {
         return window.OneTrust.IsAlertBoxClosed();
       }
-      return document.cookie.indexOf('OptanonConsent=') > -1;
+      if (typeof window.planetBeautyStoredChoice === 'function') return window.planetBeautyStoredChoice();
+      return document.cookie.indexOf('OptanonAlertBoxClosed=') > -1;
     };
 
     function hasGroup(id) {
-      var groups = window.OnetrustActiveGroups || window.OptanonActiveGroups || '';
-      return groups.indexOf(id) > -1;
+      return activeGroups().indexOf(id) > -1;
     }
 
     function buildTrackingConsent() {
