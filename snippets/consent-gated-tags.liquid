@@ -1,5 +1,8 @@
 {% comment %}
   Marketing / analytics tags must not load until OneTrust consent is granted.
+  2026-10-06: Taboola loader removed at the client's request (pixel 1820245). To restore,
+  see git history of this file. The "Taboola" custom pixel in Shopify Admin > Settings >
+  Customer events must be disconnected separately.
   C0002 = Performance (analytics), C0004 = Targeting (marketing) — verify IDs in OneTrust admin.
   NOTE: Rebuy is NOT gated here — per client request its app embed loads
   unconditionally (re-enabled in settings_data.json) so homepage/PDP
@@ -8,8 +11,7 @@
 <script type="text/javascript">
   (function () {
     var GTM_ID = 'GTM-542GFXP';
-    var TABOOLA_ID = '1820245';
-    var loaded = { gtm: false, taboola: false };
+    var loaded = { gtm: false };
 
     window.dataLayer = window.dataLayer || [];
     function gtag() {
@@ -60,20 +62,6 @@
       })(window, document, 'script', 'dataLayer', GTM_ID);
     }
 
-    function loadTaboola() {
-      if (loaded.taboola || !hasGroup('C0004')) return;
-      loaded.taboola = true;
-      window._tfa = window._tfa || [];
-      window._tfa.push({ notify: 'event', name: 'page_view', id: TABOOLA_ID });
-      if (document.getElementById('tb_tfa_script')) return;
-      var t = document.createElement('script');
-      t.async = true;
-      t.src = '//cdn.taboola.com/libtrc/unip/' + TABOOLA_ID + '/tfa.js';
-      t.id = 'tb_tfa_script';
-      var f = document.getElementsByTagName('script')[0];
-      f.parentNode.insertBefore(t, f);
-    }
-
     /* pb-consent-marketing-apps (migration-added, 2026-09-29, updated 2026-10-02):
        Klaviyo onsite was firing before consent. Its theme app embed is DISABLED
        in config/settings_data.json and it loads here only after a Marketing
@@ -98,8 +86,15 @@
       return ATTENTIVE_TAG.test(node.src) && !!document.querySelector('script[src*="cdn.attn.tv/planetbeauty/dtag.js"]');
     }
 
+    /* pb-block-taboola (2026-10-06, client request "Taboola should be removed"):
+       Taboola is also loaded by a tag inside GTM (GTM-542GFXP), which we cannot edit.
+       This drops every Taboola script before it is inserted, even after Accept.
+       Remove this once the Taboola tag is deleted from GTM. */
+    var ALWAYS_BLOCKED_SCRIPT = /(^|\/\/|\.)taboola(syndication)?\.com\//;
+
     function isHeldMarketingScript(node) {
       if (!node || node.nodeName !== 'SCRIPT' || !node.src) return false;
+      if (ALWAYS_BLOCKED_SCRIPT.test(node.src)) return true;
       if (isDuplicateAttentiveTag(node)) return true;
       if (marketingAppsLoaded) return false;
       for (var i = 0; i < MARKETING_APP_SCRIPTS.length; i++) {
@@ -148,7 +143,6 @@
       if (hasGroup('C0002') || hasGroup('C0004')) {
         loadGTM();
       }
-      loadTaboola();
       loadMarketingApps();
     };
   })();
