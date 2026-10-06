@@ -220,76 +220,6 @@
             "padding-inline-end": 48
           },
           "blocks": {}
-        },
-        "slide_kqUfMJ": {
-          "type": "_slide",
-          "name": "t:names.slide",
-          "settings": {
-            "media_type_1": "image",
-            "image_1": "shopify://shop_images/Bioderma_Hero_Banner.png",
-            "mobile_image_1": "shopify://shop_images/Bioderma_Hero_Mobile.jpg",
-            "link": "shopify://collections/bioderma",
-            "open_in_new_tab": false,
-            "video_aspect_ratio": "auto",
-            "video_aspect_ratio_mobile": "inherit",
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "content_position_x": 50,
-            "content_position_y": 50,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-6",
-            "color_scheme_mobile": "",
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 48,
-            "padding-block-end": 48,
-            "padding-inline-start": 48,
-            "padding-inline-end": 48
-          },
-          "blocks": {}
-        },
-        "slide_TzEg9r": {
-          "type": "_slide",
-          "name": "t:names.slide",
-          "settings": {
-            "media_type_1": "image",
-            "image_1": "shopify://shop_images/Skincare_Tools_Hero_Banner.png",
-            "mobile_image_1": "shopify://shop_images/Skincare_Tools_Hero_Mobile.jpg",
-            "link": "shopify://collections/skincarecare-tools",
-            "open_in_new_tab": false,
-            "video_aspect_ratio": "auto",
-            "video_aspect_ratio_mobile": "inherit",
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "content_position_x": 50,
-            "content_position_y": 50,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-6",
-            "color_scheme_mobile": "",
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 48,
-            "padding-block-end": 48,
-            "padding-inline-start": 48,
-            "padding-inline-end": 48
-          },
-          "blocks": {}
         }
       },
       "block_order": [
@@ -298,9 +228,7 @@
         "slide_H9AYRR",
         "slide_mexy7m",
         "slide_LncGyF",
-        "slide_cqVRan",
-        "slide_kqUfMJ",
-        "slide_TzEg9r"
+        "slide_cqVRan"
       ],
       "name": "t:names.slideshow_full_frame",
       "settings": {
