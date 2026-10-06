@@ -82,8 +82,16 @@
        Set back to false to return to strict opt-in. */
     var GOOGLE_ALWAYS_ON = false;
 
+    /* pb-region-consent (2026-10-07): Shopify consent mirrors OneTrust's active groups
+       (opt-out regions: on by default; opt-in regions: off until Accept). See the note
+       in snippets/consent-gated-tags.liquid. */
+    function groupsKnown() {
+      if (typeof window.planetBeautyGroupsKnown === 'function') return window.planetBeautyGroupsKnown();
+      return !!(window.OnetrustActiveGroups || window.OptanonActiveGroups);
+    }
+
     function desiredConsent() {
-      var chosen = window.planetBeautyHasConsentChoice() ? buildTrackingConsent() : DENY_ALL;
+      var chosen = groupsKnown() ? buildTrackingConsent() : DENY_ALL;
       if (!GOOGLE_ALWAYS_ON) return chosen;
       return {
         analytics: true,
@@ -109,6 +117,8 @@
         consentPending = true;
         return;
       }
+      /* Nothing to say to Shopify yet: leave its regional default in place. */
+      if (!groupsKnown()) return;
       consentInFlight = true;
       consentPending = false;
       loadConsentApi(function (error) {
@@ -148,10 +158,7 @@
     window.planetBeautyApplyConsentAfterChoice = function () {
       scheduleConsentSync();
 
-      if (
-        window.planetBeautyHasConsentChoice() &&
-        typeof window.planetBeautyLoadConsentTags === 'function'
-      ) {
+      if (groupsKnown() && typeof window.planetBeautyLoadConsentTags === 'function') {
         window.planetBeautyLoadConsentTags();
       }
     };

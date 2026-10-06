@@ -64,6 +64,18 @@
       return document.cookie.indexOf('OptanonAlertBoxClosed=') > -1;
     };
 
+    /* pb-region-consent (2026-10-07): consent now follows OneTrust's ACTIVE GROUPS for the
+       visitor's region, not "has the visitor clicked a button":
+         - US rules (opt-out): groups are active by default -> tags load on arrival and
+           stop only if the visitor opts out (preferences / Global Privacy Control).
+         - EU rule (opt-in): groups are inactive until Accept -> nothing loads before.
+       Groups are "known" once OneTrust has loaded, or earlier from its cookie when the
+       visitor already made a choice. Until then we do nothing (no grant, no deny). */
+    window.planetBeautyGroupsKnown = function () {
+      if (window.OnetrustActiveGroups || window.OptanonActiveGroups) return true;
+      return window.planetBeautyStoredChoice() && /(?:^|&)groups=/.test(readCookie('OptanonConsent'));
+    };
+
     function hasGroup(id) {
       return window.planetBeautyActiveGroups().indexOf(id) > -1;
     }
@@ -163,12 +175,7 @@
     }
 
     window.planetBeautyLoadConsentTags = function () {
-      if (
-        typeof window.planetBeautyHasConsentChoice === 'function' &&
-        !window.planetBeautyHasConsentChoice()
-      ) {
-        return;
-      }
+      if (!window.planetBeautyGroupsKnown()) return;
 
       updateConsentMode();
       if (hasGroup('C0002') || hasGroup('C0004')) {
