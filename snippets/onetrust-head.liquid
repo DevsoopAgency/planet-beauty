@@ -10,6 +10,30 @@
   loads, so defer/async or self-hosting would break consent auto-blocking.
   Matches the live theme's integration.
 {%- endcomment -%}
+{%- comment -%}
+  pb-region-consent-reset (2026-10-07): one-time clean-up, must stay ABOVE the OneTrust scripts.
+  Visitors who came while the whole site was opt-in (2026-10-02 to 10-06) and never
+  clicked a banner button still carry a OneTrust cookie saying "everything off".
+  OneTrust keeps that cookie instead of applying the new regional default, so US
+  visitors stayed untracked. This removes that cookie ONCE per browser, only when the
+  visitor never made a choice; OneTrust then re-creates it with the region's default
+  (US: on, EU/UK: off, Global Privacy Control still honoured).
+  Safe to delete this block after 2027-10-07 (those cookies will have expired).
+{%- endcomment -%}
+<script type="text/javascript">
+  (function () {
+    try {
+      if (localStorage.getItem('pbOtRegionReset')) return;
+      localStorage.setItem('pbOtRegionReset', '1');
+      var c = document.cookie;
+      if (c.indexOf('OptanonAlertBoxClosed=') > -1 || c.indexOf('OptanonConsent=') === -1) return;
+      var host = location.hostname;
+      ['', '; domain=' + host, '; domain=.' + host, '; domain=.' + host.replace(/^www\./, '')].forEach(function (d) {
+        document.cookie = 'OptanonConsent=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT' + d;
+      });
+    } catch (e) {}
+  })();
+</script>
 <script
   type="text/javascript"
   src="https://cdn.cookielaw.org/consent/6de6c5c0-b6ec-464f-8291-9377a7d50585/OtAutoBlock.js"
