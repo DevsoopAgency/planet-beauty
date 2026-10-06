@@ -106,9 +106,12 @@
          custom-liquid wrapper still counts as a flex item — collapse it.
     Both collapse rules are scoped to .product-details and self-undo once
     real content appears. Safe to remove if the layout is reworked.
+    NOTE: rule 2 must stay ":only-child" — app blocks that ship an inline
+    <style> next to real markup (e.g. the Flex HSA/FSA badge wrapper) were
+    being hidden by a bare "div:has(> style)".
   {%- endcomment -%}
   .product-details div:has(> .pb-pr-snippet:empty),
-  .product-details div:has(> style) {
+  .product-details div:has(> style:only-child) {
     display: none;
   }
   .rc-widget .rc-radio__label,
