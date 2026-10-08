@@ -1,0 +1,66 @@
+{%- comment -%}
+  pb-tag-assistant-shim (2026-10-08) — TEST BRANCH ONLY until verified on the store.
+
+  Why: Google's tag library (gtag.js / gtm.js) checks for `window.Shopify` when it starts.
+  If it finds it, it injects its own `set developer_id.dN2ZkMj` command ahead of the queued
+  consent default. Nothing is wrong with consent after that (hits carry gcs=G111), but
+  Tag Assistant's Consent tab then reports "Consent not configured — Default consent state
+  has not been set yet" for every Google tag on the page. Reproduced on a stock Dawn theme
+  and on a plain test page by defining `window.Shopify`.
+
+  What: while Google's tags start up, a read of `window.Shopify` made DIRECTLY by Google's
+  tag code gets `undefined`. Every other reader (theme, apps, Shopify itself) gets the real
+  object. After 20 seconds the property is put back as a normal value.
+
+  Side effect: Google's tag no longer marks its hits with the "Shopify" developer ID.
+
+  Must be rendered in <head> BEFORE {{ content_for_header }}.
+  To remove: delete this file and its render line in layout/theme.liquid.
+{%- endcomment -%}
+<script type="text/javascript">
+  (function () {
+    var real = window.Shopify;
+    var active = true;
+
+    function callerIsGoogleTag() {
+      var lines = String(new Error().stack || '').split('\n');
+      if (lines.length && lines[0].indexOf('Error') === 0) lines.shift();
+      /* lines[0] = this helper, lines[1] = the getter, lines[2] = whoever read window.Shopify */
+      var caller = lines[2] || '';
+      return caller.indexOf('googletagmanager.com/') > -1;
+    }
+
+    function restore() {
+      if (!active) return;
+      active = false;
+      try {
+        Object.defineProperty(window, 'Shopify', {
+          configurable: true,
+          enumerable: true,
+          writable: true,
+          value: real,
+        });
+      } catch (e) {}
+    }
+
+    try {
+      Object.defineProperty(window, 'Shopify', {
+        configurable: true,
+        enumerable: true,
+        get: function () {
+          if (active && callerIsGoogleTag()) return undefined;
+          return real;
+        },
+        set: function (value) {
+          real = value;
+        },
+      });
+    } catch (e) {
+      return;
+    }
+
+    window.addEventListener('load', function () {
+      setTimeout(restore, 20000);
+    });
+  })();
+</script>
