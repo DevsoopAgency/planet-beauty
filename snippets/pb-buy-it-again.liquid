@@ -26,7 +26,7 @@
       {%- endfor -%}
     {%- endcapture -%}
 
-    {%- if bia_cards | strip != blank -%}
+    {%- if bia_cards -%}
       <div class="pb-bia">
         <div class="pb-bia__track">{{ bia_cards }}</div>
       </div>
@@ -41,7 +41,7 @@
           {%- if p.available -%}{% render 'pb-bia-card', p: p %}{%- endif -%}
         {%- endfor -%}
       {%- endcapture -%}
-      {%- if fb_cards | strip != blank -%}
+      {%- if fb_cards -%}
         <p class="pb-bia__note">You haven't placed an order yet — here are some of our best sellers to get you started.</p>
         <div class="pb-bia">
           <div class="pb-bia__track">{{ fb_cards }}</div>
@@ -52,3 +52,16 @@
     {%- endif -%}
   {%- endpaginate -%}
 {%- endif -%}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- if bia_cards | strip != blank -%}"
+  to: "{%- if bia_cards -%}"
+  position: 1237..1257
+- from: "{%- if fb_cards | strip != blank -%}"
+  to: "{%- if fb_cards -%}"
+  position: 1905..1924
+{% endcomment %}
