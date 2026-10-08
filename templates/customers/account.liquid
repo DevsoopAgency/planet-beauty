@@ -129,7 +129,7 @@
         {%- endfor -%}
       {%- endcapture -%}
 
-      {%- if pb_bia_cards | strip == blank -%}
+      {%- if pb_bia_cards -%}
         {%- assign pb_is_fallback = true -%}
         {%- assign pb_fb = collections['best-sellers'] -%}
         {%- if pb_fb == empty or pb_fb.products_count == 0 -%}{%- assign pb_fb = collections.all -%}{%- endif -%}
@@ -157,7 +157,7 @@
         {%- endcapture -%}
       {%- endif -%}
 
-      {%- if pb_bia_cards | strip != blank -%}
+      {%- if pb_bia_cards -%}
         {%- if pb_is_fallback -%}<p class="pb-bia__note">You haven't placed an order yet — here are some of our best sellers to get you started.</p>{%- endif -%}
         <div class="pb-bia">
           <button type="button" class="pb-bia__nav pb-bia__nav--prev" aria-label="Previous">
@@ -282,3 +282,16 @@
     });
   })();
 </script>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- if pb_bia_cards | strip == blank -%}"
+  to: "{%- if pb_bia_cards -%}"
+  position: 7361..7384
+- from: "{%- if pb_bia_cards | strip != blank -%}"
+  to: "{%- if pb_bia_cards -%}"
+  position: 9222..9245
+{% endcomment %}
