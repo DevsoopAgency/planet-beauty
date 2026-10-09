@@ -116,6 +116,16 @@
     min-width: 0;
   }
 
+  /* pb: last card's start-snap sits past max scroll, so it only peeks and stays inert.
+     End-align gives it a reachable snap point. Keep the card hit-testable while it peeks. */
+  .resource-list__carousel .resource-list__slide:last-child {
+    scroll-snap-align: end;
+  }
+
+  .resource-list__carousel slideshow-slide:not([aria-hidden='false']) {
+    content-visibility: visible;
+  }
+
   /* pb: Rebuy-style filled caret arrows always visible on mobile carousels.
      Card links stay clickable — touch swipe is native scroll (see slideshow.js). */
   @media screen and (max-width: 749px) {

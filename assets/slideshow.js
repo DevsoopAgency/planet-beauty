@@ -983,13 +983,27 @@ export class Slideshow extends Component {
     if (!slides || !slides.length) return 0;
 
     const visibleSlides = this.visibleSlides;
+    // Resource carousels (Shop by Category): the last card's snap point is past
+    // max scroll, so it only peeks and never clears the 0.7 threshold. It stays
+    // aria-hidden + inert and the link never fires. Any on-screen card is tappable.
+    const isResourceCarousel = this.classList.contains('resource-list__carousel');
+    const interactiveSlides = isResourceCarousel
+      ? getVisibleElements(this.refs.scroller, slides, 0.01, 'x')
+      : visibleSlides;
+
+    if (isResourceCarousel && this.refs.scroller) {
+      const scroller = this.refs.scroller;
+      const last = slides[slides.length - 1];
+      const nearEnd = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 48;
+      if (nearEnd && last && !interactiveSlides.includes(last)) interactiveSlides.push(last);
+    }
 
     // Batch writes to the DOM
     scheduler.schedule(() => {
-      // Update aria-hidden based on visibility
       slides.forEach((slide) => {
-        const isVisible = visibleSlides.includes(slide);
+        const isVisible = interactiveSlides.includes(slide);
         slide.setAttribute('aria-hidden', `${!isVisible}`);
+        if (isVisible) slide.removeAttribute('inert');
       });
     });
 

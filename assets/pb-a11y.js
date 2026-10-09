@@ -58,8 +58,14 @@
       el.removeAttribute('aria-expanded');
     });
 
-    /* Hidden slideshow slides were aria-hidden but still tabbable. */
+    /* Hidden slideshow slides were aria-hidden but still tabbable.
+       Resource-list cards (Shop by Category) stay clickable while peeking —
+       the last slide never clears the slideshow's 70% visibility bar. */
     document.querySelectorAll('slideshow-slide').forEach(function (slide) {
+      if (slide.closest('.resource-list__carousel')) {
+        if (slide.getAttribute('aria-hidden') !== 'true') slide.removeAttribute('inert');
+        return;
+      }
       if (slide.getAttribute('aria-hidden') === 'true') {
         slide.setAttribute('inert', '');
       } else {
