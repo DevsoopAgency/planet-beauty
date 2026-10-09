@@ -116,22 +116,9 @@
     min-width: 0;
   }
 
-  /* Planet Beauty: full-card link overlay steals touch drags — keep buttons/titles tappable. */
+  /* pb: Rebuy-style filled caret arrows always visible on mobile carousels.
+     Card links stay clickable — touch swipe is native scroll (see slideshow.js). */
   @media screen and (max-width: 749px) {
-    .resource-list__carousel .collection-card__link,
-    .resource-list__carousel .product-card__link,
-    .resource-list__carousel .featured-blog-posts-card__link {
-      pointer-events: none;
-    }
-
-    .resource-list__carousel .collection-card__content a,
-    .resource-list__carousel .collection-card__content button,
-    .resource-list__carousel .product-card__content a,
-    .resource-list__carousel .product-card__content button {
-      pointer-events: auto;
-    }
-
-    /* pb: Rebuy-style filled caret arrows always visible on mobile carousels */
     .resource-list__carousel slideshow-arrows .slideshow-control.slideshow-control--style-flickity {
       opacity: 1;
     }
