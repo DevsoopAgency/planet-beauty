@@ -1,0 +1,123 @@
+{% doc %}
+  PB MIGRATION (custom): sender / recipient fields for the virtual gift card PDP.
+
+  Parity with the live theme's `snippets/product-form-giftcard.liquid`, which was rendered on products
+  assigned the `gift-card` template suffix. These products are regular products (not native Shopify
+  gift cards), so Horizon's `gift-card-recipient-form` does not apply to them. Values are saved as line
+  item properties using the same keys as the live theme. Must be rendered inside the product form.
+
+  @param {block} block - The block object, used for element IDs.
+{% enddoc %}
+
+{%- comment -%} pb-gift-card-fields: start (custom, see doc above) {%- endcomment -%}
+<div class="pb-gift-card-fields">
+  <div class="pb-gift-card-fields__row">
+    <div class="pb-gift-card-fields__field">
+      <label for="pb-giftcard-sender-name-{{ block.id }}">Sender name*</label>
+      <input
+        class="recipient-fields__input"
+        id="pb-giftcard-sender-name-{{ block.id }}"
+        type="text"
+        name="properties[giftcard_sender_name]"
+        autocomplete="name"
+        maxlength="100"
+        required
+        aria-required="true"
+      >
+    </div>
+    <div class="pb-gift-card-fields__field">
+      <label for="pb-giftcard-sender-email-{{ block.id }}">Sender email*</label>
+      <input
+        class="recipient-fields__input"
+        id="pb-giftcard-sender-email-{{ block.id }}"
+        type="email"
+        name="properties[giftcard_sender_email]"
+        autocomplete="email"
+        autocorrect="off"
+        autocapitalize="off"
+        required
+        aria-required="true"
+      >
+    </div>
+  </div>
+  <div class="pb-gift-card-fields__row">
+    <div class="pb-gift-card-fields__field">
+      <label for="pb-giftcard-recipient-name-{{ block.id }}">Recipient name*</label>
+      <input
+        class="recipient-fields__input"
+        id="pb-giftcard-recipient-name-{{ block.id }}"
+        type="text"
+        name="properties[giftcard_recipient_name]"
+        autocomplete="off"
+        maxlength="100"
+        required
+        aria-required="true"
+      >
+    </div>
+    <div class="pb-gift-card-fields__field">
+      <label for="pb-giftcard-recipient-email-{{ block.id }}">Recipient email*</label>
+      <input
+        class="recipient-fields__input"
+        id="pb-giftcard-recipient-email-{{ block.id }}"
+        type="email"
+        name="properties[giftcard_recipient_email]"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        required
+        aria-required="true"
+      >
+    </div>
+  </div>
+  <div class="pb-gift-card-fields__field">
+    <label for="pb-giftcard-message-{{ block.id }}">Message</label>
+    <textarea
+      class="recipient-fields__input pb-gift-card-fields__textarea"
+      id="pb-giftcard-message-{{ block.id }}"
+      name="properties[giftcard_message]"
+      rows="4"
+    ></textarea>
+  </div>
+</div>
+{%- comment -%} pb-gift-card-fields: end {%- endcomment -%}
+
+{% comment %} Reuses Horizon's input styling (.recipient-fields__input) to keep custom CSS minimal. {% endcomment %}
+{% render 'gift-card-recipient-form-styles' %}
+
+{% stylesheet %}
+  /* PB MIGRATION (custom): layout for pb-gift-card-fields */
+  .pb-gift-card-fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+    padding-bottom: var(--padding-xl);
+  }
+
+  .pb-gift-card-fields__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-sm);
+  }
+
+  @media screen and (min-width: 750px) {
+    .pb-gift-card-fields__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .pb-gift-card-fields__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-2xs);
+    min-width: 0;
+  }
+
+  .pb-gift-card-fields__field .recipient-fields__input {
+    width: 100%;
+  }
+
+  .pb-gift-card-fields__textarea {
+    min-height: 5.5rem;
+    resize: vertical;
+  }
+{% endstylesheet %}
