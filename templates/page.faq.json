@@ -105,6 +105,46 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "accordion_row_zjdWyp": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "When will I get my order?",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_D9igeL": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_D9igeL"
+              ]
+            },
             "accordion_row_TjA8yD": {
               "type": "_accordion-row",
               "settings": {
@@ -142,6 +182,46 @@
               },
               "block_order": [
                 "text_7CeN7E"
+              ]
+            },
+            "accordion_row_9UWUB7": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Can I receive my order same day?",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_PQzPB6": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Most items are available for same-day delivery throughout much of Orange County, California. Simply enter your shipping address at checkout to view the delivery options available in your area, including local delivery when applicable.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_PQzPB6"
               ]
             },
             "accordion_row_N36RfT": {
@@ -708,7 +788,9 @@
             }
           },
           "block_order": [
+            "accordion_row_zjdWyp",
             "accordion_row_TjA8yD",
+            "accordion_row_9UWUB7",
             "accordion_row_N36RfT",
             "accordion_row_C7kpFa",
             "accordion_row_PMdXn6",
