@@ -10,12 +10,25 @@
 {% enddoc %}
 
 {%- comment -%} pb-gift-card-fields: start (custom, see doc above) {%- endcomment -%}
-<div class="pb-gift-card-fields">
+<div
+  class="pb-gift-card-fields"
+  role="group"
+  aria-labelledby="pb-giftcard-heading-{{ block.id }}"
+>
+  <div class="pb-gift-card-fields__header">
+    <p
+      class="pb-gift-card-fields__heading"
+      id="pb-giftcard-heading-{{ block.id }}"
+    >
+      Gift card details
+    </p>
+    <p class="pb-gift-card-fields__note">* Required</p>
+  </div>
   <div class="pb-gift-card-fields__row">
     <div class="pb-gift-card-fields__field">
       <label for="pb-giftcard-sender-name-{{ block.id }}">Sender name*</label>
       <input
-        class="recipient-fields__input"
+        class="pb-gift-card-fields__input"
         id="pb-giftcard-sender-name-{{ block.id }}"
         type="text"
         name="properties[giftcard_sender_name]"
@@ -28,7 +41,7 @@
     <div class="pb-gift-card-fields__field">
       <label for="pb-giftcard-sender-email-{{ block.id }}">Sender email*</label>
       <input
-        class="recipient-fields__input"
+        class="pb-gift-card-fields__input"
         id="pb-giftcard-sender-email-{{ block.id }}"
         type="email"
         name="properties[giftcard_sender_email]"
@@ -44,7 +57,7 @@
     <div class="pb-gift-card-fields__field">
       <label for="pb-giftcard-recipient-name-{{ block.id }}">Recipient name*</label>
       <input
-        class="recipient-fields__input"
+        class="pb-gift-card-fields__input"
         id="pb-giftcard-recipient-name-{{ block.id }}"
         type="text"
         name="properties[giftcard_recipient_name]"
@@ -57,7 +70,7 @@
     <div class="pb-gift-card-fields__field">
       <label for="pb-giftcard-recipient-email-{{ block.id }}">Recipient email*</label>
       <input
-        class="recipient-fields__input"
+        class="pb-gift-card-fields__input"
         id="pb-giftcard-recipient-email-{{ block.id }}"
         type="email"
         name="properties[giftcard_recipient_email]"
@@ -70,39 +83,49 @@
     </div>
   </div>
   <div class="pb-gift-card-fields__field">
-    <label for="pb-giftcard-message-{{ block.id }}">Message</label>
+    <label for="pb-giftcard-message-{{ block.id }}">Message (optional)</label>
     <textarea
-      class="recipient-fields__input pb-gift-card-fields__textarea"
+      class="pb-gift-card-fields__input pb-gift-card-fields__textarea"
       id="pb-giftcard-message-{{ block.id }}"
       name="properties[giftcard_message]"
-      rows="4"
+      rows="3"
     ></textarea>
   </div>
 </div>
 {%- comment -%} pb-gift-card-fields: end {%- endcomment -%}
 
-{% comment %} Reuses Horizon's input styling (.recipient-fields__input) to keep custom CSS minimal. {% endcomment %}
-{% render 'gift-card-recipient-form-styles' %}
-
 {% stylesheet %}
-  /* PB MIGRATION (custom): layout for pb-gift-card-fields */
+  /* PB MIGRATION (custom): pb-gift-card-fields. Self-contained so it can be removed with the snippet. */
   .pb-gift-card-fields {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-sm);
-    padding-bottom: var(--padding-xl);
+    gap: var(--gap-md);
+    padding-block: var(--padding-xs) var(--padding-xl);
   }
 
+  .pb-gift-card-fields__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--gap-sm);
+  }
+
+  .pb-gift-card-fields__heading {
+    margin: 0;
+    font-weight: var(--font-weight-semibold, 600);
+    text-transform: uppercase;
+  }
+
+  .pb-gift-card-fields__note {
+    margin: 0;
+    font-size: var(--font-paragraph-small--size, 0.75rem);
+  }
+
+  /* Two columns when there is room, one column in narrow containers (mobile, quick-add modal). */
   .pb-gift-card-fields__row {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--gap-sm);
-  }
-
-  @media screen and (min-width: 750px) {
-    .pb-gift-card-fields__row {
-      grid-template-columns: 1fr 1fr;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: var(--gap-md) var(--gap-sm);
   }
 
   .pb-gift-card-fields__field {
@@ -112,8 +135,27 @@
     min-width: 0;
   }
 
-  .pb-gift-card-fields__field .recipient-fields__input {
+  /* 16px text stops iOS zooming on focus; full-strength text and a 3:1 border for ADA contrast. */
+  .pb-gift-card-fields__input {
     width: 100%;
+    padding: var(--padding-sm) var(--padding-md);
+    background-color: var(--color-input-background);
+    color: var(--color-foreground);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.4;
+    border: var(--style-border-width-inputs, 1px) solid rgb(var(--color-foreground-rgb) / 0.45);
+    border-radius: var(--style-border-radius-inputs);
+    transition: border-color var(--animation-speed) ease;
+  }
+
+  .pb-gift-card-fields__input:is(:hover, :focus) {
+    border-color: var(--color-foreground);
+  }
+
+  .pb-gift-card-fields__input:focus-visible {
+    outline: var(--focus-outline-width) solid var(--color-foreground);
+    outline-offset: var(--focus-outline-offset);
   }
 
   .pb-gift-card-fields__textarea {

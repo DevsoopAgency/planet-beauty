@@ -292,7 +292,9 @@
     }
   }
 
-  .quick-add-modal__content .product-details .buy-buttons-block:has(gift-card-recipient-form) {
+  /* PB MIGRATION (custom): `.pb-gift-card-fields` added to these :has() selectors so the tall custom gift card
+     form scrolls with the modal instead of sticking over the variant picker. */
+  .quick-add-modal__content .product-details .buy-buttons-block:has(gift-card-recipient-form, .pb-gift-card-fields) {
     position: static;
     padding-bottom: 0;
     flex-grow: 1;
@@ -300,19 +302,19 @@
     flex-direction: column;
   }
 
-  .quick-add-modal__content .product-details .buy-buttons-block:has(gift-card-recipient-form) > product-form-component {
+  .quick-add-modal__content .product-details .buy-buttons-block:has(gift-card-recipient-form, .pb-gift-card-fields) > product-form-component {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
   }
 
-  .quick-add-modal__content .product-details .buy-buttons-block:has(gift-card-recipient-form) form {
+  .quick-add-modal__content .product-details .buy-buttons-block:has(gift-card-recipient-form, .pb-gift-card-fields) form {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
   }
 
-  .quick-add-modal__content .product-details .buy-buttons-block:has(gift-card-recipient-form)::before {
+  .quick-add-modal__content .product-details .buy-buttons-block:has(gift-card-recipient-form, .pb-gift-card-fields)::before {
     display: none;
   }
 

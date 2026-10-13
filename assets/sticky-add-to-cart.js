@@ -164,6 +164,19 @@ class StickyAddToCartComponent extends Component {
    */
   handleAddToCartClick = async () => {
     if (!this.#targetAddToCartButton) return;
+
+    // PB MIGRATION (custom): the product form can hold required fields (pb-gift-card-fields). When one is
+    // invalid, bring it into view with the browser's validation message instead of playing the added animation.
+    const form = this.#targetAddToCartButton.closest('form');
+    const invalidField = Array.from(form?.elements ?? []).find(
+      (field) => 'willValidate' in field && field.willValidate && !field.validity.valid
+    );
+    if (form && invalidField instanceof HTMLElement) {
+      invalidField.scrollIntoView({ block: 'center', behavior: 'instant' });
+      form.reportValidity();
+      return;
+    }
+
     this.#targetAddToCartButton.dataset.puppet = 'true';
     this.#targetAddToCartButton.click();
     const cartIcon = document.querySelector('.header-actions__cart-icon');

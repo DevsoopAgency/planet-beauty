@@ -83,10 +83,18 @@
           PB MIGRATION (custom): live-theme parity. Products on the `gift-card` template suffix are regular
           products sold as virtual gift cards, so they get the sender / recipient line item property fields.
         {%- endcomment -%}
-        {%- if block_settings.gift_card_form and product.template_suffix == 'gift-card' -%}
-          {%- unless product.gift_card? -%}
-            {%- render 'pb-gift-card-fields', block: block -%}
-          {%- endunless -%}
+        {%- liquid
+          assign pb_gift_card_fields = false
+          if block_settings.gift_card_form and product.template_suffix == 'gift-card'
+            unless product.gift_card?
+              assign pb_gift_card_fields = true
+            endunless
+          endif
+        -%}
+        {%- if pb_gift_card_fields -%}
+          {%- render 'pb-gift-card-fields', block: block -%}
+          {%- comment -%} Same sticky bar wrapper Horizon uses for its own gift card form (quick-add modal layout). {%- endcomment -%}
+          <span class="buy-buttons-block__bar">
         {%- endif -%}
         <div
           class="product-form-buttons spacing-style{% if block_settings.stacking %} product-form-buttons--stacked{% endif %}"
@@ -253,6 +261,10 @@
           %}
         </div>
         {%- if block_settings.gift_card_form and product.gift_card? -%}
+          </span>
+        {%- endif -%}
+        {%- comment -%} PB MIGRATION (custom): closes the bar opened after pb-gift-card-fields. {%- endcomment -%}
+        {%- if pb_gift_card_fields -%}
           </span>
         {%- endif -%}
       {%- endform -%}
