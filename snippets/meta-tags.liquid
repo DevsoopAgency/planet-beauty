@@ -24,6 +24,9 @@
 
 {%- liquid
   assign og_title = page_title | default: shop.name
+  if request.page_type == 'search'
+    assign og_title = 'Search'
+  endif
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name
@@ -108,10 +111,14 @@
 >
 
 <title>
-  {{ page_title }}
-  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-  {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  {%- if request.page_type == 'search' -%}
+    Search &ndash; {{ shop.name }}
+  {%- else -%}
+    {{ page_title }}
+    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  {%- endif -%}
 </title>
 
 <link
