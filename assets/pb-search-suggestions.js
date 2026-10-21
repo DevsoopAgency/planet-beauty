@@ -27,6 +27,24 @@
     return '/';
   }
 
+  // pb (2026-10-20): strip Shopify search-tracking params before rendering links.
+  // _psq carries the typed term; _ss/_sid/_psid/_pos are search ids/positions.
+  // Keeps variant, gclid, utm_* and every other param.
+  var PB_STRIP_PARAMS = ['_psq', '_ss', '_sid', '_psid', '_pos'];
+
+  function cleanSuggestionUrl(raw) {
+    if (!raw) return '#';
+    try {
+      var u = new URL(raw, window.location.origin);
+      PB_STRIP_PARAMS.forEach(function (p) {
+        u.searchParams.delete(p);
+      });
+      return u.origin === window.location.origin ? u.pathname + u.search + u.hash : u.href;
+    } catch (e) {
+      return String(raw).split('?')[0];
+    }
+  }
+
   function escapeHtml(value) {
     return String(value == null ? '' : value)
       .replace(/&/g, '&amp;')
@@ -130,7 +148,7 @@
 
     var rows = items
       .map(function (item) {
-        var url = escapeHtml(item.url || '#');
+        var url = escapeHtml(cleanSuggestionUrl(item.url));
         var title = escapeHtml(item.title || '');
         var imageUrl = getItemImageUrl(item);
         var imageHtml = imageUrl
