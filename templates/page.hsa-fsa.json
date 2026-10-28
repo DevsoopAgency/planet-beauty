@@ -13,7 +13,7 @@
       "type": "main-page",
       "blocks": {
         "flex_flex_banner_section_8qTj4L": {
-          "type": "shopify://apps/flex/blocks/flex-banner-section/7944fcd9-6423-42f1-9cd2-c38b5e996536",
+          "type": "shopify://apps/flex-extensions/blocks/flex-banner-section/7944fcd9-6423-42f1-9cd2-c38b5e996536",
           "settings": {
             "copy_option": "now-accepting",
             "custom_text": "",
@@ -27,7 +27,7 @@
           }
         },
         "flex_flex_hero_8MdgjJ": {
-          "type": "shopify://apps/flex/blocks/flex-hero/7944fcd9-6423-42f1-9cd2-c38b5e996536",
+          "type": "shopify://apps/flex-extensions/blocks/flex-hero/7944fcd9-6423-42f1-9cd2-c38b5e996536",
           "settings": {
             "flex_badge": "navy",
             "image": "shopify://shop_images/Omnilux_Contour_Face_9b74394e-2fe6-4391-8909-5916b03232bf.png",
@@ -38,7 +38,7 @@
           }
         },
         "flex_flex_walkthrough_edhg68": {
-          "type": "shopify://apps/flex/blocks/flex-walkthrough/7944fcd9-6423-42f1-9cd2-c38b5e996536",
+          "type": "shopify://apps/flex-extensions/blocks/flex-walkthrough/7944fcd9-6423-42f1-9cd2-c38b5e996536",
           "settings": {
             "lomn": "yes",
             "heading": "",
@@ -57,7 +57,7 @@
           }
         },
         "flex_flex_subscription_jYWtFe": {
-          "type": "shopify://apps/flex/blocks/flex-subscription/7944fcd9-6423-42f1-9cd2-c38b5e996536",
+          "type": "shopify://apps/flex-extensions/blocks/flex-subscription/7944fcd9-6423-42f1-9cd2-c38b5e996536",
           "settings": {
             "accent_color": "#0B0077",
             "eyebrow_size": 16,
@@ -73,7 +73,7 @@
           }
         },
         "flex_flex_faq_RmkzJc": {
-          "type": "shopify://apps/flex/blocks/flex-faq/7944fcd9-6423-42f1-9cd2-c38b5e996536",
+          "type": "shopify://apps/flex-extensions/blocks/flex-faq/7944fcd9-6423-42f1-9cd2-c38b5e996536",
           "settings": {
             "title_size": 22,
             "title_color": "#000000",
@@ -337,9 +337,19 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "pb_page_h1": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<h1 class=\"visually-hidden\">{{ page.title | escape }}</h1>",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
+    "pb_page_h1",
     "main",
     "product_list_8xaXgq"
   ]
