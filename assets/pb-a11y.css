@@ -354,3 +354,13 @@ footer .pb-privacy-choices-link span {
   outline: 2px solid #1a1a1a;
   outline-offset: 2px;
 }
+
+/* ADA Step 1 (Oct 26, 2026) — duplicate theme only */
+/* #8 SALE badge: white on #ff3300 at 10px was 3.66:1; #c42700 gives 5.8:1 */
+.boost-sd__product-label--sale {
+  background-color: #c42700 !important;
+}
+/* #12 content H1 demoted to H2 on default page template keeps H1 look */
+.rte h2.pb-was-h1 {
+  margin-top: 0;
+}
