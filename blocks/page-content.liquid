@@ -1,7 +1,10 @@
-
-
 <rte-formatter>
-  {{ page.content }}
+  {%- comment -%} ADA Step 1 #12: the default page template already shows the page title as the H1, so an H1 inside the page text is shown as an H2 (same look) to keep one H1 per page. {%- endcomment -%}
+  {%- if template.suffix == blank and page.content contains '<h1' -%}
+    {{ page.content | replace: '<h1', '<h2 class="h1 pb-was-h1"' | replace: '</h1>', '</h2>' }}
+  {%- else -%}
+    {{ page.content }}
+  {%- endif -%}
 </rte-formatter>
 
 {% schema %}
