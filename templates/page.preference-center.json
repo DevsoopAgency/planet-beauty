@@ -67,9 +67,19 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "pb_page_h1": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<h1 class=\"visually-hidden\">{{ page.title | escape }}</h1>",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
+    "pb_page_h1",
     "main",
     "custom_liquid_y9daz3"
   ]
