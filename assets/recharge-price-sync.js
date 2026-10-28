@@ -29,13 +29,34 @@ function getRechargePrices(widget) {
 }
 
 /**
+ * Reads the variant's compare-at price from the server-rendered markup, before this
+ * script rewrites it. Cached on the container; variant re-renders replace it.
+ * @param {Element} priceContainer
+ * @returns {string | null}
+ */
+function getVariantCompareAt(priceContainer) {
+  if (!(priceContainer instanceof HTMLElement)) return null;
+
+  if (priceContainer.dataset.variantCompareAt === undefined) {
+    const saleBlock = priceContainer.querySelector('.price__sale');
+    const isOnSale = saleBlock && !saleBlock.classList.contains('price__hidden');
+    const compareText = saleBlock?.querySelector('.compare-at-price')?.textContent?.trim() ?? '';
+    priceContainer.dataset.variantCompareAt = isOnSale ? compareText : '';
+  }
+
+  return priceContainer.dataset.variantCompareAt || null;
+}
+
+/**
  * @param {Element} priceContainer
  * @param {string} price
- * @param {string | null} compareAt
+ * @param {string | null} compareAt - Falls back to the variant's own compare-at price
  */
 function applyPriceToContainer(priceContainer, price, compareAt = null) {
   const regularBlock = priceContainer.querySelector('.price__regular');
   const saleBlock = priceContainer.querySelector('.price__sale');
+
+  compareAt = compareAt || getVariantCompareAt(priceContainer);
 
   if (compareAt) {
     regularBlock?.classList.add('price__hidden');
