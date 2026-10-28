@@ -37,19 +37,6 @@
       if (img.getAttribute('alt')) img.setAttribute('alt', '');
     });
 
-    /* Boost titles are lowercase + inline text-transform: capitalize, so the
-       code after "Item No." renders as "Babntchv15". Uppercase the code only.
-       Edits the text node in place so Boost's React tree stays intact. */
-    scope.querySelectorAll('.boost-sd__product-title').forEach(function (title) {
-      title.childNodes.forEach(function (node) {
-        if (node.nodeType !== 3) return;
-        var fixed = node.data.replace(/(item\s+no\.?\s*)([a-z0-9][a-z0-9\-\/.]*)/gi, function (m, label, code) {
-          return label + code.toUpperCase();
-        });
-        if (fixed !== node.data) node.data = fixed;
-      });
-    });
-
     /* Filename-like alts (F30): Marvis_Whitening_Mint_Toothpaste_75ml */
     scope.querySelectorAll('img[alt]').forEach(function (img) {
       var alt = img.getAttribute('alt') || '';
