@@ -150,3 +150,167 @@
     }).observe(document.documentElement, { childList: true, subtree: true });
   }
 })();
+
+/* ==========================================================================
+   ADA Step 1 (Oct 26, 2026) — built on the duplicate theme only.
+   #1 Rebuy cart drawer inert when closed, #3 variant change announced,
+   #4 Boost card links/buttons name the product, #5 Boost sale/regular price
+   labels, #10 Boost filter toggles expose open/closed, #11 cart count announced.
+   Rollback: restore the previous pb-a11y.js (saved as orig/pb-a11y.js).
+   ========================================================================== */
+(function () {
+  if (window.__pbAdaStep1) return;
+  window.__pbAdaStep1 = true;
+
+  /* ---------- shared polite live region ---------- */
+  var live;
+  function liveRegion() {
+    if (live && document.body.contains(live)) return live;
+    live = document.createElement('div');
+    live.id = 'pb-a11y-status';
+    live.className = 'visually-hidden';
+    live.setAttribute('role', 'status');
+    live.setAttribute('aria-live', 'polite');
+    live.setAttribute('aria-atomic', 'true');
+    document.body.appendChild(live);
+    return live;
+  }
+  var announceTimer;
+  function announce(msg) {
+    if (!msg) return;
+    var el = liveRegion();
+    clearTimeout(announceTimer);
+    el.textContent = '';
+    announceTimer = setTimeout(function () { el.textContent = msg; }, 120);
+  }
+  function srSpan(text) {
+    var s = document.createElement('span');
+    s.className = 'visually-hidden pb-sr';
+    s.textContent = text;
+    return s;
+  }
+  function clean(t) {
+    return (t || '').replace(/\s+/g, ' ').replace(/\s*\(\$[\d,.]+\s*value\)/i, '').trim();
+  }
+
+  /* ---------- #4 + #5 Boost product cards ---------- */
+  function fixBoostCards(scope) {
+    scope.querySelectorAll('.boost-sd__product-item').forEach(function (card) {
+      var img = card.querySelector('.boost-sd__product-image-img--main');
+      var alt = img && img.getAttribute('alt');
+      var tEl = card.querySelector('.boost-sd__product-title');
+      var title = clean(alt && !/_/.test(alt) ? alt.split(' / ')[0] : (tEl && tEl.textContent));
+      if (!title) return;
+      var imgLink = card.querySelector('a.boost-sd__product-link-image');
+      if (imgLink && imgLink.getAttribute('aria-label') !== title) imgLink.setAttribute('aria-label', title);
+      var atc = card.querySelector('.boost-sd__btn-add-to-cart');
+      if (atc) {
+        var a = 'Add ' + title + ' to cart';
+        if (atc.getAttribute('aria-label') !== a) atc.setAttribute('aria-label', a);
+      }
+      var qv = card.querySelector('.boost-sd__btn-quick-view');
+      if (qv) {
+        var q = 'Quick view: ' + title;
+        if (qv.getAttribute('aria-label') !== q) qv.setAttribute('aria-label', q);
+      }
+      var priceWrap = card.querySelector('.boost-sd__product-price-content');
+      if (priceWrap) {
+        var compare = priceWrap.querySelector('.boost-sd__format-currency--price-compare');
+        if (compare) {
+          if (!compare.querySelector('.pb-sr')) compare.insertBefore(srSpan('Regular price '), compare.firstChild);
+          var sale = [].filter.call(priceWrap.querySelectorAll('.boost-sd__format-currency'), function (n) {
+            return !n.classList.contains('boost-sd__format-currency--price-compare');
+          })[0];
+          if (sale && !sale.querySelector('.pb-sr')) sale.insertBefore(srSpan('Sale price '), sale.firstChild);
+        }
+      }
+    });
+  }
+
+  /* ---------- #10 Boost filter toggles ---------- */
+  function fixBoostFilters(scope) {
+    scope.querySelectorAll('.boost-sd__filter-option-title').forEach(function (btn) {
+      var label = btn.closest('.boost-sd__filter-option-label');
+      if (!label) return;
+      var open = !label.classList.contains('boost-sd__filter-option-label--collapsed');
+      var v = open ? 'true' : 'false';
+      if (btn.getAttribute('aria-expanded') !== v) btn.setAttribute('aria-expanded', v);
+    });
+  }
+
+  /* ---------- #1 Rebuy cart drawer: not reachable by Tab while closed ---------- */
+  function rebuyOpen(el) {
+    if (el.getAttribute('aria-hidden') === 'false') return true;
+    if (el.getAttribute('aria-hidden') === 'true') return false;
+    return /\b(is-visible|visible|rebuy-cart--open|open)\b/.test(el.className);
+  }
+  function fixRebuyDrawer() {
+    var el = document.getElementById('rebuy-cart');
+    if (!el) return;
+    if (rebuyOpen(el)) {
+      if (el.hasAttribute('inert')) el.removeAttribute('inert');
+    } else if (!el.hasAttribute('inert')) {
+      el.setAttribute('inert', '');
+    }
+  }
+
+  /* ---------- #11 cart count announced ---------- */
+  var lastCount = null;
+  function readCartCount() {
+    var el = document.querySelector('[ref="cartBubbleCount"]');
+    if (!el) return null;
+    var n = parseInt((el.textContent || '').trim(), 10);
+    if (isNaN(n)) n = parseInt(el.getAttribute('data-minicart-count') || '0', 10) || 0;
+    return n;
+  }
+  function watchCartCount() {
+    var n = readCartCount();
+    if (n === null) return;
+    if (lastCount === null) { lastCount = n; return; }
+    if (n !== lastCount) {
+      lastCount = n;
+      announce('Cart updated: ' + n + (n === 1 ? ' item' : ' items'));
+    }
+  }
+
+  /* ---------- #3 variant change announced (price + stock) ---------- */
+  document.addEventListener('variant:update', function (e) {
+    var section = (e.target && e.target.closest && e.target.closest('.shopify-section')) || document;
+    var variant = e.detail && e.detail.resource;
+    setTimeout(function () {
+      var price = section.querySelector('[ref="priceContainer"]');
+      var text = '';
+      if (price) {
+        var c = price.cloneNode(true);
+        c.querySelectorAll('.price__hidden, .volume-pricing-note').forEach(function (n) { n.remove(); });
+        text = c.textContent.replace(/\s+/g, ' ').trim();
+      }
+      var stock = '';
+      if (variant && typeof variant.available === 'boolean') stock = variant.available ? 'In stock' : 'Sold out';
+      var inv = section.querySelector('.product-inventory__status, [class*="product-inventory"]');
+      if (inv && inv.textContent.trim()) stock = inv.textContent.replace(/\s+/g, ' ').trim();
+      announce([text, stock].filter(Boolean).join('. '));
+    }, 350);
+  });
+
+  /* ---------- run + observe ---------- */
+  function runAll() {
+    fixBoostCards(document);
+    fixBoostFilters(document);
+    fixRebuyDrawer();
+    watchCartCount();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', runAll);
+  else runAll();
+  if (window.MutationObserver) {
+    var pending = false;
+    new MutationObserver(function () {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(function () { pending = false; runAll(); });
+    }).observe(document.documentElement, {
+      childList: true, subtree: true, characterData: true,
+      attributes: true, attributeFilter: ['class', 'aria-hidden']
+    });
+  }
+})();
