@@ -219,7 +219,7 @@
                   "blocks": {}
                 },
                 "flex_flex_badge_W9NAqW": {
-                  "type": "shopify://apps/flex/blocks/flex-badge/7944fcd9-6423-42f1-9cd2-c38b5e996536",
+                  "type": "shopify://apps/flex-extensions/blocks/flex-badge/7944fcd9-6423-42f1-9cd2-c38b5e996536",
                   "settings": {
                     "lomn": "ineligible",
                     "show_subscription_tab": false,
@@ -431,7 +431,7 @@
                     "text_R7A9Pk": {
                       "type": "text",
                       "settings": {
-                        "text": "<p><strong>Shipping</strong></p><p>- FREE Ground Shipping on all orders over $59</p><p>- $5.99 Continental standard ground (orders less than $59)</p><p>- $15 for expedited shipping up to 10lbs</p><p>- Orders processing time: 2-4 business days</p><p>- Orders placed on weekends and holidays will be processed the next business day.</p><p>- See Shipping page for more details: <a href=\"https://planet-beauty-production.myshopify.com/pages/shipping\" target=\"_blank\" title=\"https://planet-beauty-production.myshopify.com/pages/shipping\">Shipping</a></p><p><strong>Returns</strong></p><p>- FREE returns and exchanges in store for qualifying online purchases</p><p>- See Returns page for more details: <a href=\"https://planet-beauty-production.myshopify.com/pages/returns\" target=\"_blank\" title=\"https://planet-beauty-production.myshopify.com/pages/returns\">Returns</a></p><p><strong>SELECT TOOLS AND DEVICES ARE FINAL SALES (it will state that information on each product description)</strong>:</p><p>All others: We are happy to refund or exchange them if returned within 14 days <br/>of purchase, if it is returned in its original state, unused and in<br/> original packaging with the seal unbroken and package not damaged. <br/>Please contact us directly for more details. </p>",
+                        "text": "<p><strong>Shipping</strong></p><p>- FREE Ground Shipping on all orders over $59</p><p>- $5.99 Continental standard ground (orders less than $59)</p><p>- $15 for expedited shipping up to 10lbs</p><p>- Orders processing time: 2-4 business days</p><p>- Orders placed on weekends and holidays will be processed the next business day.</p><p>- See Shipping page for more details: <a href=\"https://planet-beauty-production.myshopify.com/pages/shipping\" target=\"_blank\" title=\"https://planet-beauty-production.myshopify.com/pages/shipping\">Shipping</a></p><p><strong>Returns</strong></p><p>- FREE returns and exchanges in store for qualifying online purchases</p><p>- See Returns page for more details: <a href=\"https://planet-beauty-production.myshopify.com/pages/returns\" target=\"_blank\" title=\"https://planet-beauty-production.myshopify.com/pages/returns\">Returns</a></p><p><strong>SELECT TOOLS AND DEVICES ARE FINAL SALES (it will state that information on each product description)</strong>:</p><p>All others: We are happy to refund or exchange them if returned within 30 days&nbsp;<br/>of purchase, if it is returned in its original state, unused and in<br/>&nbsp;original packaging with the seal unbroken and package not damaged.&nbsp;<br/>Please contact us directly for more details.&nbsp;</p>",
                         "width": "100%",
                         "max_width": "normal",
                         "alignment": "left",
