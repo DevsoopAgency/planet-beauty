@@ -202,9 +202,10 @@
           'If the item arrived damaged or is not what you ordered, add a photo below and we will replace it.',
           'Full details are on our <a href="/pages/returns">returns page</a>.']
     },
-    damaged: {
-      h: 'We will replace it',
-      p: ['Add a photo of the item and the box below, and tell us what happened. That is everything we need to arrange a replacement.',
+       damaged: {
+      h: 'We will put it right',
+      p: ['Add a photo of the item and the box below, and tell us what happened. That is everything we need to sort it out.',
+          'Usually that means sending you a replacement. If a replacement is not the best answer — the item is out of stock, or you would rather not wait for another delivery — we will agree a refund with you instead.',
           'Please keep the item and its packaging until you hear from us.',
           'If part of your order is missing rather than damaged, just tell us which items below. No photo needed.']
     },
@@ -346,10 +347,42 @@
       page: window.location.pathname
     };
 
-    fetch(ENDPOINT, {
+        // 29 Oct 2026 — delivery goes through Shopify's own contact relay, not n8n.
+    // n8n hit its monthly execution limit on 23 Oct and began returning HTTP 200
+    // while refusing to run the workflow, so every submission was accepted on
+    // screen and thrown away. Shopify's relay has no quota. See the project note
+    // "Contact form was silently dropping every message".
+    var REASON_LABEL = {
+      wismo: 'Where is my order',
+      addr: 'My address is wrong',
+      cancel: 'Cancel my order',
+      ret: 'Return or exchange',
+      damaged: 'Damaged, wrong or missing item',
+      other: 'Something else'
+    };
+
+    var body = payload.message || '(no message written)';
+    if (payload.photos && payload.photos.length) {
+      body += '\n\n--\nThe customer attached ' + payload.photos.length +
+              ' photo(s). Photos cannot ride on this email while the form is in ' +
+              'fallback mode — reply to the customer and ask them to send the ' +
+              'images, or wait for the attachments once n8n is back.';
+    }
+
+    var fd = new URLSearchParams();
+    fd.append('form_type', 'contact');
+    fd.append('utf8', '✓');
+    fd.append('contact[email]', payload.email);
+    fd.append('contact[name]', payload.name || '');
+    fd.append('contact[Reason]', REASON_LABEL[payload.reason] || payload.reason);
+    fd.append('contact[Order number]', payload.order_number || '(not given)');
+    fd.append('contact[body]', body);
+
+    fetch('/contact', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: fd.toString(),
+      redirect: 'follow'
     }).then(function (r) {
       if (!r.ok) { throw new Error('bad status'); }
       document.getElementById('pbct-done-email').textContent = email;
