@@ -1,19 +1,46 @@
 {%- comment -%}
-  Planet Beauty — contact triage form (v1)
+  Planet Beauty — contact triage form (v2, 29 Oct 2026)
 
-  Deliberately does NOT look up or display any order data. Order numbers are
-  sequential, so showing order details on an order-number + email pair would let
-  anyone walk the range and read another customer's order. The order number is
-  captured and passed to staff; nothing about the order is ever shown back.
+  DELIVERY
+  --------
+  This is a plain Shopify contact form. The whole UI sits inside {% form 'contact' %},
+  the fields carry Shopify's own contact[...] names, and Send is a real submit. Mail
+  goes to the store contact address (info@planetbeauty.com) through Shopify. There is
+  no API call, no webhook and no background fetch anywhere in this file.
 
-  Posts to n8n (Contact Form v2 — intake), which emails info@ with a structured
-  subject and hands off to the existing acknowledgement workflow.
+  WHY IT IS BUILT THIS WAY — read before changing it
+  --------------------------------------------------
+  v1 posted to n8n. On 23 Oct n8n hit its monthly execution limit and began answering
+  HTTP 200 while refusing to run the workflow, so for six days every submission was
+  accepted, shown the green confirmation, and thrown away. Roughly 100 customers were
+  told we had their message when we did not.
+
+  The first repair hand-built a POST to /contact with fetch(). Shopify rejects that
+  with HTTP 400 — it will not accept a contact form it did not render itself, posted
+  from the background rather than as a real navigation. Do not try it again.
+
+  The rule this file now follows: the thing that tells the customer we received their
+  message must be the same thing that sends it. Here, that is Shopify.
+
+  PRIVACY — unchanged from v1
+  ---------------------------
+  This page never looks up or displays order data. Order numbers are sequential, so
+  echoing order details back for an email + order number pair would let anyone walk
+  the range and read another customer's order. The number is captured and passed to
+  staff; nothing about the order is shown back.
+
+  KNOWN GAP
+  ---------
+  Photo upload is gone. Shopify's contact relay cannot carry attachments, and leaving
+  an upload control that silently discards files repeats the mistake above. The copy
+  now asks customers to reply to our first email with photos. Restore uploads only
+  alongside something that can actually receive them.
 {%- endcomment -%}
 
 <style>
   .pbct{--pbct-ink:#231b20;--pbct-ink2:#5c5157;--pbct-ink3:#6b6268;--pbct-line:#e6dde1;
         --pbct-line2:#d5c8ce;--pbct-surface:#fff;--pbct-soft:#f7f2f4;--pbct-brand:#d6007b;
-        --pbct-brandsoft:#fce7f2;--pbct-warm:#a86616;
+        --pbct-brandsoft:#fce7f2;--pbct-warm:#a86616;--pbct-bad:#b3261e;
         max-width:720px;margin:0 auto;padding:32px 16px 64px;color:var(--pbct-ink);
         font-size:16px;line-height:1.6}
   .pbct *{box-sizing:border-box}
@@ -56,63 +83,81 @@
   .pbct .pbct-send[disabled]{opacity:.55;cursor:default}
   .pbct .pbct-notice{font-size:12.5px;color:var(--pbct-ink3);margin-top:14px;line-height:1.5}
   .pbct .pbct-notice a{color:var(--pbct-ink2)}
-  .pbct .pbct-err{color:#b3261e;font-size:14px;margin-top:10px}
+  .pbct .pbct-err{color:var(--pbct-bad);font-size:14px;margin-top:10px}
+  .pbct .pbct-errbox{border:1px solid var(--pbct-bad);border-radius:3px;padding:14px 16px;
+    margin:0 0 22px;color:var(--pbct-bad);font-size:15px}
+  .pbct .pbct-errbox p{margin:0 0 6px;font-weight:700}
+  .pbct .pbct-errbox ul{margin:0;padding-left:20px}
   .pbct .pbct-trap{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
-  {%- comment -%}
-    The bare OS file input looks unfinished next to the rest of the form, and the
-    theme's global input margin pushes the hint text away from it. Both pinned here.
-  {%- endcomment -%}
-  .pbct input[type=file]{font:inherit;font-size:14.5px;color:var(--pbct-ink2);margin:0;
-    width:100%;background:var(--pbct-surface);border:1px dashed var(--pbct-line2);
-    border-radius:3px;padding:11px 12px;cursor:pointer}
-  .pbct input[type=file]::file-selector-button{font:inherit;font-size:14px;font-weight:700;
-    text-transform:none;letter-spacing:normal;cursor:pointer;margin:0 12px 0 0;
-    background:var(--pbct-soft);color:var(--pbct-ink);border:1px solid var(--pbct-line2);
-    border-radius:3px;padding:8px 14px;transition:border-color .12s}
-  .pbct input[type=file]::file-selector-button:hover{border-color:var(--pbct-brand)}
-  .pbct input[type=file]:hover{border-color:var(--pbct-line2)}
-  .pbct #pbct-photo-field .pbct-hint{margin:7px 0 0}
-  .pbct .pbct-thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-  .pbct .pbct-thumb{position:relative;width:84px;height:84px;border-radius:3px;overflow:hidden;
-    border:1px solid var(--pbct-line2);background:var(--pbct-soft)}
-  .pbct .pbct-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-  .pbct .pbct-thumb button{position:absolute;top:2px;right:2px;width:22px;height:22px;border:none;
-    border-radius:50%;background:rgba(0,0,0,.62);color:#fff;font-size:14px;line-height:22px;
-    padding:0;cursor:pointer;text-transform:none}
   .pbct .pbct-done{background:var(--pbct-brandsoft);border-radius:4px;padding:28px 26px;text-align:left}
   .pbct .pbct-done h2{margin:0 0 8px;font-size:20px;font-weight:800}
   .pbct .pbct-done p{margin:0 0 8px;color:var(--pbct-ink2)}
+  .pbct .pbct-done p:last-child{margin-bottom:0}
   @media (prefers-reduced-motion:reduce){.pbct *{transition:none!important}}
 </style>
 
 <div class="pbct" id="pbct">
-  <div id="pbct-form-wrap">
-    <h1>{{ section.settings.heading | default: 'How can we help?' }}</h1>
-    {%- comment -%}
-      Reply time must match the acknowledgement email word for word. That email
-      says "one to two business days"; if this page promises something shorter,
-      customers chase us on day two quoting our own page back at us.
-    {%- endcomment -%}
-    <p class="pbct-sub{% if section.settings.hours != blank %} pbct-sub--tight{% endif %}">{{ section.settings.intro | default: 'Tell us what you need and we will reply within one to two business days.' }}</p>
-    {%- if section.settings.hours != blank -%}
-      <p class="pbct-hours">{{ section.settings.hours }}</p>
-    {%- endif -%}
+  {%- form 'contact', id: 'pbct-form' -%}
 
-    <form id="pbct-form" novalidate>
+    {%- if form.posted_successfully? -%}
+
+      {%- comment -%}
+        Server-rendered by Shopify, and only after the mail has actually been
+        accepted. This block cannot appear unless the message was sent. That is
+        the entire point of the rebuild — do not reproduce it in JavaScript.
+      {%- endcomment -%}
+      <div class="pbct-done" id="pbct-done" tabindex="-1">
+        <h2>Thanks — we have got it</h2>
+        {%- if form.email != blank -%}
+          <p>We will reply to <strong>{{ form.email }}</strong> within one to two business days.</p>
+        {%- else -%}
+          <p>We will reply to the email address you gave us within one to two business days.</p>
+        {%- endif -%}
+        <p>If you gave us an order number, it is already attached, so nobody will need to ask you for it.</p>
+        <p>No need to send it again — a second message will not reach us any faster.</p>
+        <p><a href="/">Continue shopping</a></p>
+      </div>
+
+    {%- else -%}
+
+      <h1>{{ section.settings.heading | default: 'How can we help?' }}</h1>
+      {%- comment -%}
+        Reply time must match the acknowledgement wording. If this page promises
+        something shorter, customers chase us on day two quoting our own page back.
+      {%- endcomment -%}
+      <p class="pbct-sub{% if section.settings.hours != blank %} pbct-sub--tight{% endif %}">{{ section.settings.intro | default: 'Tell us what you need and we will reply within one to two business days.' }}</p>
+      {%- if section.settings.hours != blank -%}
+        <p class="pbct-hours">{{ section.settings.hours }}</p>
+      {%- endif -%}
+
+      {%- if form.errors -%}
+        <div class="pbct-errbox" role="alert">
+          <p>Please check the following:</p>
+          <ul>
+            {%- for field in form.errors -%}
+              <li>{{ form.errors.messages[field] }}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
       <div class="pbct-row">
         <div>
           <label for="pbct-name">Your name</label>
-          <input type="text" id="pbct-name" name="name" autocomplete="name" maxlength="80">
+          <input type="text" id="pbct-name" name="contact[name]" autocomplete="name"
+                 maxlength="80" value="{{ form.name }}">
         </div>
         <div>
           <label for="pbct-email">Your email <span aria-hidden="true">*</span></label>
-          <input type="email" id="pbct-email" name="email" autocomplete="email" required maxlength="160">
+          <input type="email" id="pbct-email" name="contact[email]" autocomplete="email"
+                 required maxlength="160" value="{{ form.email }}">
         </div>
       </div>
 
       <div class="pbct-field">
         <label for="pbct-order">Order number</label>
-        <input type="text" id="pbct-order" name="order_number" inputmode="numeric" maxlength="20" placeholder="e.g. 697382">
+        <input type="text" id="pbct-order" name="contact[Order number]" inputmode="numeric"
+               maxlength="20" placeholder="e.g. 697382">
         <p class="pbct-hint">Optional, but it gets you a faster answer. It is in your confirmation email.</p>
       </div>
 
@@ -120,6 +165,7 @@
         Anti-bot trap. NEVER name this something an autofill engine recognises.
         It was called "company" for one day and Chrome filled it from the
         visitor's saved details, silently dropping a real person as a bot.
+        Not a contact[...] field, so it never reaches the staff email.
       {%- endcomment -%}
       <div class="pbct-trap" aria-hidden="true">
         <label for="pbct-ref">Leave this field empty</label>
@@ -137,46 +183,33 @@
         <button type="button" class="pbct-reason" data-k="other" aria-pressed="false">Something else</button>
       </div>
 
-      <div id="pbct-answer" hidden></div>
+      {%- comment -%} Carries the chosen reason into the staff email as its own line. {%- endcomment -%}
+      <input type="hidden" name="contact[Reason]" id="pbct-reason-value" value="Not chosen">
 
-      <div class="pbct-field" id="pbct-photo-field" style="margin-top:22px" hidden>
-        <label for="pbct-photos">Add a photo</label>
-        <input type="file" id="pbct-photos" accept="image/*" multiple>
-                <p class="pbct-hint">Up to 3 photos. We cannot attach photos to the form for the
-          next few days — add them anyway and we will email you to ask for them, or reply
-          to our first message with the photos attached.</p>
-        <div class="pbct-thumbs" id="pbct-thumbs"></div>
-      </div>
+      <div id="pbct-answer" hidden></div>
 
       <div class="pbct-field" style="margin-top:22px">
         <label for="pbct-message" id="pbct-message-label">Tell us what is happening</label>
-        <textarea id="pbct-message" name="message" maxlength="4000"
-          placeholder="Anything the options above do not cover"></textarea>
+        <textarea id="pbct-message" name="contact[body]" maxlength="4000"
+          placeholder="Anything the options above do not cover">{{ form.body }}</textarea>
       </div>
 
       <button type="submit" class="pbct-send" id="pbct-send">Send message</button>
       <p class="pbct-err" id="pbct-err" hidden></p>
 
       <p class="pbct-notice">
-        We use your name, email, order number, message and any photos only to answer you, and we keep them
+        We use your name, email, order number and message only to answer you, and we keep them
         with your customer service history. We do not sell your information. See our
         <a href="/policies/privacy-policy">Privacy Policy</a> for how to request or delete your data.
       </p>
-    </form>
-  </div>
 
-  <div class="pbct-done" id="pbct-done" hidden>
-    <h2>Thanks — we have got it</h2>
-    <p id="pbct-done-line">We will reply to <strong id="pbct-done-email"></strong> within one to two business days.</p>
-    <p>If you gave us an order number, it is already attached, so nobody will need to ask you for it.</p>
-  </div>
+    {%- endif -%}
+  {%- endform -%}
 </div>
 
 <script>
 (function () {
-  var ENDPOINT = 'https://planetbeauty.app.n8n.cloud/webhook/contact-form-v2';
   var LOADED_AT = Date.now();
-  var MAX_PHOTOS = 3;
 
   // Answers are static. Nothing here is specific to an order, because the page
   // never looks one up.
@@ -200,15 +233,15 @@
     ret: {
       h: 'You have 30 days from delivery',
       p: ['Tell us what you would like to return and why, and we will confirm it is eligible and send instructions.',
-                    'If the item arrived damaged or is not what you ordered, add a photo below and we will put it right.',
+          'If the item arrived damaged or is not what you ordered, tell us below and we will put it right.',
           'Full details are on our <a href="/pages/returns">returns page</a>.']
     },
-       damaged: {
+    damaged: {
       h: 'We will put it right',
-      p: ['Add a photo of the item and the box below, and tell us what happened. That is everything we need to sort it out.',
-          'Usually that means sending you a replacement. If a replacement is not the best answer — the item is out of stock, or you would rather not wait for another delivery — we will agree a refund with you instead.',
-          'Please keep the item and its packaging until you hear from us.',
-          'If part of your order is missing rather than damaged, just tell us which items below. No photo needed.']
+      p: ['Tell us below what arrived and what is wrong with it. Please keep the item and its packaging until you hear from us.',
+          'When we reply, attach a photo of the item and the box to your answer. That is usually everything we need.',
+          'Usually we send a replacement. If a replacement is not the best answer — the item is out of stock, or you would rather not wait for another delivery — we will agree a refund with you instead.',
+          'If part of your order is missing rather than damaged, just tell us which items below.']
     },
     other: { h: '', p: [] }
   };
@@ -222,26 +255,27 @@
     other: 'Tell us what is happening'
   };
 
-  // Reasons that plausibly need a photo. Others keep the field hidden so the
-  // form stays as short as the customer's problem requires.
-  // 'other' is here because a real customer on day one wrote that her shampoo
-  // arrived broken and ended with "tengo fotos" - I have photos - but she had
-  // picked Something else, so the upload never appeared. Whoever cannot find a
-  // button for their problem is exactly who most needs to show us.
-  var WANTS_PHOTO = { damaged: true, ret: true, other: true };
+  var LABELS = {
+    wismo: 'Where is my order',
+    addr: 'My address is wrong',
+    cancel: 'Cancel my order',
+    ret: 'Return or exchange',
+    damaged: 'Damaged, wrong or missing item',
+    other: 'Something else'
+  };
 
   var form = document.getElementById('pbct-form');
-  if (!form) { return; }
+  var done = document.getElementById('pbct-done');
+  if (done) { try { done.focus(); } catch (e) {} }
+  if (!form || done) { return; }
+
   var buttons = Array.prototype.slice.call(document.querySelectorAll('.pbct-reason'));
   var answerEl = document.getElementById('pbct-answer');
   var messageEl = document.getElementById('pbct-message');
+  var reasonEl = document.getElementById('pbct-reason-value');
   var errEl = document.getElementById('pbct-err');
   var sendEl = document.getElementById('pbct-send');
-  var photoField = document.getElementById('pbct-photo-field');
-  var photoInput = document.getElementById('pbct-photos');
-  var thumbsEl = document.getElementById('pbct-thumbs');
   var chosen = '';
-  var photos = [];
 
   function showAnswer(k) {
     var a = ANSWERS[k];
@@ -258,144 +292,57 @@
       buttons.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
       showAnswer(chosen);
       messageEl.setAttribute('placeholder', PROMPTS[chosen] || '');
-      photoField.hidden = !WANTS_PHOTO[chosen];
+      reasonEl.value = LABELS[chosen] || chosen;
     });
   });
 
-  // Resize on the device. A modern phone photo is 4-8MB; Graph refuses a message
-  // over about 3MB, so sending the original would simply lose the attachment.
-  function shrink(file) {
-    return new Promise(function (resolve, reject) {
-      var reader = new FileReader();
-      reader.onerror = function () { reject(new Error('read failed')); };
-      reader.onload = function () {
-        var img = new Image();
-        img.onerror = function () { reject(new Error('decode failed')); };
-        img.onload = function () {
-          var max = 1600;
-          var w = img.width, h = img.height;
-          if (w > max || h > max) {
-            if (w >= h) { h = Math.round(h * (max / w)); w = max; }
-            else { w = Math.round(w * (max / h)); h = max; }
-          }
-          var canvas = document.createElement('canvas');
-          canvas.width = w; canvas.height = h;
-          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', 0.72));
-        };
-        img.src = reader.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  function drawThumbs() {
-    thumbsEl.innerHTML = '';
-    photos.forEach(function (p, i) {
-      var wrap = document.createElement('div');
-      wrap.className = 'pbct-thumb';
-      var im = document.createElement('img');
-      im.src = p.dataUrl; im.alt = p.name;
-      var rm = document.createElement('button');
-      rm.type = 'button';
-      rm.setAttribute('aria-label', 'Remove ' + p.name);
-      rm.textContent = '×';
-      rm.addEventListener('click', function () { photos.splice(i, 1); drawThumbs(); });
-      wrap.appendChild(im); wrap.appendChild(rm);
-      thumbsEl.appendChild(wrap);
-    });
-  }
-
-  photoInput.addEventListener('change', function () {
-    var files = Array.prototype.slice.call(photoInput.files || []);
-    var room = MAX_PHOTOS - photos.length;
-    if (room <= 0) { photoInput.value = ''; return; }
-    var queue = files.slice(0, room).filter(function (f) { return /^image\//.test(f.type); });
-    Promise.all(queue.map(function (f) {
-      return shrink(f).then(function (dataUrl) { return { name: f.name, dataUrl: dataUrl }; })
-        .catch(function () { return null; });
-    })).then(function (done) {
-      done.filter(Boolean).forEach(function (p) { photos.push(p); });
-      photoInput.value = '';
-      drawThumbs();
-    });
-  });
-
+  // Validation only. This handler never sends anything and never shows a
+  // confirmation — if it lets the event through, Shopify does the rest and
+  // Shopify alone decides what the customer is told.
   form.addEventListener('submit', function (e) {
-    e.preventDefault();
     errEl.hidden = true;
+
     var email = document.getElementById('pbct-email').value.trim();
-    var message = messageEl.value.trim();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) {
+      e.preventDefault();
       errEl.textContent = 'Please check your email address so we can reply to you.';
-      errEl.hidden = false; document.getElementById('pbct-email').focus(); return;
-    }
-    if (!chosen && !message) {
-      errEl.textContent = 'Please choose what we can help with, or write us a message.';
-      errEl.hidden = false; return;
-    }
-    sendEl.disabled = true; sendEl.textContent = 'Sending…';
-
-    var payload = {
-      name: document.getElementById('pbct-name').value.trim(),
-      email: email,
-      order_number: document.getElementById('pbct-order').value.trim(),
-      pbct_ref: document.getElementById('pbct-ref').value.trim(),
-      elapsed_ms: Date.now() - LOADED_AT,
-      reason: chosen || 'other',
-      message: message,
-      photos: photos,
-      page: window.location.pathname
-    };
-
-        // 29 Oct 2026 — delivery goes through Shopify's own contact relay, not n8n.
-    // n8n hit its monthly execution limit on 23 Oct and began returning HTTP 200
-    // while refusing to run the workflow, so every submission was accepted on
-    // screen and thrown away. Shopify's relay has no quota. See the project note
-    // "Contact form was silently dropping every message".
-    var REASON_LABEL = {
-      wismo: 'Where is my order',
-      addr: 'My address is wrong',
-      cancel: 'Cancel my order',
-      ret: 'Return or exchange',
-      damaged: 'Damaged, wrong or missing item',
-      other: 'Something else'
-    };
-
-    var body = payload.message || '(no message written)';
-    if (payload.photos && payload.photos.length) {
-      body += '\n\n--\nThe customer attached ' + payload.photos.length +
-              ' photo(s). Photos cannot ride on this email while the form is in ' +
-              'fallback mode — reply to the customer and ask them to send the ' +
-              'images, or wait for the attachments once n8n is back.';
-    }
-
-    var fd = new URLSearchParams();
-    fd.append('form_type', 'contact');
-    fd.append('utf8', '✓');
-    fd.append('contact[email]', payload.email);
-    fd.append('contact[name]', payload.name || '');
-    fd.append('contact[Reason]', REASON_LABEL[payload.reason] || payload.reason);
-    fd.append('contact[Order number]', payload.order_number || '(not given)');
-    fd.append('contact[body]', body);
-
-    fetch('/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: fd.toString(),
-      redirect: 'follow'
-    }).then(function (r) {
-      if (!r.ok) { throw new Error('bad status'); }
-      document.getElementById('pbct-done-email').textContent = email;
-      document.getElementById('pbct-form-wrap').hidden = true;
-      document.getElementById('pbct-done').hidden = false;
-      document.getElementById('pbct-done').scrollIntoView({ block: 'center' });
-    }).catch(function () {
-      sendEl.disabled = false; sendEl.textContent = 'Send message';
-      errEl.innerHTML = 'Something went wrong sending that. Please email us at ' +
-        '<a href="mailto:info@planetbeauty.com">info@planetbeauty.com</a> and we will pick it up.';
       errEl.hidden = false;
-    });
+      document.getElementById('pbct-email').focus();
+      return;
+    }
+
+    var message = messageEl.value.trim();
+    if (!chosen && !message) {
+      e.preventDefault();
+      errEl.textContent = 'Please choose what we can help with, or write us a message.';
+      errEl.hidden = false;
+      return;
+    }
+
+    // Bot gates: the honeypot, and anything submitted inside two seconds of load.
+    // Swallow the submit without telling them why.
+    var trap = document.getElementById('pbct-ref').value.trim();
+    if (trap || (Date.now() - LOADED_AT) < 2000) {
+      e.preventDefault();
+      sendEl.disabled = true;
+      sendEl.textContent = 'Sending…';
+      return;
+    }
+
+    // Shopify rejects an empty body. A reason with no message is a legitimate
+    // submission, so give the body something true rather than failing them.
+    if (!message) {
+      messageEl.value = '(no message written — see Reason above)';
+    }
+
+    sendEl.disabled = true;
+    sendEl.textContent = 'Sending…';
+  });
+
+  // bfcache would otherwise restore a dead, disabled button.
+  window.addEventListener('pageshow', function () {
+    sendEl.disabled = false;
+    sendEl.textContent = 'Send message';
   });
 })();
 </script>
