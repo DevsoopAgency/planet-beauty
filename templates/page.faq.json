@@ -439,7 +439,7 @@
                 "text_caj4Hx": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>You have 30 days to return your items from when they were received, except select items that have a no return policy, these items will show that information in their page. If it was an online order, shipping charges may apply. Please see our full return policy here: <a href=\"/pages/returns\"> Returns</a></p>",
+                    "text": "<p>You have 30 days to return your items from when they were received. Opened and gently used products are welcome. If it was an online order, shipping charges may apply. Please see our full return policy here: <a href=\"/pages/returns\"> Returns</a></p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -590,7 +590,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Can I change an order for store pick up to be ship to me? It is good to explain about the minimum order amount shipping fee.",
+                "heading": "Can I change an order for store pick up to be shipped to me?",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
@@ -599,7 +599,7 @@
                 "text_zgwxKf": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Yes you may switch any store pick up order to be shipped to you as long as your order is over $39. Please give us a call or email, we would be happy to help!</p>",
+                    "text": "<p>Yes you may switch any store pick up order to be shipped to you as long as your order is over $59. Please give us a call or email, we would be happy to help!</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
