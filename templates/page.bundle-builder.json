@@ -44,14 +44,19 @@
           "blocks": {}
         }
       },
-      "block_order": ["heading", "page-content"],
-      "custom_css": [],
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "custom_css": [
+        ".text-block:has(> h1) {margin-block-end: 0 !important;}"
+      ],
       "settings": {
         "content_direction": "column",
-        "gap": 15,
+        "gap": 0,
         "color_scheme": "",
         "padding-block-start": 24,
-        "padding-block-end": 16
+        "padding-block-end": 0
       }
     },
     "1792700254e83411ee": {
@@ -67,7 +72,9 @@
           }
         }
       },
-      "block_order": ["rebuy_personalization_engine_rebuy_widget_b3NNCP"],
+      "block_order": [
+        "rebuy_personalization_engine_rebuy_widget_b3NNCP"
+      ],
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -97,5 +104,8 @@
       }
     }
   },
-  "order": ["main", "1792700254e83411ee"]
+  "order": [
+    "main",
+    "1792700254e83411ee"
+  ]
 }
