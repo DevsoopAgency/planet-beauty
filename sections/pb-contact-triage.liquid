@@ -1,41 +1,52 @@
 {%- comment -%}
-  Planet Beauty — contact triage form (v2, 29 Oct 2026)
+  Planet Beauty — contact triage form (v3, 4 Nov 2026)
 
-  DELIVERY
-  --------
-  This is a plain Shopify contact form. The whole UI sits inside {% form 'contact' %},
-  the fields carry Shopify's own contact[...] names, and Send is a real submit. Mail
-  goes to the store contact address (info@planetbeauty.com) through Shopify. There is
-  no API call, no webhook and no background fetch anywhere in this file.
+  WHAT THIS IS
+  ------------
+  A restore of v1: the form posts directly to our own intake
+  (n8n webhook `contact-form-v2`) and staff receive the rich email with the
+  customer's order details looked up from Shopify and ShipStation. Photos are
+  carried again.
 
-  WHY IT IS BUILT THIS WAY — read before changing it
-  --------------------------------------------------
-  v1 posted to n8n. On 23 Oct n8n hit its monthly execution limit and began answering
-  HTTP 200 while refusing to run the workflow, so for six days every submission was
-  accepted, shown the green confirmation, and thrown away. Roughly 100 customers were
-  told we had their message when we did not.
+  It replaces v2 (29 Oct – 4 Nov), which posted to Shopify's native contact
+  relay. v2 was put in as a temporary measure while n8n was over its execution
+  quota; Shopify delivered reliably but could only produce a generic email with
+  no subject line and no order lookup.
 
-  The first repair hand-built a POST to /contact with fetch(). Shopify rejects that
-  with HTTP 400 — it will not accept a contact form it did not render itself, posted
-  from the background rather than as a real navigation. Do not try it again.
+  THE PAYLOAD — do not change these key names
+  -------------------------------------------
+  Taken from real October submissions so the restore matches what
+  `Shape Submission` already expects:
 
-  The rule this file now follows: the thing that tells the customer we received their
-  message must be the same thing that sends it. Here, that is Shopify.
+    { name, email, order_number, pbct_ref, elapsed_ms, reason, message,
+      photos: [{ name, dataUrl }], page }
 
-  PRIVACY — unchanged from v1
-  ---------------------------
-  This page never looks up or displays order data. Order numbers are sequential, so
-  echoing order details back for an email + order number pair would let anyone walk
-  the range and read another customer's order. The number is captured and passed to
-  staff; nothing about the order is shown back.
+  `reason` is the CODE (wismo | addr | cancel | ret | damaged | other), not the
+  label. `pbct_ref` is the honeypot. `elapsed_ms` is time since page load.
 
-  KNOWN GAP
-  ---------
-  Photo upload is gone. Shopify's contact relay cannot carry attachments, and leaving
-  an upload control that silently discards files repeats the mistake above. The copy
-  now asks customers to reply to our first email with photos. Restore uploads only
-  alongside something that can actually receive them.
+  THE ONE THING NOT RESTORED AS-WAS — read this
+  ---------------------------------------------
+  v1 showed the green confirmation whenever the request returned HTTP 200.
+  When n8n hit its quota on 23 Oct it kept answering 200 while refusing to run
+  the workflow, so for six days every submission was accepted, confirmed to the
+  customer, and thrown away. 112 messages.
+
+  The quota was the cause and it is resolved. But the webhook has always
+  answered {"ok":true} on success — v1 simply never read it. This version reads
+  it. Nothing else about the mechanism changed; this is not a new safety net,
+  it is the same request checking the answer it was already being given.
+
+  PRIVACY — unchanged
+  -------------------
+  This page never looks up or displays order data. Order numbers are
+  sequential, so echoing order details back for an email + order number pair
+  would let anyone walk the range and read another customer's order. The number
+  is captured and passed to staff; nothing about the order is shown back.
 {%- endcomment -%}
+
+{%- liquid
+  assign intake = 'https://planetbeauty.app.n8n.cloud/webhook/contact-form-v2'
+-%}
 
 <style>
   .pbct{--pbct-ink:#231b20;--pbct-ink2:#5c5157;--pbct-ink3:#6b6268;--pbct-line:#e6dde1;
@@ -46,11 +57,6 @@
   .pbct *{box-sizing:border-box}
   .pbct h1{font-size:clamp(24px,4vw,32px);font-weight:800;letter-spacing:-.02em;margin:0 0 6px;text-wrap:balance}
   .pbct .pbct-sub{color:var(--pbct-ink2);margin:0 0 28px;font-size:16px}
-  {%- comment -%}
-    When the hours line is present it owns the gap below the intro, so the intro
-    tightens up. When it is blank the intro keeps its own spacing and nothing
-    collapses. Editable in the theme editor, so hours can be corrected without code.
-  {%- endcomment -%}
   .pbct .pbct-sub--tight{margin-bottom:8px}
   .pbct .pbct-hours{margin:0 0 28px;font-size:14px;font-weight:700;color:var(--pbct-ink)}
   .pbct label{display:block;font-size:13.5px;font-weight:700;margin-bottom:5px}
@@ -84,139 +90,113 @@
   .pbct .pbct-notice{font-size:12.5px;color:var(--pbct-ink3);margin-top:14px;line-height:1.5}
   .pbct .pbct-notice a{color:var(--pbct-ink2)}
   .pbct .pbct-err{color:var(--pbct-bad);font-size:14px;margin-top:10px}
-  .pbct .pbct-errbox{border:1px solid var(--pbct-bad);border-radius:3px;padding:14px 16px;
-    margin:0 0 22px;color:var(--pbct-bad);font-size:15px}
-  .pbct .pbct-errbox p{margin:0 0 6px;font-weight:700}
-  .pbct .pbct-errbox ul{margin:0;padding-left:20px}
   .pbct .pbct-trap{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
   .pbct .pbct-done{background:var(--pbct-brandsoft);border-radius:4px;padding:28px 26px;text-align:left}
   .pbct .pbct-done h2{margin:0 0 8px;font-size:20px;font-weight:800}
   .pbct .pbct-done p{margin:0 0 8px;color:var(--pbct-ink2)}
   .pbct .pbct-done p:last-child{margin-bottom:0}
+  .pbct .pbct-photos{margin-top:4px}
+  .pbct .pbct-photolist{list-style:none;margin:8px 0 0;padding:0;font-size:13px;color:var(--pbct-ink2)}
+  .pbct .pbct-photolist li{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .pbct .pbct-photodrop{font:inherit;font-size:12.5px;background:none;border:none;color:var(--pbct-brand);
+    cursor:pointer;padding:0;text-transform:none;letter-spacing:normal}
   @media (prefers-reduced-motion:reduce){.pbct *{transition:none!important}}
 </style>
 
 <div class="pbct" id="pbct">
-  {%- form 'contact', id: 'pbct-form' -%}
+  <form id="pbct-form" novalidate>
 
-    {%- if form.posted_successfully? -%}
-
-      {%- comment -%}
-        Server-rendered by Shopify, and only after the mail has actually been
-        accepted. This block cannot appear unless the message was sent. That is
-        the entire point of the rebuild — do not reproduce it in JavaScript.
-      {%- endcomment -%}
-      <div class="pbct-done" id="pbct-done" tabindex="-1">
-        <h2>Thanks — we have got it</h2>
-        {%- if form.email != blank -%}
-          <p>We will reply to <strong>{{ form.email }}</strong> within one to two business days.</p>
-        {%- else -%}
-          <p>We will reply to the email address you gave us within one to two business days.</p>
-        {%- endif -%}
-        <p>If you gave us an order number, it is already attached, so nobody will need to ask you for it.</p>
-        <p>No need to send it again — a second message will not reach us any faster.</p>
-        <p><a href="/">Continue shopping</a></p>
-      </div>
-
-    {%- else -%}
-
-      <h1>{{ section.settings.heading | default: 'How can we help?' }}</h1>
-      {%- comment -%}
-        Reply time must match the acknowledgement wording. If this page promises
-        something shorter, customers chase us on day two quoting our own page back.
-      {%- endcomment -%}
-      <p class="pbct-sub{% if section.settings.hours != blank %} pbct-sub--tight{% endif %}">{{ section.settings.intro | default: 'Tell us what you need and we will reply within one to two business days.' }}</p>
-      {%- if section.settings.hours != blank -%}
-        <p class="pbct-hours">{{ section.settings.hours }}</p>
-      {%- endif -%}
-
-      {%- if form.errors -%}
-        <div class="pbct-errbox" role="alert">
-          <p>Please check the following:</p>
-          <ul>
-            {%- for field in form.errors -%}
-              <li>{{ form.errors.messages[field] }}</li>
-            {%- endfor -%}
-          </ul>
-        </div>
-      {%- endif -%}
-
-      <div class="pbct-row">
-        <div>
-          <label for="pbct-name">Your name</label>
-          <input type="text" id="pbct-name" name="contact[name]" autocomplete="name"
-                 maxlength="80" value="{{ form.name }}">
-        </div>
-        <div>
-          <label for="pbct-email">Your email <span aria-hidden="true">*</span></label>
-          <input type="email" id="pbct-email" name="contact[email]" autocomplete="email"
-                 required maxlength="160" value="{{ form.email }}">
-        </div>
-      </div>
-
-      <div class="pbct-field">
-        <label for="pbct-order">Order number</label>
-        <input type="text" id="pbct-order" name="contact[Order number]" inputmode="numeric"
-               maxlength="20" placeholder="e.g. 697382">
-        <p class="pbct-hint">Optional, but it gets you a faster answer. It is in your confirmation email.</p>
-      </div>
-
-      {%- comment -%}
-        Anti-bot trap. NEVER name this something an autofill engine recognises.
-        It was called "company" for one day and Chrome filled it from the
-        visitor's saved details, silently dropping a real person as a bot.
-        Not a contact[...] field, so it never reaches the staff email.
-      {%- endcomment -%}
-      <div class="pbct-trap" aria-hidden="true">
-        <label for="pbct-ref">Leave this field empty</label>
-        <input type="text" id="pbct-ref" name="pbct_ref" tabindex="-1"
-               autocomplete="off" data-lpignore="true" data-1p-ignore>
-      </div>
-
-      <p class="pbct-legend" id="pbct-reason-label">What can we help with?</p>
-      <div class="pbct-reasons" role="group" aria-labelledby="pbct-reason-label">
-        <button type="button" class="pbct-reason" data-k="wismo" aria-pressed="false">Where is my order</button>
-        <button type="button" class="pbct-reason" data-k="addr" aria-pressed="false">My address is wrong</button>
-        <button type="button" class="pbct-reason" data-k="cancel" aria-pressed="false">Cancel my order</button>
-        <button type="button" class="pbct-reason" data-k="ret" aria-pressed="false">Return or exchange</button>
-        <button type="button" class="pbct-reason" data-k="damaged" aria-pressed="false">Damaged, wrong or missing item</button>
-        <button type="button" class="pbct-reason" data-k="other" aria-pressed="false">Something else</button>
-      </div>
-
-      {%- comment -%} Carries the chosen reason into the staff email as its own line. {%- endcomment -%}
-      <input type="hidden" name="contact[Reason]" id="pbct-reason-value" value="Not chosen">
-
-      <div id="pbct-answer" hidden></div>
-
-      <div class="pbct-field" style="margin-top:22px">
-        <label for="pbct-message" id="pbct-message-label">Tell us what is happening</label>
-        <textarea id="pbct-message" name="contact[body]" maxlength="4000"
-          placeholder="Anything the options above do not cover">{{ form.body }}</textarea>
-      </div>
-
-      <button type="submit" class="pbct-send" id="pbct-send">Send message</button>
-      <p class="pbct-err" id="pbct-err" hidden></p>
-
-      <p class="pbct-notice">
-        We use your name, email, order number and message only to answer you, and we keep them
-        with your customer service history. We do not sell your information. See our
-        <a href="/policies/privacy-policy">Privacy Policy</a> for how to request or delete your data.
-      </p>
-
+    <h1>{{ section.settings.heading | default: 'How can we help?' }}</h1>
+    {%- comment -%}
+      Reply time must match the acknowledgement wording. If this page promises
+      something shorter, customers chase us on day two quoting our own page back.
+    {%- endcomment -%}
+    <p class="pbct-sub{% if section.settings.hours != blank %} pbct-sub--tight{% endif %}">{{ section.settings.intro | default: 'Tell us what you need and we will reply within one to two business days.' }}</p>
+    {%- if section.settings.hours != blank -%}
+      <p class="pbct-hours">{{ section.settings.hours }}</p>
     {%- endif -%}
-  {%- endform -%}
+
+    <div class="pbct-row">
+      <div>
+        <label for="pbct-name">Your name</label>
+        <input type="text" id="pbct-name" name="name" autocomplete="name" maxlength="80">
+      </div>
+      <div>
+        <label for="pbct-email">Your email <span aria-hidden="true">*</span></label>
+        <input type="email" id="pbct-email" name="email" autocomplete="email" required maxlength="160">
+      </div>
+    </div>
+
+    <div class="pbct-field">
+      <label for="pbct-order">Order number</label>
+      <input type="text" id="pbct-order" name="order_number" inputmode="numeric"
+             maxlength="20" placeholder="e.g. 697382">
+      <p class="pbct-hint">Optional, but it gets you a faster answer. It is in your confirmation email.</p>
+    </div>
+
+    {%- comment -%}
+      Anti-bot trap. NEVER name this something an autofill engine recognises.
+      It was called "company" for one day and Chrome filled it from the
+      visitor's saved details, silently dropping a real person as a bot.
+    {%- endcomment -%}
+    <div class="pbct-trap" aria-hidden="true">
+      <label for="pbct-ref">Leave this field empty</label>
+      <input type="text" id="pbct-ref" name="pbct_ref" tabindex="-1"
+             autocomplete="off" data-lpignore="true" data-1p-ignore>
+    </div>
+
+    <p class="pbct-legend" id="pbct-reason-label">What can we help with?</p>
+    <div class="pbct-reasons" role="group" aria-labelledby="pbct-reason-label">
+      <button type="button" class="pbct-reason" data-k="wismo" aria-pressed="false">Where is my order</button>
+      <button type="button" class="pbct-reason" data-k="addr" aria-pressed="false">My address is wrong</button>
+      <button type="button" class="pbct-reason" data-k="cancel" aria-pressed="false">Cancel my order</button>
+      <button type="button" class="pbct-reason" data-k="ret" aria-pressed="false">Return or exchange</button>
+      <button type="button" class="pbct-reason" data-k="damaged" aria-pressed="false">Damaged, wrong or missing item</button>
+      <button type="button" class="pbct-reason" data-k="other" aria-pressed="false">Something else</button>
+    </div>
+
+    <div id="pbct-answer" hidden></div>
+
+    <div class="pbct-field" style="margin-top:22px">
+      <label for="pbct-message" id="pbct-message-label">Tell us what is happening</label>
+      <textarea id="pbct-message" name="message" maxlength="4000"
+        placeholder="Anything the options above do not cover"></textarea>
+    </div>
+
+    {%- comment -%}
+      Photos go straight into the staff email as attachments. Shown for every
+      reason, as in v1, but the hint changes for damage reports.
+    {%- endcomment -%}
+    <div class="pbct-field pbct-photos">
+      <label for="pbct-photo">Add a photo <span style="font-weight:400;color:var(--pbct-ink3)">(optional)</span></label>
+      <input type="file" id="pbct-photo" accept="image/*" multiple>
+      <p class="pbct-hint" id="pbct-photo-hint">Up to 3 images, 5MB each.</p>
+      <ul class="pbct-photolist" id="pbct-photolist"></ul>
+    </div>
+
+    <button type="submit" class="pbct-send" id="pbct-send">Send message</button>
+    <p class="pbct-err" id="pbct-err" hidden></p>
+
+    <p class="pbct-notice">
+      We use your name, email, order number and message only to answer you, and we keep them
+      with your customer service history. We do not sell your information. See our
+      <a href="/policies/privacy-policy">Privacy Policy</a> for how to request or delete your data.
+    </p>
+
+  </form>
 </div>
 
 <script>
 (function () {
+  var INTAKE = {{ intake | json }};
   var LOADED_AT = Date.now();
+  var MAX_PHOTOS = 3;
+  var MAX_BYTES = 5 * 1024 * 1024;
 
-  // Answers are static. Nothing here is specific to an order, because the page
-  // never looks one up.
   var ANSWERS = {
     wismo: {
       h: 'Most orders leave the warehouse within 1 to 2 business days',
-      p:  ['Your tracking number arrives by email the moment your order ships. If the link will not open, copy the number straight into the carrier we hired to send your package.',
+      p: ['Your tracking number arrives by email the moment your order ships. If the link will not open, copy the number straight into fedex.com, ups.com or usps.com.',
           'If tracking shows nothing yet, the label exists but the carrier has not scanned the parcel. That usually clears within 24 hours.',
           'If tracking says delivered and it is not with you, check anywhere a parcel might be left and ask others at the address, then tell us below and we will open a claim.']
     },
@@ -228,18 +208,20 @@
     cancel: {
       h: 'We can cancel any order that has not shipped',
       p: ['Tell us below and we will cancel it and start the refund. Refunds go back to the original payment method.',
-                    'If it has already shipped, you can return it within 30 days of delivery. Opened and gently used products are welcome.']
+          'If it has already shipped, send it back unopened within 30 days and we will refund it in full.']
     },
     ret: {
       h: 'You have 30 days from delivery',
       p: ['Tell us what you would like to return and why, and we will confirm it is eligible and send instructions.',
           'If the item arrived damaged or is not what you ordered, tell us below and we will put it right.',
-          'Opened and gently used products are welcome. Mail-in returns: you pay return shipping, and orders that shipped free have $5.99 deducted. In-store returns are free.',
           'Full details are on our <a href="/pages/returns">returns page</a>.']
     },
-        damaged: {
+    damaged: {
       h: 'We will put it right',
-      p: ['Tell us below what arrived and what is wrong with it. Please keep the item and its packaging until you hear from us.']
+      p: ['Tell us below what arrived and what is wrong with it. Please keep the item and its packaging until you hear from us.',
+          'A photo of the item and the box is usually everything we need — you can attach one below.',
+          'Usually we send a replacement. If a replacement is not the best answer — the item is out of stock, or you would rather not wait for another delivery — we will agree a refund with you instead.',
+          'If part of your order is missing rather than damaged, just tell us which items below.']
     },
     other: { h: '', p: [] }
   };
@@ -253,27 +235,19 @@
     other: 'Tell us what is happening'
   };
 
-  var LABELS = {
-    wismo: 'Where is my order',
-    addr: 'My address is wrong',
-    cancel: 'Cancel my order',
-    ret: 'Return or exchange',
-    damaged: 'Damaged, wrong or missing item',
-    other: 'Something else'
-  };
-
   var form = document.getElementById('pbct-form');
-  var done = document.getElementById('pbct-done');
-  if (done) { try { done.focus(); } catch (e) {} }
-  if (!form || done) { return; }
+  if (!form) { return; }
 
   var buttons = Array.prototype.slice.call(document.querySelectorAll('.pbct-reason'));
   var answerEl = document.getElementById('pbct-answer');
   var messageEl = document.getElementById('pbct-message');
-  var reasonEl = document.getElementById('pbct-reason-value');
   var errEl = document.getElementById('pbct-err');
   var sendEl = document.getElementById('pbct-send');
+  var photoEl = document.getElementById('pbct-photo');
+  var photoHint = document.getElementById('pbct-photo-hint');
+  var photoList = document.getElementById('pbct-photolist');
   var chosen = '';
+  var photos = [];
 
   function showAnswer(k) {
     var a = ANSWERS[k];
@@ -290,19 +264,66 @@
       buttons.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
       showAnswer(chosen);
       messageEl.setAttribute('placeholder', PROMPTS[chosen] || '');
-      reasonEl.value = LABELS[chosen] || chosen;
+      photoHint.textContent = (chosen === 'damaged')
+        ? 'A photo of the item and the box helps us settle it in one reply. Up to 3 images, 5MB each.'
+        : 'Up to 3 images, 5MB each.';
     });
   });
 
-  // Validation only. This handler never sends anything and never shows a
-  // confirmation — if it lets the event through, Shopify does the rest and
-  // Shopify alone decides what the customer is told.
+  function renderPhotos() {
+    photoList.innerHTML = '';
+    photos.forEach(function (p, i) {
+      var li = document.createElement('li');
+      var span = document.createElement('span');
+      span.textContent = p.name;
+      var drop = document.createElement('button');
+      drop.type = 'button';
+      drop.className = 'pbct-photodrop';
+      drop.textContent = 'remove';
+      drop.addEventListener('click', function () { photos.splice(i, 1); renderPhotos(); });
+      li.appendChild(span); li.appendChild(drop);
+      photoList.appendChild(li);
+    });
+  }
+
+  photoEl.addEventListener('change', function () {
+    var files = Array.prototype.slice.call(photoEl.files || []);
+    errEl.hidden = true;
+    files.forEach(function (f) {
+      if (photos.length >= MAX_PHOTOS) { return; }
+      if (f.size > MAX_BYTES) {
+        errEl.textContent = f.name + ' is larger than 5MB, so it was not added. Send us a smaller one, or reply to our email with it.';
+        errEl.hidden = false;
+        return;
+      }
+      var r = new FileReader();
+      r.onload = function () { photos.push({ name: f.name, dataUrl: String(r.result) }); renderPhotos(); };
+      r.readAsDataURL(f);
+    });
+    photoEl.value = '';
+  });
+
+  function showDone(email) {
+    var box = document.createElement('div');
+    box.className = 'pbct-done';
+    box.tabIndex = -1;
+    var who = email ? ('<strong>' + email.replace(/[<>&]/g, '') + '</strong>') : 'the email address you gave us';
+    box.innerHTML =
+      '<h2>Thanks — we have got it</h2>' +
+      '<p>We will reply to ' + who + ' within one to two business days.</p>' +
+      '<p>If you gave us an order number, it is already attached, so nobody will need to ask you for it.</p>' +
+      '<p>No need to send it again — a second message will not reach us any faster.</p>' +
+      '<p><a href="/">Continue shopping</a></p>';
+    form.parentNode.replaceChild(box, form);
+    try { box.focus(); } catch (e) {}
+  }
+
   form.addEventListener('submit', function (e) {
+    e.preventDefault();
     errEl.hidden = true;
 
     var email = document.getElementById('pbct-email').value.trim();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) {
-      e.preventDefault();
       errEl.textContent = 'Please check your email address so we can reply to you.';
       errEl.hidden = false;
       document.getElementById('pbct-email').focus();
@@ -311,33 +332,50 @@
 
     var message = messageEl.value.trim();
     if (!chosen && !message) {
-      e.preventDefault();
       errEl.textContent = 'Please choose what we can help with, or write us a message.';
       errEl.hidden = false;
       return;
     }
 
-    // Bot gates: the honeypot, and anything submitted inside two seconds of load.
-    // Swallow the submit without telling them why.
-    var trap = document.getElementById('pbct-ref').value.trim();
-    if (trap || (Date.now() - LOADED_AT) < 2000) {
-      e.preventDefault();
-      sendEl.disabled = true;
-      sendEl.textContent = 'Sending…';
-      return;
-    }
-
-    // Shopify rejects an empty body. A reason with no message is a legitimate
-    // submission, so give the body something true rather than failing them.
-    if (!message) {
-      messageEl.value = '(no message written — see Reason above)';
-    }
-
     sendEl.disabled = true;
     sendEl.textContent = 'Sending…';
+
+    var payload = {
+      name: document.getElementById('pbct-name').value.trim(),
+      email: email,
+      order_number: document.getElementById('pbct-order').value.trim(),
+      pbct_ref: document.getElementById('pbct-ref').value.trim(),
+      elapsed_ms: Date.now() - LOADED_AT,
+      reason: chosen || 'other',
+      message: message,
+      photos: photos,
+      page: window.location.pathname
+    };
+
+    // The confirmation below is shown only when the intake answers ok:true.
+    // A 200 with anything else means the workflow did not run — that is the
+    // exact state that lost 112 messages in October, and it must read as a
+    // failure to the customer, never as a thank-you.
+    var failed = function () {
+      sendEl.disabled = false;
+      sendEl.textContent = 'Send message';
+      errEl.innerHTML = 'Sorry — we could not send that just now. Please try again, or email us directly at <a href="mailto:info@planetbeauty.com">info@planetbeauty.com</a> and we will pick it up.';
+      errEl.hidden = false;
+    };
+
+    fetch(INTAKE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (res) {
+      if (!res.ok) { throw new Error('status ' + res.status); }
+      return res.json();
+    }).then(function (data) {
+      if (data && data.ok === true) { showDone(email); }
+      else { failed(); }
+    }).catch(failed);
   });
 
-  // bfcache would otherwise restore a dead, disabled button.
   window.addEventListener('pageshow', function () {
     sendEl.disabled = false;
     sendEl.textContent = 'Send message';
