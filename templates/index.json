@@ -12,6 +12,112 @@
     "slideshow_hNjgrd": {
       "type": "slideshow",
       "blocks": {
+        "slide_kz3iib": {
+          "type": "_slide",
+          "name": "Colorescience BF",
+          "settings": {
+            "media_type_1": "image",
+            "image_1": "shopify://shop_images/Desktop_banner_2880x960_1x_5d089c4b-01d3-4cd5-82dd-389715ba5048.png",
+            "mobile_image_1": "shopify://shop_images/Mobile_banner_1100x1100_1x_9257daa6-ad3c-46d1-9d9a-e6de4f9ff9f3.png",
+            "link": "https://www.planetbeauty.com/collections/colorescience",
+            "open_in_new_tab": false,
+            "video_aspect_ratio": "auto",
+            "video_aspect_ratio_mobile": "inherit",
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "content_position_x": 50,
+            "content_position_y": 50,
+            "inherit_color_scheme": false,
+            "color_scheme": "scheme-6",
+            "color_scheme_mobile": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 48,
+            "padding-block-end": 48,
+            "padding-inline-start": 48,
+            "padding-inline-end": 48
+          },
+          "blocks": {
+            "text_fLHwBp": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<h2>New arrivals</h2>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_KY36AH": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Introducing our latest products, made especially for the season. Shop your favorites before they're gone!</p>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 20,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "button_fAdNHP": {
+              "type": "button",
+              "settings": {
+                "label": "Shop now",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_fLHwBp",
+            "text_KY36AH",
+            "button_fAdNHP"
+          ]
+        },
         "slide_WB3TBG": {
           "type": "_slide",
           "name": "Rodial Salmon",
@@ -155,6 +261,7 @@
         "slide_mexy7m": {
           "type": "_slide",
           "name": "t:names.slide",
+          "disabled": true,
           "settings": {
             "media_type_1": "image",
             "image_1": "shopify://shop_images/Pro-Collagen_Hero.png",
@@ -259,6 +366,7 @@
         }
       },
       "block_order": [
+        "slide_kz3iib",
         "slide_WB3TBG",
         "slide_xLYXR3",
         "slide_dVYxg6",
