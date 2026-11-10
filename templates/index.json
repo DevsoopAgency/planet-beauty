@@ -12,14 +12,14 @@
     "slideshow_hNjgrd": {
       "type": "slideshow",
       "blocks": {
-        "slide_kz3iib": {
+        "slide_JEKFmD": {
           "type": "_slide",
-          "name": "SC Blond",
+          "name": "Colorescience BF",
           "settings": {
             "media_type_1": "image",
-            "image_1": "shopify://shop_images/1026_Planet_Beauty_Banners_V10_Image_1_2880x960-02.png",
-            "mobile_image_1": "shopify://shop_images/1026_Planet_Beauty_Banners_V10_Image_2_1800x1800_eb38bb87-f3c3-445b-91d0-82d9a7cbc8ab.png",
-            "link": "https://www.planetbeauty.com/products/schwarzkof-professional-blondme-bondfinity-deep-repair-mask-with-b",
+            "image_1": "shopify://shop_images/Desktop_banner_2880x960_1x_5d089c4b-01d3-4cd5-82dd-389715ba5048.png",
+            "mobile_image_1": "shopify://shop_images/Mobile_banner_1100x1100_1x_9257daa6-ad3c-46d1-9d9a-e6de4f9ff9f3.png",
+            "link": "https://www.planetbeauty.com/collections/colorescience",
             "open_in_new_tab": false,
             "video_aspect_ratio": "auto",
             "video_aspect_ratio_mobile": "inherit",
@@ -47,14 +47,14 @@
           },
           "blocks": {}
         },
-        "slide_JEKFmD": {
+        "slide_kz3iib": {
           "type": "_slide",
-          "name": "Colorescience BF",
+          "name": "SC Blond",
           "settings": {
             "media_type_1": "image",
-            "image_1": "shopify://shop_images/Desktop_banner_2880x960_1x_5d089c4b-01d3-4cd5-82dd-389715ba5048.png",
-            "mobile_image_1": "shopify://shop_images/Mobile_banner_1100x1100_1x_9257daa6-ad3c-46d1-9d9a-e6de4f9ff9f3.png",
-            "link": "https://www.planetbeauty.com/collections/colorescience",
+            "image_1": "shopify://shop_images/1026_Planet_Beauty_Banners_V10_Image_1_2880x960-02.png",
+            "mobile_image_1": "shopify://shop_images/1026_Planet_Beauty_Banners_V10_Image_2_1800x1800_eb38bb87-f3c3-445b-91d0-82d9a7cbc8ab.png",
+            "link": "https://www.planetbeauty.com/products/schwarzkof-professional-blondme-bondfinity-deep-repair-mask-with-b",
             "open_in_new_tab": false,
             "video_aspect_ratio": "auto",
             "video_aspect_ratio_mobile": "inherit",
@@ -331,8 +331,8 @@
         }
       },
       "block_order": [
-        "slide_kz3iib",
         "slide_JEKFmD",
+        "slide_kz3iib",
         "slide_WB3TBG",
         "slide_xLYXR3",
         "slide_dVYxg6",
