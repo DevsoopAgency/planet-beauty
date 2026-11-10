@@ -225,7 +225,7 @@
         },
         "slide_dVYxg6": {
           "type": "_slide",
-          "name": "t:names.slide",
+          "name": "SCH clinix mask",
           "disabled": true,
           "settings": {
             "media_type_1": "image",
@@ -261,7 +261,7 @@
         },
         "slide_H9AYRR": {
           "type": "_slide",
-          "name": "t:names.slide",
+          "name": "GHD Spped dryer",
           "settings": {
             "media_type_1": "image",
             "image_1": "shopify://shop_images/GHD_Hero_Banner.png",
@@ -296,7 +296,7 @@
         },
         "slide_mexy7m": {
           "type": "_slide",
-          "name": "t:names.slide",
+          "name": "Dermalogica Collagen",
           "disabled": true,
           "settings": {
             "media_type_1": "image",
@@ -332,7 +332,8 @@
         },
         "slide_LncGyF": {
           "type": "_slide",
-          "name": "t:names.slide",
+          "name": "Luna",
+          "disabled": true,
           "settings": {
             "media_type_1": "image",
             "image_1": "shopify://shop_images/Hero_Banner_Luna_London.png",
@@ -367,7 +368,7 @@
         },
         "slide_cqVRan": {
           "type": "_slide",
-          "name": "t:names.slide",
+          "name": "Skyn Iceland",
           "settings": {
             "media_type_1": "image",
             "image_1": "shopify://shop_images/Hero_Banner_Skyn_Iceland.png",
