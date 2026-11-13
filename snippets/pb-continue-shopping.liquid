@@ -1,0 +1,110 @@
+{%- comment -%}
+  pb: "Continue shopping" button under Checkout (Bahman + Veronica, Nov 13 2026).
+  - Rebuy Smart Cart drawer: button inserted right under Rebuy's Checkout button.
+  - /cart page: button inserted right under the theme's Checkout button (.cart__ctas).
+  Target = last brand/collection page this session, else the last product's brand collection
+  (from its vendor, if that collection exists), else last product page, else homepage.
+  In the drawer, if the target is the page you're on, the button just closes the drawer.
+  Stores only collection/product paths in sessionStorage (never search terms).
+  To remove: delete this render line in layout/theme.liquid and this snippet.
+{%- endcomment -%}
+<style>
+  .pb-continue-shopping { display: flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; text-decoration: none; cursor: pointer; }
+  .pb-continue-shopping--drawer { margin-top: 10px; min-height: 40px; padding: 10px 16px; background: #fff; border: 2px solid var(--pb-cs-accent, #d6006f); color: var(--pb-cs-accent, #d6006f); font: inherit; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; }
+  .pb-continue-shopping--drawer:hover, .pb-continue-shopping--drawer:focus-visible { background: var(--pb-cs-accent, #d6006f); color: #fff; }
+  .cart__ctas .pb-continue-shopping { height: clamp(25px, var(--height-buy-buttons), 55px); padding-inline: var(--padding-4xl); }
+</style>
+{%- liquid
+  assign pb_cs_brand_url = ''
+  if template.name == 'product' and product.vendor != blank
+    assign pb_cs_brand_handle = product.vendor | handleize
+    assign pb_cs_brand = collections[pb_cs_brand_handle]
+    if pb_cs_brand.id and pb_cs_brand.products_count > 0
+      assign pb_cs_brand_url = pb_cs_brand.url
+    endif
+  endif
+-%}
+<script>
+  (function () {
+    var KEY_LIST = 'pb_cs_last_list';
+    var KEY_PRODUCT = 'pb_cs_last_product';
+    var KEY_BRAND = 'pb_cs_last_product_brand';
+    var BRAND_URL = {{ pb_cs_brand_url | json }};
+    var LABEL = 'Continue shopping';
+
+    function get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+    function set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+
+    // 1) Remember where the shopper was browsing (paths only; no search terms).
+    var main = document.getElementById('MainContent');
+    var tpl = ((main && main.getAttribute('data-template')) || '').split('.')[0];
+    var path = window.location.pathname;
+    if (tpl === 'collection') {
+      var params = new URLSearchParams(window.location.search);
+      params.delete('q');
+      var qs = params.toString();
+      set(KEY_LIST, path + (qs ? '?' + qs : ''));
+    } else if (tpl === 'product') {
+      set(KEY_PRODUCT, path);
+      set(KEY_BRAND, BRAND_URL || '');
+    }
+
+    function target() { return get(KEY_LIST) || get(KEY_BRAND) || get(KEY_PRODUCT) || '/'; }
+    function samePage(url) {
+      try { return new URL(url, window.location.origin).pathname === window.location.pathname; } catch (e) { return false; }
+    }
+
+    // 2) Rebuy Smart Cart drawer: button under Checkout.
+    function addDrawerButton() {
+      var checkout = document.querySelector('#rebuy-cart .rebuy-cart__checkout-button');
+      if (!checkout || checkout.parentElement.querySelector('.pb-continue-shopping')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'pb-continue-shopping pb-continue-shopping--drawer';
+      btn.textContent = LABEL;
+      try {
+        var bg = getComputedStyle(checkout).backgroundColor;
+        if (bg && bg !== 'rgba(0, 0, 0, 0)') btn.style.setProperty('--pb-cs-accent', bg);
+      } catch (e) {}
+      btn.addEventListener('click', function () {
+        var url = target();
+        if (samePage(url)) {
+          if (window.Rebuy && Rebuy.SmartCart && typeof Rebuy.SmartCart.hide === 'function') Rebuy.SmartCart.hide();
+          return;
+        }
+        window.location.href = url;
+      });
+      checkout.insertAdjacentElement('afterend', btn);
+    }
+
+    // 3) /cart page: button under the theme's Checkout button.
+    function addCartPageButton() {
+      var ctas = document.querySelector('.cart__ctas');
+      if (!ctas) return;
+      var existing = ctas.querySelector('.pb-continue-shopping');
+      if (existing) { existing.href = target(); return; }
+      var checkout = ctas.querySelector('.cart__checkout-button');
+      if (!checkout) return;
+      var a = document.createElement('a');
+      a.className = 'pb-continue-shopping button button-secondary';
+      a.href = target();
+      a.textContent = LABEL.toUpperCase();
+      checkout.insertAdjacentElement('afterend', a);
+    }
+
+    function ensure() { addDrawerButton(); addCartPageButton(); }
+    var queued = false;
+    function schedule() {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; ensure(); });
+    }
+
+    function init() {
+      ensure();
+      if (window.MutationObserver) new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+  })();
+</script>
