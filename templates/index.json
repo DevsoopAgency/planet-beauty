@@ -333,6 +333,7 @@
         "slide_H9AYRR": {
           "type": "_slide",
           "name": "GHD Spped dryer",
+          "disabled": true,
           "settings": {
             "media_type_1": "image",
             "image_1": "shopify://shop_images/GHD_Hero_Banner.png",
