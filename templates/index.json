@@ -1283,7 +1283,7 @@
               "type": "button",
               "settings": {
                 "label": "Build A Box",
-                "link": "shopify://collections/all",
+                "link": "https://www.planetbeauty.com/pages/bundle-builder",
                 "open_in_new_tab": false,
                 "style_class": "button",
                 "width": "custom",
