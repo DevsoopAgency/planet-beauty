@@ -6,6 +6,8 @@
   (from its vendor, if that collection exists), else last product page, else homepage.
   In the drawer, if the target is the page you're on, the button just closes the drawer.
   Stores only collection/product paths in sessionStorage (never search terms).
+  Click count (Nov 17 2026): the page the button opens gets ?from=cs-drawer or ?from=cs-cart,
+  which GA4 records with the page view. No extra tag. The marker is never saved as the last page.
   To remove: delete this render line in layout/theme.liquid and this snippet.
 {%- endcomment -%}
 <style>
@@ -42,6 +44,7 @@
     if (tpl === 'collection') {
       var params = new URLSearchParams(window.location.search);
       params.delete('q');
+      params.delete('from');
       var qs = params.toString();
       set(KEY_LIST, path + (qs ? '?' + qs : ''));
     } else if (tpl === 'product') {
@@ -50,6 +53,9 @@
     }
 
     function target() { return get(KEY_LIST) || get(KEY_BRAND) || get(KEY_PRODUCT) || '/'; }
+    function withFrom(url, src) {
+      try { var u = new URL(url, window.location.origin); u.searchParams.set('from', src); return u.pathname + u.search; } catch (e) { return url; }
+    }
     function samePage(url) {
       try { return new URL(url, window.location.origin).pathname === window.location.pathname; } catch (e) { return false; }
     }
@@ -72,7 +78,7 @@
           if (window.Rebuy && Rebuy.SmartCart && typeof Rebuy.SmartCart.hide === 'function') Rebuy.SmartCart.hide();
           return;
         }
-        window.location.href = url;
+        window.location.href = withFrom(url, 'cs-drawer');
       });
       checkout.insertAdjacentElement('afterend', btn);
     }
@@ -82,12 +88,12 @@
       var ctas = document.querySelector('.cart__ctas');
       if (!ctas) return;
       var existing = ctas.querySelector('.pb-continue-shopping');
-      if (existing) { existing.href = target(); return; }
+      if (existing) { existing.href = withFrom(target(), 'cs-cart'); return; }
       var checkout = ctas.querySelector('.cart__checkout-button');
       if (!checkout) return;
       var a = document.createElement('a');
       a.className = 'pb-continue-shopping button button-secondary';
-      a.href = target();
+      a.href = withFrom(target(), 'cs-cart');
       a.textContent = LABEL.toUpperCase();
       checkout.insertAdjacentElement('afterend', a);
     }
