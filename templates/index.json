@@ -1168,7 +1168,7 @@
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/image_8.png",
-            "link": "shopify://collections/all",
+            "link": "https://www.planetbeauty.com/pages/bundle-builder",
             "image_ratio": "landscape",
             "width": "fill",
             "custom_width": 100,
