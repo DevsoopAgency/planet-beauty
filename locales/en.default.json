@@ -406,6 +406,9 @@
     "checkout": {
       "shipping": {
         "local_delivery": "Same Day"
+      },
+      "contact": {
+        "optional_phone_label": "(Optional) Enter mobile # for order & shipping text updates. Reply STOP to unsubscribe."
       }
     }
   }
