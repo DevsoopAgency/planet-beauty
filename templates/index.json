@@ -224,14 +224,14 @@
           },
           "blocks": {}
         },
-        "slide_kz3iib": {
+        "slide_WB3TBG": {
           "type": "_slide",
-          "name": "SC Blond",
+          "name": "Rodial Holiday",
           "settings": {
             "media_type_1": "image",
-            "image_1": "shopify://shop_images/1026_Planet_Beauty_Banners_V10_Image_1_2880x960-02.png",
-            "mobile_image_1": "shopify://shop_images/1026_Planet_Beauty_Banners_V10_Image_2_1800x1800_eb38bb87-f3c3-445b-91d0-82d9a7cbc8ab.png",
-            "link": "https://www.planetbeauty.com/products/schwarzkof-professional-blondme-bondfinity-deep-repair-mask-with-b",
+            "image_1": "shopify://shop_images/Bee_Venom_Edit_2880x960_a383b636-6486-49d5-b583-dac62b066cbd.jpg",
+            "mobile_image_1": "shopify://shop_images/Bee_Venom_Edit_1800x1800_07d0e241-fa02-46f6-9568-66d83f149afc.jpg",
+            "link": "https://www.planetbeauty.com/products/rodial-bee-venom-edit-holiday-2026?variant=67572882145430&_pos=3&_sid=47177b175&_ss=r",
             "open_in_new_tab": false,
             "video_aspect_ratio": "auto",
             "video_aspect_ratio_mobile": "inherit",
@@ -259,14 +259,14 @@
           },
           "blocks": {}
         },
-        "slide_WB3TBG": {
+        "slide_kz3iib": {
           "type": "_slide",
-          "name": "Rodial Holiday",
+          "name": "SC Blond",
           "settings": {
             "media_type_1": "image",
-            "image_1": "shopify://shop_images/Bee_Venom_Edit_2880x960_a383b636-6486-49d5-b583-dac62b066cbd.jpg",
-            "mobile_image_1": "shopify://shop_images/Bee_Venom_Edit_1800x1800_07d0e241-fa02-46f6-9568-66d83f149afc.jpg",
-            "link": "https://www.planetbeauty.com/products/rodial-bee-venom-edit-holiday-2026?variant=67572882145430&_pos=3&_sid=47177b175&_ss=r",
+            "image_1": "shopify://shop_images/1026_Planet_Beauty_Banners_V10_Image_1_2880x960-02.png",
+            "mobile_image_1": "shopify://shop_images/1026_Planet_Beauty_Banners_V10_Image_2_1800x1800_eb38bb87-f3c3-445b-91d0-82d9a7cbc8ab.png",
+            "link": "https://www.planetbeauty.com/products/schwarzkof-professional-blondme-bondfinity-deep-repair-mask-with-b",
             "open_in_new_tab": false,
             "video_aspect_ratio": "auto",
             "video_aspect_ratio_mobile": "inherit",
@@ -517,8 +517,8 @@
         "slide_kCkVMY",
         "slide_xDVeCg",
         "slide_84bBYr",
-        "slide_kz3iib",
         "slide_WB3TBG",
+        "slide_kz3iib",
         "slide_xLYXR3",
         "slide_dVYxg6",
         "slide_H9AYRR",
