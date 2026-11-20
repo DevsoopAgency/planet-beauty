@@ -261,12 +261,12 @@
         },
         "slide_WB3TBG": {
           "type": "_slide",
-          "name": "Rodial Salmon",
+          "name": "Rodial Holiday",
           "settings": {
             "media_type_1": "image",
-            "image_1": "shopify://shop_images/SalmonDNA_2880x960_9a1a93ce-6c64-413d-8ff0-0d3efe8e1af3.jpg",
-            "mobile_image_1": "shopify://shop_images/SalmonDNA_1800x1800_81b15542-9a26-4894-8397-01ebf86db40f.jpg",
-            "link": "https://www.planetbeauty.com/products/rodial-salmon-dna-water-oil",
+            "image_1": "shopify://shop_images/Bee_Venom_Edit_2880x960_a383b636-6486-49d5-b583-dac62b066cbd.jpg",
+            "mobile_image_1": "shopify://shop_images/Bee_Venom_Edit_1800x1800_07d0e241-fa02-46f6-9568-66d83f149afc.jpg",
+            "link": "https://www.planetbeauty.com/products/rodial-bee-venom-edit-holiday-2026?variant=67572882145430&_pos=3&_sid=47177b175&_ss=r",
             "open_in_new_tab": false,
             "video_aspect_ratio": "auto",
             "video_aspect_ratio_mobile": "inherit",
