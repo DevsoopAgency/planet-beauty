@@ -1,0 +1,101 @@
+{%- comment -%}
+  pb-search-term-guard (Ace, Nov 20 2026). DRAFT THEME ONLY until Marcelo's APPROVED.
+
+  Why: on /search the shopper's search words sit in the address bar (?q=, _psq,
+  options[prefix]) and third-party tags (Rebuy, Attentive, Awin, Klaviyo,
+  Refersion) read the page URL. This script runs before any of them, takes the
+  words out of the address bar and keeps them for the theme only.
+
+  How the theme still works:
+  - window.PBSearch.term() / addTerm(url) / withTerm(url) give the words back to
+    the theme's own requests (section-renderer.js, search-page-input.js), which
+    covers page 2 / infinite scroll, filters, sort, section reloads and the
+    empty-search check.
+  - Every history entry on /search keeps the words in history.state, so the back
+    link from a product card, reloads and back/forward reload the page once with
+    the words; this script then cleans them again before any tag runs.
+
+  Must stay the FIRST thing in <head> (theme.liquid). Renders on /search only.
+  Rollback: remove the render line in theme.liquid (and this file).
+{%- endcomment -%}
+{%- if request.page_type == 'search' -%}
+<script>
+(function () {
+  'use strict';
+  var w = window, L = w.location, H = w.history, SK = '__pbSearch', cur = null;
+  function isSearch(u) { return u.origin === L.origin && /\/search\/?$/.test(u.pathname); }
+  function take(u) {
+    var sp = u.searchParams;
+    if (!sp.has('q') && !sp.has('_psq') && !sp.has('options[prefix]')) return null;
+    var s = { q: sp.has('q') ? sp.get('q') : (sp.get('_psq') || ''), p: sp.get('options[prefix]') };
+    sp.delete('q'); sp.delete('_psq'); sp.delete('options[prefix]');
+    return s;
+  }
+  function addTerm(u, s) {
+    s = s || cur;
+    if (s && isSearch(u) && !u.searchParams.has('q')) {
+      u.searchParams.set('q', s.q);
+      if (s.p && !u.searchParams.has('options[prefix]')) u.searchParams.set('options[prefix]', s.p);
+    }
+    return u;
+  }
+  function merge(state, s) {
+    var o = {}, k;
+    if (state == null || state === '') { o[SK] = s; return o; }
+    if (typeof state === 'object' && !Array.isArray(state)) {
+      for (k in state) if (Object.prototype.hasOwnProperty.call(state, k)) o[k] = state[k];
+      o[SK] = s; return o;
+    }
+    return state;
+  }
+  function rel(u) { return u.pathname + u.search + u.hash; }
+
+  try {
+    var u = new URL(L.href), s = take(u), st = H.state;
+    if (s) {
+      cur = s;
+      H.replaceState(merge(st, s), '', rel(u));
+    } else if (st && typeof st === 'object' && st[SK]) {
+      L.replace(addTerm(new URL(L.href), st[SK]).toString());
+      return;
+    }
+  } catch (e) {}
+
+  function wrap(name) {
+    var orig = H[name];
+    if (typeof orig !== 'function') return;
+    H[name] = function (state, title, url) {
+      try {
+        var target = L;
+        if (url != null && url !== '') {
+          target = new URL(String(url), L.href);
+          if (isSearch(target)) {
+            var t = take(target);
+            if (t) cur = t;
+            url = rel(target);
+          }
+        }
+        if (cur && isSearch(target)) state = merge(state, cur);
+      } catch (e) {}
+      return orig.call(H, state, title, url);
+    };
+  }
+  wrap('pushState');
+  wrap('replaceState');
+
+  w.addEventListener('popstate', function (e) {
+    if (e.state && e.state[SK]) cur = e.state[SK];
+  });
+
+  try {
+    Object.defineProperty(w, 'PBSearch', {
+      value: Object.freeze({
+        term: function () { return cur ? cur.q : null; },
+        addTerm: function (url) { return addTerm(url); },
+        withTerm: function (href) { return addTerm(new URL(href ? String(href) : L.href, L.href)); }
+      })
+    });
+  } catch (e) {}
+})();
+</script>
+{%- endif -%}

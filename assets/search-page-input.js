@@ -37,6 +37,10 @@ class SearchPageInputComponent extends Component {
   }
 
   #isEmptyState = () => {
+    // pb search-term fix (Nov 20 2026): read the saved words, not the address bar
+    const savedTerm = window.PBSearch?.term();
+    if (typeof savedTerm === 'string') return savedTerm.trim() === '';
+
     const url = new URL(window.location.href);
     const queryParam = url.searchParams.get('q') ?? '';
 

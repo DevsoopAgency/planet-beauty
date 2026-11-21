@@ -6,6 +6,8 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    {%- comment -%} pb search-term fix: MUST stay the first thing in <head> (keeps search words out of the address bar on /search; see snippet) {%- endcomment -%}
+    {%- render 'pb-search-term-guard' -%}
       {%- comment -%} Boost: show product card titles exactly as in Shopify admin (turn off Boost title capitalize) {%- endcomment -%}
      <script>(function(){function f(c){try{var m=c&&c.appMetafields;if(!m)return;Object.keys(m).forEach(function(k){var s=m[k],t=s&&s.productItems&&s.productItems.productInfo&&s.productItems.productInfo.elements&&s.productItems.productInfo.elements.title;if(t)t.textTransform='none';});}catch(e){}}var v=window.__BOOST_V3_LIQUID__;if(v){f(v);return;}Object.defineProperty(window,'__BOOST_V3_LIQUID__',{configurable:true,enumerable:true,get:function(){return v;},set:function(n){f(n);v=n;}});})();</script>
     

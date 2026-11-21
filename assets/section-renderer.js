@@ -120,6 +120,10 @@ const SECTION_ID_PREFIX = 'shopify-section-';
  * @returns {string} The section rendering URL
  */
 function buildSectionRenderingURL(sectionId, url = new URL(window.location.href)) {
+  // pb search-term fix (Nov 20 2026): on /search the words are no longer in the address bar
+  // (snippets/pb-search-term-guard.liquid), so put them back into the theme's own request.
+  // Covers page 2 / infinite scroll, filters, sort, filter prefetch and section reloads.
+  window.PBSearch?.addTerm(url);
   url.searchParams.set('section_id', normalizeSectionId(sectionId));
   url.searchParams.sort();
 
