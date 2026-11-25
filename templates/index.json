@@ -12,6 +12,42 @@
     "slideshow_hNjgrd": {
       "type": "slideshow",
       "blocks": {
+        "slide_YiCbye": {
+          "type": "_slide",
+          "name": "Black Friday 25",
+          "disabled": true,
+          "settings": {
+            "media_type_1": "image",
+            "image_1": "shopify://shop_images/PB_BFCM_BF25_banner_desktop_2880x960_ecacdd76-a284-4c79-b7f7-d7ac9f9d17c8.png",
+            "mobile_image_1": "shopify://shop_images/PB_BFCM_BF25_banner_mobile_1100x1100_b19d0c00-cf7b-4420-a73e-59f365d0e5ea.png",
+            "link": "",
+            "open_in_new_tab": false,
+            "video_aspect_ratio": "auto",
+            "video_aspect_ratio_mobile": "inherit",
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "content_position_x": 50,
+            "content_position_y": 50,
+            "inherit_color_scheme": false,
+            "color_scheme": "scheme-6",
+            "color_scheme_mobile": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 48,
+            "padding-block-end": 48,
+            "padding-inline-start": 48,
+            "padding-inline-end": 48
+          },
+          "blocks": {}
+        },
         "slide_Wq6nBV": {
           "type": "_slide",
           "name": "Dennis Holiday Mask",
@@ -545,6 +581,7 @@
         }
       },
       "block_order": [
+        "slide_YiCbye",
         "slide_Wq6nBV",
         "slide_JEKFmD",
         "slide_w86tNK",
